@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Homepage"
+    android:background="#4d4365">
+
+    <TextView
+        android:layout_width="95dp"
+        android:layout_height="60dp"
+        android:text="@string/uts"
+        android:textColor="#000000"
+        android:textSize="50sp"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="160dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_centerHorizontal="true"
+        android:background="#500250"
+        android:text="E-Healthcare Solution"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:translationY="150dp"/>
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:background="#84528a"
+        android:text="Login"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:translationY="200dp"/>
+
+    <Button
+        android:id="@+id/registerBtn"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:background="#84528a"
+        android:text="Register"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>
