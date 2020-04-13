@@ -5,26 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4d4365"
-    tools:context=".Homepage">
+    tools:context=".Dashboard">
 
     <TextView style="@style/uts_header" />
 
     <TextView
         style="@style/heading"
-        android:text="E-Healthcare Solution"
-
-        android:translationY="100dp" />
-
-    <Button
-        android:id="@+id/loginBtn"
-        style="@style/button_1"
-        android:text="Login"
-        android:translationY="200dp" />
-
-    <Button
-        android:id="@+id/registerBtn"
-        style="@style/button_1"
-        android:layout_centerVertical="true"
-        android:text="Register" />
+        android:layout_marginTop="100dp"
+        android:text="Dashboard Page" />
 
 </RelativeLayout>
