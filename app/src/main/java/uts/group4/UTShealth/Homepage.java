@@ -20,14 +20,14 @@ public class Homepage extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Login.class);
+                Intent intent = new Intent(getApplicationContext(), Login.class);//opens login class when login btn is clicked
                 startActivity(intent);
             }
         });
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Register.class);
+                Intent intent = new Intent(getApplicationContext(), Register.class);//opens register class when register btn is clicked
                 startActivity(intent);
             }
         });

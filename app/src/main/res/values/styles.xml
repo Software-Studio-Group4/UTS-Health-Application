@@ -1,8 +1,8 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar" />
+
     <style name="uts_header">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -11,24 +11,33 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
         <item name="android:text">UTS</item>
-        <item name= "android:textSize">50sp</item>
+        <item name="android:textSize">50sp</item>
     </style>
+
     <style name="button_1">
         <item name="android:layout_width">125dp</item>
-       <item name="android:layout_height">50dp</item>
-       <item name= "android:layout_centerHorizontal">true</item>
-        <item name= "android:background">#84528a</item>
-        <item name= "android:textColor">#ffffff</item>
-        <item name= "android:textSize">20sp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">#84528a</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="heading">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name= "android:layout_centerHorizontal">true</item>
-        <item name= "android:background">#500250</item>
-        <item name= "android:textColor">#ffffff</item>
-        <item name= "android:textSize">30sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">#500250</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="textField">
+        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>
