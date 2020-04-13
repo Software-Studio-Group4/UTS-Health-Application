@@ -19,7 +19,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
         username = (EditText) findViewById(R.id.username);//links to user input
-        password = (EditText) findViewById(R.id.password);//links to user input
+        password = (EditText) findViewById(R.id.confirmPasswordTf);//links to user input
         userLoginBtn = (findViewById(R.id.userLoginBtn));//links to login btn
 
         userLoginBtn.setOnClickListener(new View.OnClickListener() {

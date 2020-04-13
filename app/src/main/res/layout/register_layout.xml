@@ -1,6 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#4d4365"
+    tools:context=".Register">
 
-</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width= "match_parent"
+        android:layout_height="match_parent"
+        android:orientation ="vertical">
+
+        <TextView
+            style="@style/uts_header"
+            />
+
+        <TextView
+            style="@style/heading"
+
+            android:layout_marginTop="100dp"
+            android:text="@string/patient_registration" />
+
+        <TextView
+            style="@style/registrationForm_TextView"
+
+            android:layout_marginTop="170dp"
+            android:text="Email" />
+
+        <EditText
+            android:id="@+id/emailTf"
+            style="@style/textField"
+            android:layout_marginTop="200dp"
+            android:hint="@string/example_email"
+            android:inputType="textEmailAddress" />
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginTop="270dp"
+            android:text="Password" />
+
+        <EditText
+            android:id="@+id/passwordTf"
+            style="@style/passwordTextField"
+            android:layout_marginTop="300dp"
+            android:hint="Password"
+             />
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginTop="370dp"
+            android:text="Confirm Password" />
+
+        <EditText
+            android:id="@+id/confirmPasswordTf"
+            style="@style/passwordTextField"
+            android:layout_marginTop="400dp"
+            android:hint="Password"
+            />
+
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginTop="470dp"
+            android:text="First Name" />
+
+        <EditText
+            android:id="@+id/firstNameTf"
+            style="@style/textField"
+            android:layout_marginTop="500dp"
+            android:hint="John"
+            android:inputType="textCapWords" />
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginTop="570dp"
+            android:text="Last Name" />
+
+        <EditText
+            android:id="@+id/lastNameTf"
+            style="@style/textField"
+            android:layout_marginTop="600dp"
+            android:hint="Smith"
+            android:inputType="textCapWords" />
+
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginTop="715dp"
+            android:text="Age" />
+
+        <EditText
+            android:id="@+id/ageTf"
+            style="@style/textField"
+            android:layout_marginTop="700dp"
+            android:layout_centerHorizontal="false"
+            android:layout_marginLeft="100dp"
+            android:layout_width="75dp"
+            android:inputType="text|number" />
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginTop="785dp"
+            android:text="Medicare Number" />
+
+        <EditText
+            android:id="@+id/medicareNumberTf"
+            style="@style/textField"
+            android:layout_marginTop="815dp"
+            android:layout_centerHorizontal="false"
+            android:layout_marginLeft="70dp"
+            android:inputType="text|number" />
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginTop="900dp"
+            android:text="Street Address" />
+
+        <EditText
+            android:id="@+id/streetAddressTf"
+            style="@style/textField"
+            android:layout_marginTop="935dp"
+            android:hint="street address " />
+
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="1010dp"
+            android:text="State" />
+
+        <EditText
+            android:id="@+id/stateTf"
+            style="@style/textField"
+            android:layout_marginTop="1045dp"
+            android:layout_centerHorizontal="false"
+            android:layout_marginLeft="50dp"
+            android:layout_width="75dp"
+            android:inputType="textCapCharacters" />
+
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginLeft="270dp"
+            android:layout_marginTop="1010dp"
+            android:text="City" />
+
+        <EditText
+            android:id="@+id/cityTf"
+            style="@style/textField"
+            android:layout_marginTop="1045dp"
+            android:layout_centerHorizontal="false"
+            android:layout_marginLeft="200dp"
+            android:layout_width="175dp"
+            android:inputType="textCapWords" />
+
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="1125dp"
+            android:text="Post Code" />
+
+        <EditText
+            android:id="@+id/postCodeTf"
+            style="@style/textField"
+            android:layout_marginTop="1155dp"
+            android:layout_centerHorizontal="false"
+            android:layout_marginLeft="60dp"
+            android:layout_width="120dp"
+            android:inputType="text|number" />
+
+        <Button
+            style="@style/button_1"
+            android:id="@+id/registerBtn"
+            android:layout_marginTop="1400dp"
+            android:text="@string/register" />
+
+        <EditText
+            android:id="@+id/phoneNumberTf"
+            style="@style/textField"
+            android:layout_marginTop="1265dp"
+            android:hint="000 000 000"
+            android:inputType="text|number" />
+
+        <TextView
+            style="@style/registrationForm_TextView"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="1235dp"
+            android:text="Phone Number" />
+    </RelativeLayout>
+
+
+</ScrollView>
