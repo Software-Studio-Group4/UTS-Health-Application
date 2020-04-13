@@ -8,21 +8,19 @@
     tools:context=".Homepage">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_centerHorizontal="true"
-        android:background="#500250"
+        style="@style/uts_header"
+        />
+    <TextView
+        style="@style/heading"
         android:text="@string/e_healthcare_solution"
-        android:textColor="#ffffff"
-        android:textSize="15sp"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="100dp"
         />
 
     <com.google.android.material.textfield.TextInputEditText
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="200dp"
         android:background="#ffffff"
         android:hint="@string/username" />
 
@@ -30,18 +28,14 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="300dp"
         android:background="#ffffff"
         android:hint="@string/password" />
 
     <Button
+        style="@style/button_1"
         android:id="@+id/userLoginBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="350dp"
-        android:background="#84528a"
-        android:textColor="#FFFFFF"
+        android:layout_marginTop="400dp"
         android:text="@string/login" />
 
 
