@@ -4,6 +4,7 @@ package uts.group4.UTShealth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ public class Register extends AppCompatActivity {
     Button registerBtn;
     DatabaseReference dbRef;
     Patient patient;
+    Long maxPatientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,28 @@ public class Register extends AppCompatActivity {
 
         patient = new Patient();
 
+
         dbRef = FirebaseDatabase.getInstance().getReference().child("Patient");
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                    maxPatientId=(dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String email = emailTf.getText().toString().trim();
+
                 patient.setEmail(emailTf.getText().toString().trim());
                 patient.setAge(Integer.parseInt(ageTf.getText().toString().trim()));
                 patient.setCity(cityTf.getText().toString().trim());
@@ -64,10 +82,9 @@ public class Register extends AppCompatActivity {
                 patient.setState(stateTf.getText().toString().trim());
                 patient.setStreetAddress(streetAddressTf.getText().toString().trim());
 
-                String patientEmail = patient.getEmail();
 
-               dbRef.child(patientEmail).setValue(patient);
-                Toast.makeText(Register.this, "data inserted successfully", Toast.LENGTH_LONG).show();
+               dbRef.child("patient" + (maxPatientId+1)).setValue(patient);
+                Toast.makeText(Register.this, "period did not crash", Toast.LENGTH_LONG).show();
             }
         });
     }
