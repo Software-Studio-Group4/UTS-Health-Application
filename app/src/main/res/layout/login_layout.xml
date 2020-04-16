@@ -18,13 +18,13 @@
         android:text="@string/e_healthcare_solution" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/emailTf"
         style="@style/textField"
         android:hint="Username"
         android:layout_marginTop="200dp"
         />
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/passwordTf"
         style="@style/textField"
         android:hint="Password"
         android:layout_marginTop="300dp"
