@@ -123,7 +123,7 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                                Toast.makeText(Register.this, "User Created", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_SHORT).show();
                                 userID = fAuth.getCurrentUser().getUid();
                             DocumentReference documentReference = fStore.collection("Patients").document(userID);
                             Map<String, Object> user = new HashMap<>();
@@ -148,7 +148,7 @@ public class Register extends AppCompatActivity {
                                     Log.d(TAG, "onFailure" + e.toString());
                                 }
                             });
-                                startActivity(new Intent(getApplicationContext(), Dashboard.class));
+                                startActivity(new Intent(getApplicationContext(), Login.class));
                         }else{
                             Toast.makeText(Register.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -160,32 +160,6 @@ public class Register extends AppCompatActivity {
 
         }
 
-       /* patient = new Patient();
-
-        dbRef = FirebaseDatabase.getInstance().getReference().child("Patient");
-
-
-        registerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                patient.setEmail(emailTf.getText().toString().trim());
-                patient.setAge(Integer.parseInt(ageTf.getText().toString().trim()));
-                patient.setCity(cityTf.getText().toString().trim());
-                patient.setFirstName(firstNameTf.getText().toString().trim());
-                patient.setLastName(lastNameTf.getText().toString().trim());
-                patient.setMedicareNumber(medicareNumberTf.getText().toString().trim());
-                patient.setPhoneNumber(phoneNumberTf.getText().toString().trim());
-                patient.setPassword(passwordTf.getText().toString().trim());
-                patient.setPostCode(passwordTf.getText().toString().trim());
-                patient.setState(stateTf.getText().toString().trim());
-                patient.setStreetAddress(streetAddressTf.getText().toString().trim());
-
-                String patientEmail = patient.getEmail();
-
-               dbRef.child(patientEmail).setValue(patient);
-                Toast.makeText(Register.this, "data inserted successfully", Toast.LENGTH_LONG).show();
-            }
-        }); */
     }
 
-    /*To Do : add limiters for phone numbers, medicare numbers, postcode length, etc. ****/
+

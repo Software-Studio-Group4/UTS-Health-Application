@@ -55,7 +55,7 @@ public class Login extends AppCompatActivity {
                                 Toast.makeText(Login.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getApplicationContext(), Dashboard.class));
                             } else {
-                                Toast.makeText(Login.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login.this, "Invalid Username or password" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -69,15 +69,6 @@ public class Login extends AppCompatActivity {
             }
         });
 
-    /*private void validate(String user, String pass) {
-        if ((user.equals("name")) && (pass.equals("pass123"))) {//checks user and password (hardcoded)
-            Intent intent = new Intent(getApplicationContext(), Dashboard.class);//opens dashboard
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "username or password are invalid", Toast.LENGTH_LONG).show();//error message
-        }
-
-     */
 
     }
 
