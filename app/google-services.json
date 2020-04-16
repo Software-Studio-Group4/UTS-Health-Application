@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "35301743367",
+    "firebase_url": "https://uts-health-application.firebaseio.com",
+    "project_id": "uts-health-application",
+    "storage_bucket": "uts-health-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35301743367:android:b841ed39373099bd0703a2",
+        "android_client_info": {
+          "package_name": "uts.group4.UTShealth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35301743367-ao0jubpsuamkk20pocna8i4npiqpga2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uts.group4.UTShealth",
+            "certificate_hash": "0cdc86d3ee54d3c40f7608100424c86bff41006a"
+          }
+        },
+        {
+          "client_id": "35301743367-ucfl845aeqoje66b7vlcarqfmoqhb210.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQXpx4Gl3rrwWAZaKA7gMp1p8WzOKcDmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35301743367-ucfl845aeqoje66b7vlcarqfmoqhb210.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
