@@ -13,5 +13,11 @@
         style="@style/heading"
         android:layout_marginTop="100dp"
         android:text="Dashboard Page" />
+    <Button
+        style="@style/button_1"
+        android:layout_centerVertical="true"
+        android:text="Logout"
+        android:id="@+id/logoutBtn"
+        />
 
 </RelativeLayout>
