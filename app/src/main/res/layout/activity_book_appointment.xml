@@ -5,25 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4d4365"
-    tools:context=".Dashboard">
+    tools:context=".BookAppointment">
 
     <TextView style="@style/uts_header" />
 
     <TextView
+        android:id="@+id/dateTextView"
         style="@style/heading"
         android:layout_marginTop="100dp"
-        android:text="Dashboard Page" />
+        android:text="Date" />
+
     <Button
+        android:id="@+id/dateButton"
         style="@style/button_1"
-        android:layout_marginTop="200dp"
-        android:text="Book"
-        android:id="@+id/bookBtn"
-        />
-    <Button
-        style="@style/button_1"
-        android:layout_centerVertical="true"
-        android:text="Logout"
-        android:id="@+id/logoutBtn"
-        />
+        android:layout_marginTop="150dp"
+        android:text="Date"
+        android:onClick="btn_PickerDate"/>
+
+
+
 
 </RelativeLayout>
