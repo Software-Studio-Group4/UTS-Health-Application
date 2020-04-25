@@ -9,20 +9,36 @@
 
     <TextView style="@style/uts_header" />
 
+    <Spinner
+        android:id="@+id/doctorSpinner"
+        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/dateTextView"
         style="@style/heading"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="150dp"
         android:text="Date" />
 
     <Button
         android:id="@+id/dateButton"
         style="@style/button_1"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="200dp"
         android:text="Date"
         android:onClick="btn_PickerDate"/>
 
+    <TextView
+        android:id="@+id/timeTextView"
+        style="@style/heading"
+        android:layout_marginTop="250dp"
+        android:text="Time" />
 
-
+    <Button
+        android:id="@+id/timeButton"
+        style="@style/button_1"
+        android:layout_marginTop="300dp"
+        android:text="Time"
+        android:onClick="btn_PickerTime"/>
 
 </RelativeLayout>
