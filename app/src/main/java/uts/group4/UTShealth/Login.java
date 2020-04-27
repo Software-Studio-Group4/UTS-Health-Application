@@ -1,9 +1,5 @@
 package uts.group4.UTShealth;
 
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,14 +8,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import maes.tech.intentanim.CustomIntent;
+
+// Login page
+
 public class Login extends AppCompatActivity {
     private EditText emailTf, passwordTf;
-    private Button userLoginBtn;
     FirebaseAuth fAuth;
 
     @Override
@@ -27,9 +29,9 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
-        emailTf = (EditText) findViewById(R.id.emailTf);
-        passwordTf = (EditText) findViewById(R.id.passwordTf);
-        userLoginBtn = (Button) findViewById(R.id.userLoginBtn);
+        emailTf = findViewById(R.id.emailTf);
+        passwordTf = findViewById(R.id.passwordTf);
+        Button userLoginBtn = findViewById(R.id.userLoginBtn);
         fAuth = FirebaseAuth.getInstance();
 
         userLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -50,26 +52,23 @@ public class Login extends AppCompatActivity {
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
                         if (task.isSuccessful()) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(Login.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), Dashboard.class));
-                            } else {
-                                Toast.makeText(Login.this, "Invalid Username or password" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+                            Toast.makeText(Login.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), Dashboard.class));
+                        } else {
+                            Toast.makeText(Login.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                         }
                     }
-
-                    ;
-
-
                 });
-
-
             }
         });
-
-
     }
 
+
+    @Override
+    public void finish() {
+        super.finish();
+        CustomIntent.customType(this, "right-to-left");
+    } // Fade transition
 }
