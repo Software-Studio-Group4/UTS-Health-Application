@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4d4365"
-    tools:context=".MainActivity">
-
-    <TextView style="@style/uts_header" />
-
-    <TextView
-        style="@style/heading"
-        android:layout_marginTop="100dp"
-        android:text="Welcome" />
+    android:background="@drawable/homepage_bg">
 
     <Button
-        android:id="@+id/welcomeBtn"
-        style="@style/button_1"
-        android:layout_centerVertical="true"
-        android:text="OK" />
+        android:id="@+id/signup_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="111dp"
+        android:layout_height="57dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="37dp"
+        android:layout_marginLeft="37dp"
+        android:layout_marginTop="257dp"
+        android:background="@drawable/signup_button"
+        android:text="" />
+
+    <Button
+        android:id="@+id/login_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="111dp"
+        android:layout_height="57dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="257dp"
+        android:layout_marginEnd="37dp"
+        android:layout_marginRight="37dp"
+        android:background="@drawable/login_button"
+        android:text="" />
+
 </RelativeLayout>

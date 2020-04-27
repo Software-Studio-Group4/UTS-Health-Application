@@ -1,6 +1,5 @@
 package uts.group4.UTShealth;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,38 +19,41 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Register extends AppCompatActivity {
-    public static final String TAG = "Register";
-    EditText emailTf, passwordTf, firstNameTf, lastNameTf, ageTf, medicareNumberTf, streetAddressTf,
-            cityTf, stateTf, postCodeTf, confirmPasswordTf, phoneNumberTf;
-    Button registerBtn;
-    DatabaseReference dbRef;
-    Patient patient;
+import maes.tech.intentanim.CustomIntent;
+
+import static uts.group4.UTShealth.RegisterEmailPge.getEmail;
+import static uts.group4.UTShealth.RegisterPassPge.getPass;
+
+// Patient details Registration page
+
+public class RegisterDetailsPge extends AppCompatActivity {
+    private static final String TAG = "RegisterDetailsPge";
+    String userEmail = getEmail();
+    String userPass = getPass();
+
+    EditText firstNameTf, lastNameTf, medicareNumberTf, streetAddressTf,
+            cityTf, stateTf, postCodeTf, phoneNumberTf;
+    Button nextBtn2;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_layout);
+        setContentView(R.layout.reg_detailspage);
+        Log.d(TAG, "onCreate " + userEmail + userPass);
 
         // GET ALL THE OBJECTS FROM THE VIEW TO MANIPULATE
-        registerBtn = findViewById(R.id.registerBtn);
-        emailTf = findViewById(R.id.emailTf);
-        passwordTf = findViewById(R.id.passwordTf);
+        nextBtn2 = findViewById(R.id.nextBtn2);
         firstNameTf = findViewById(R.id.firstNameTf);
         lastNameTf = findViewById(R.id.lastNameTf);
-        confirmPasswordTf = findViewById((R.id.confirmPasswordTf));
-        ageTf = findViewById(R.id.ageTf);
         medicareNumberTf = findViewById(R.id.medicareNumberTf);
         streetAddressTf = findViewById(R.id.streetAddressTf);
         cityTf = findViewById(R.id.cityTf);
@@ -61,13 +64,9 @@ public class Register extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-
-        registerBtn.setOnClickListener(new View.OnClickListener() {
+        nextBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String email = emailTf.getText().toString().trim();
-                String password = passwordTf.getText().toString().trim();
-                int age = Integer.parseInt(ageTf.getText().toString().trim());
                 final String city = cityTf.getText().toString().trim();
                 final String firstName = firstNameTf.getText().toString().trim();
                 final String lastName = lastNameTf.getText().toString().trim();
@@ -77,14 +76,6 @@ public class Register extends AppCompatActivity {
                 final String state = stateTf.getText().toString().trim();
                 final String streetAddress = streetAddressTf.getText().toString().trim();
 
-                if (TextUtils.isEmpty(password)) {
-                    passwordTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(city)) {
-                    cityTf.setError("Cannot have Empty Field");
-                    return;
-                }
                 if (TextUtils.isEmpty(firstName)) {
                     firstNameTf.setError("Cannot have Empty Field");
                     return;
@@ -93,36 +84,42 @@ public class Register extends AppCompatActivity {
                     lastNameTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if (TextUtils.isEmpty(medicareNumber)) {
-                    medicareNumberTf.setError("Cannot have Empty Field");
-                    return;
-                }
                 if (TextUtils.isEmpty(phoneNumber)) {
                     phoneNumberTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if (TextUtils.isEmpty(postCode)) {
-                    postCodeTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(state)) {
-                    stateTf.setError("Cannot have Empty Field");
+                if (TextUtils.isEmpty(medicareNumber)) {
+                    medicareNumberTf.setError("Cannot have Empty Field");
                     return;
                 }
                 if (TextUtils.isEmpty(streetAddress)) {
                     streetAddressTf.setError("Cannot have Empty Field");
                     return;
                 }
+                if (TextUtils.isEmpty(city)) {
+                    cityTf.setError("Cannot have Empty Field");
+                    return;
+                }
+                if (TextUtils.isEmpty(state)) {
+                    stateTf.setError("Cannot have Empty Field");
+                    return;
+                }
+                if (TextUtils.isEmpty(postCode)) {
+                    postCodeTf.setError("Cannot have Empty Field");
+                    return;
+                }
 
-                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                fAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), RegisterFinishPge.class));
+                            CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
+                            Toast.makeText(RegisterDetailsPge.this, "Registration successful", Toast.LENGTH_SHORT).show();
                             userID = fAuth.getCurrentUser().getUid();
                             DocumentReference documentReference = fStore.collection("Patients").document(userID);
                             Map<String, Object> user = new HashMap<>();
-                            user.put("email", email);
+                            user.put("email", userEmail);
                             user.put("firstName", firstName);
                             user.put("lastName", lastName);
                             user.put("city", city);
@@ -135,7 +132,6 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d(TAG, "onSucess: user profile has been created for user" + userID);
-
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -143,10 +139,11 @@ public class Register extends AppCompatActivity {
                                     Log.d(TAG, "onFailure" + e.toString());
                                 }
                             });
-                            startActivity(new Intent(getApplicationContext(), Login.class));
+
                         } else {
-                            Toast.makeText(Register.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterDetailsPge.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
             }
@@ -154,6 +151,10 @@ public class Register extends AppCompatActivity {
 
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        CustomIntent.customType(this, "fadein-to-fadeout");
+    } // Fade transition
 }
-
 

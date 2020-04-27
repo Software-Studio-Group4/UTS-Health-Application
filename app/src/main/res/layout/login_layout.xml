@@ -4,38 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4d4365"
+    android:background="@drawable/login_bg"
     tools:context=".Login">
-
-    <TextView
-        style="@style/uts_header"
-        />
-
-    <TextView
-        style="@style/heading"
-
-        android:layout_marginTop="100dp"
-        android:text="@string/e_healthcare_solution" />
 
     <EditText
         android:id="@+id/emailTf"
         style="@style/textField"
-        android:hint="Username"
-        android:layout_marginTop="200dp"
-        />
+        android:layout_width="261dp"
+        android:layout_height="38dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="230dp"
+        android:autofillHints=""
+        android:background="@drawable/shape"
+        android:fontFamily="sans-serif-light"
+        android:hint="Email or Patient ID"
+        android:inputType="none|textEmailAddress"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:textColor="#000000"
+        android:textColorHint="@color/common_google_signin_btn_text_light"
+        android:textSize="14sp" />
+
     <EditText
         android:id="@+id/passwordTf"
         style="@style/textField"
+        android:layout_width="261dp"
+        android:layout_height="38dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="67dp"
+        android:layout_marginLeft="67dp"
+        android:layout_marginTop="298dp"
+        android:background="@drawable/shape"
+        android:fontFamily="sans-serif-light"
         android:hint="Password"
-        android:layout_marginTop="300dp"
-        />
+        android:inputType="none|textPassword"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:textColor="#000000"
+        android:textColorHint="@color/common_google_signin_btn_text_light"
+        android:textSize="14sp" />
 
     <Button
-        style="@style/button_1"
         android:id="@+id/userLoginBtn"
-        android:layout_marginTop="400dp"
-        android:text="@string/login" />
-
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="110dp"
+        android:layout_height="59dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="141dp"
+        android:layout_marginLeft="141dp"
+        android:layout_marginBottom="320dp"
+        android:background="@drawable/login_button"
+        android:text="" />
 
 
 </RelativeLayout>
