@@ -19,5 +19,12 @@
         android:text="Logout"
         android:id="@+id/logoutBtn"
         />
+    <Button
+        style="@style/button_1"
+
+        android:text="Chatroom"
+        android:id="@+id/chatBtn"
+        />
+
 
 </RelativeLayout>
