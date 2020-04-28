@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:layout_height="38dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="230dp"
+        android:layout_marginBottom="20dp"
         android:autofillHints=""
         android:background="@drawable/shape"
         android:fontFamily="sans-serif-light"
@@ -24,7 +24,11 @@
         android:paddingRight="5sp"
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/passwordTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/passwordTf"
@@ -35,9 +39,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginStart="67dp"
-        android:layout_marginLeft="67dp"
-        android:layout_marginTop="298dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/shape"
         android:fontFamily="sans-serif-light"
         android:hint="Password"
@@ -46,7 +48,11 @@
         android:paddingRight="5sp"
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/userLoginBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/userLoginBtn"
@@ -57,13 +63,29 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="141dp"
-        android:layout_marginLeft="141dp"
-        android:layout_marginBottom="320dp"
         android:background="@drawable/login_button"
-        android:text="" />
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/forgotpassBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.915"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/forgotpassBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="117dp"
+        android:layout_height="16dp"
+        android:layout_marginBottom="240dp"
+        android:background="@drawable/forgot_pass"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 
