@@ -11,7 +11,7 @@ public class Patient {
     private String email;
     private String password; /*important note regarding password : for now we don't have to make any
     security features because it's only sprint 1, but in future, the password should be stored using a
-    hashing algorithm, and then dehashed and compared when querying the login form.*/
+    hashing algorithm, and then dehashed and compared when querying the login_bg form.*/
 
     private String firstName;
     private String lastName;
