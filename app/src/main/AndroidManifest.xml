@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".Dashboard"></activity>
+        <activity android:name=".Chat"></activity>
+        <activity android:name=".Dashboard" />
         <activity android:name=".DatabaseTester">
             <intent-filter>
-                <action android:name="com.company.package.FOO"/>
+                <action android:name="com.company.package.FOO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -23,9 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Homepage"></activity>
-        <activity android:name=".Login"></activity>
-        <activity android:name=".Register"></activity>
+        <activity android:name=".Homepage" />
+        <activity android:name=".Login" />
+        <activity android:name=".Register" />
         <activity android:name=".RegisterEmailPge" />
         <activity android:name=".RegisterPassPge" />
         <activity android:name=".RegisterDetailsPge" />
