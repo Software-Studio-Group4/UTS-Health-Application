@@ -14,7 +14,7 @@
         android:layout_height="37dp"
         android:layout_marginStart="36dp"
         android:layout_marginLeft="36dp"
-        android:layout_marginTop="312dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -28,13 +28,13 @@
         android:textSize="14sp"
         app:boxBackgroundMode="none"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/pleasefilldetails" />
 
     <EditText
         android:id="@+id/lastNameTf"
         android:layout_width="150dp"
         android:layout_height="37dp"
-        android:layout_marginTop="312dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="36dp"
         android:layout_marginRight="36dp"
         android:background="@drawable/shape"
@@ -49,13 +49,13 @@
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/pleasefilldetails" />
 
     <EditText
         android:id="@+id/phoneNumberTf"
         android:layout_width="205dp"
         android:layout_height="38dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="72dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -69,13 +69,13 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstNameTf" />
+        app:layout_constraintTop_toBottomOf="@+id/pleasefilldetails" />
 
     <EditText
         android:id="@+id/medicareNumberTf"
         android:layout_width="205dp"
         android:layout_height="38dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -95,7 +95,7 @@
         android:id="@+id/cityTf"
         android:layout_width="205dp"
         android:layout_height="38dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -108,7 +108,6 @@
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/streetAddressTf" />
 
@@ -116,9 +115,7 @@
         android:id="@+id/postCodeTf"
         android:layout_width="103dp"
         android:layout_height="38dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginRight="92dp"
+        android:layout_marginTop="52dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -131,15 +128,17 @@
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cityTf" />
+        app:layout_constraintHorizontal_bias="0.675"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cityTf" />
 
     <EditText
         android:id="@+id/stateTf"
         android:layout_width="80dp"
         android:layout_height="37dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginLeft="92dp"
+        android:layout_marginTop="52dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -152,13 +151,15 @@
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/postCodeTf"
-        app:layout_constraintTop_toBottomOf="@+id/cityTf" />
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cityTf" />
 
     <EditText
         android:id="@+id/streetAddressTf"
         android:layout_width="205dp"
         android:layout_height="38dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -171,22 +172,46 @@
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberTf" />
+        app:layout_constraintTop_toBottomOf="@+id/medicareNumberTf" />
 
     <Button
         android:id="@+id/nextBtn2"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="111dp"
         android:layout_height="57dp"
-        android:layout_marginTop="652dp"
+        android:layout_marginStart="141dp"
+        android:layout_marginLeft="141dp"
+        android:layout_marginTop="630dp"
+        android:layout_marginEnd="141dp"
+        android:layout_marginRight="141dp"
+        android:layout_marginBottom="26dp"
         android:background="@drawable/next_button"
         android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.814" />
+
+    <TextView
+        android:id="@+id/pleasefilldetails"
+        android:layout_width="254dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="270dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="440dp"
+        android:background="@drawable/regdetails_text"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.29"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.546" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
