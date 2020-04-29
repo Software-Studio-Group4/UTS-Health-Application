@@ -15,6 +15,12 @@
         android:text="Dashboard Page" />
     <Button
         style="@style/button_1"
+        android:layout_marginTop="200dp"
+        android:text="Book"
+        android:id="@+id/bookBtn"
+        />
+    <Button
+        style="@style/button_1"
         android:layout_centerVertical="true"
         android:text="Logout"
         android:id="@+id/logoutBtn"
