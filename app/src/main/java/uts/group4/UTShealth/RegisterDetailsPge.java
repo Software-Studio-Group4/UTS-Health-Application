@@ -76,6 +76,7 @@ public class RegisterDetailsPge extends AppCompatActivity {
                 final String state = stateTf.getText().toString().trim();
                 final String streetAddress = streetAddressTf.getText().toString().trim();
 
+
                 if (TextUtils.isEmpty(firstName)) {
                     firstNameTf.setError("Cannot have Empty Field");
                     return;
