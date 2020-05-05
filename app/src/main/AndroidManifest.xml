@@ -30,6 +30,7 @@
         <activity android:name=".RegisterPassPge" />
         <activity android:name=".RegisterDetailsPge" />
         <activity android:name=".RegisterFinishPge" />
+        <activity android:name=".Chat" />
     </application>
 
 </manifest>
