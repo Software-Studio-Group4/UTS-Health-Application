@@ -20,7 +20,7 @@ import maes.tech.intentanim.CustomIntent;
 
 // Patient Login Page
 
-public class Login extends AppCompatActivity {
+public class PatientLogin extends AppCompatActivity {
     private EditText emailTf, passwordTf;
     FirebaseAuth fAuth;
 
@@ -53,10 +53,10 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(Login.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PatientLogin.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
                         } else {
-                            Toast.makeText(Login.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PatientLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -66,8 +66,8 @@ public class Login extends AppCompatActivity {
         forgotpassBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ResetPassword.class));
-                CustomIntent.customType(Login.this, "left-to-right");
+                startActivity(new Intent(getApplicationContext(), PatientResetPass.class));
+                CustomIntent.customType(PatientLogin.this, "left-to-right");
             }
         });
     }

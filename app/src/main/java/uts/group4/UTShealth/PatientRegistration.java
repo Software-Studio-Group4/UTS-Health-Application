@@ -260,7 +260,7 @@ public class PatientRegistration extends AppCompatActivity {
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(getApplicationContext(), Login.class));
+                    startActivity(new Intent(getApplicationContext(), PatientLogin.class));
                     CustomIntent.customType(RegisterFinishPge.this, "left-to-right");
                 }
             });

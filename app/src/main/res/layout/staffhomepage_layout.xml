@@ -47,7 +47,7 @@
         android:id="@+id/createBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="135dp"
-        android:layout_height="54dp"
+        android:layout_height="55dp"
         android:layout_marginStart="130dp"
         android:layout_marginLeft="130dp"
         android:layout_marginTop="20dp"
@@ -82,15 +82,16 @@
         android:id="@+id/loginBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="111dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/login_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="@+id/white_square"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTf"
-        app:layout_constraintVertical_bias="0.054"
+        app:layout_constraintEnd_toEndOf="@+id/white_square"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/white_square"
+        app:layout_constraintTop_toBottomOf="@+id/forgotpassBtn"
+        app:layout_constraintVertical_bias="0.619"
         tools:ignore="MissingConstraints" />
 
     <EditText
@@ -149,6 +150,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/white_square"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/forgotpassBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="117dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/forgot_pass"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTf"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,6 +39,7 @@ public class StaffHomepage extends AppCompatActivity {
         Button requestBtn = findViewById(R.id.requestBtn);
         Button createBtn = findViewById(R.id.createBtn);
         Button loginBtn = findViewById(R.id.loginBtn);
+        Button forgotPassBtn = findViewById(R.id.forgotpassBtn);
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
         fAuth = FirebaseAuth.getInstance();
@@ -57,6 +58,14 @@ public class StaffHomepage extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), StaffCreateProfile.class));
                 CustomIntent.customType(StaffHomepage.this, "right-to-left");
+            }
+        });
+
+        forgotPassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), StaffResetPass.class));
+                CustomIntent.customType(StaffHomepage.this, "fadein-to-fadeout");
             }
         });
 

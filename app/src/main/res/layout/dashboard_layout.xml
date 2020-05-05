@@ -13,18 +13,23 @@
         style="@style/heading"
         android:layout_marginTop="100dp"
         android:text="Dashboard Page" />
-    <Button
-        style="@style/button_1"
-        android:layout_centerVertical="true"
-        android:text="Logout"
-        android:id="@+id/logoutBtn"
-        />
-    <Button
-        style="@style/button_1"
 
-        android:text="Chatroom"
+    <Button
+        android:id="@+id/logoutBtn"
+        style="@style/button_1"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="258dp"
+        android:text="Logout" />
+
+    <Button
         android:id="@+id/chatBtn"
-        />
+
+        style="@style/button_1"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="243dp"
+        android:text="Chatroom" />
 
 
 </RelativeLayout>

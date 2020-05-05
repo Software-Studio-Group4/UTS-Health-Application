@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_bg"
-    tools:context=".Login">
+    tools:context=".PatientLogin">
 
     <EditText
         android:id="@+id/emailTf"
@@ -65,7 +65,7 @@
         android:id="@+id/userLoginBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="110dp"
-        android:layout_height="59dp"
+        android:layout_height="55dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"

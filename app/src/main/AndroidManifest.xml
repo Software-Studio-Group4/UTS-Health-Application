@@ -23,10 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login"></activity>
+        <activity android:name=".PatientLogin"></activity>
         <activity android:name=".Chat" />
         <activity android:name=".PatientRegistration" />
-        <activity android:name=".ResetPassword" />
+        <activity android:name=".PatientResetPass" />
         <activity android:name=".StaffCreateProfile" />
         <activity android:name=".StaffCreateProfile$StaffAddDetails" />
         <activity android:name=".StaffCreateProfile$StaffFinishPage" />
@@ -36,6 +36,7 @@
         <activity android:name=".StaffRequestAcc" />
         <activity android:name=".StaffHomepage" />
         <activity android:name=".StaffDashboard" />
+        <activity android:name=".StaffResetPass" />
     </application>
 
 </manifest>

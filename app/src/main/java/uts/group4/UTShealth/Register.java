@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+// Old registration method
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -143,7 +144,7 @@ public class Register extends AppCompatActivity {
                                     Log.d(TAG, "onFailure" + e.toString());
                                 }
                             });
-                            startActivity(new Intent(getApplicationContext(), Login.class));
+                            startActivity(new Intent(getApplicationContext(), PatientLogin.class));
                         } else {
                             Toast.makeText(Register.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }

@@ -17,12 +17,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import maes.tech.intentanim.CustomIntent;
 
-public class ResetPassword extends AppCompatActivity {
+public class PatientResetPass extends AppCompatActivity {
     private static final String TAG = "ResetPassword";
     private EditText emailTf;
     private String userEmail;
     Button resetBtn;
-    FirebaseAuth firebaseAuth;
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class ResetPassword extends AppCompatActivity {
         setContentView(R.layout.resetpass_layout);
         resetBtn = findViewById(R.id.resetBtn);
         emailTf = findViewById(R.id.emailTf);
-        firebaseAuth = FirebaseAuth.getInstance();
+        fAuth = FirebaseAuth.getInstance();
 
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,11 +42,14 @@ public class ResetPassword extends AppCompatActivity {
                     return;
                 }
 
-                firebaseAuth.sendPasswordResetEmail(userEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                fAuth.sendPasswordResetEmail(userEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(ResetPassword.this, "Password reset email sent", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PatientResetPass.this, "Password reset email sent", Toast.LENGTH_LONG).show();
+                            emailTf.getText().clear();
+                        } else {
+                            Toast.makeText(PatientResetPass.this, "Error", Toast.LENGTH_LONG).show();
                         }
                     }
                 });

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Login.class));
+                startActivity(new Intent(getApplicationContext(), PatientLogin.class));
                 CustomIntent.customType(MainActivity.this, "left-to-right");
             }
         });
