@@ -20,7 +20,7 @@ public class Homepage extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Login.class);//opens login_bg class when login_bg btn is clicked
+                Intent intent = new Intent(getApplicationContext(), Login.class); //Opens login_bg class when login_bg btn is clicked
                 startActivity(intent);
             }
         });

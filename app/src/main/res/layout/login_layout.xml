@@ -72,6 +72,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
         android:background="@drawable/login_button"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -79,7 +80,7 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordTf"
         tools:ignore="MissingConstraints" />
 
-    <TextView
+    <Button
         android:id="@+id/forgotpassBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="117dp"
@@ -87,6 +88,7 @@
         android:layout_marginTop="28dp"
         android:layout_marginBottom="264dp"
         android:background="@drawable/forgot_pass"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -32,13 +32,14 @@ public class Dashboard extends AppCompatActivity {
                 finish();//finish session
             }
         });
-        chatBtn.setOnClickListener(new View.OnClickListener() {
+
+        /*chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Chat.class);
                 startActivity(intent);
             }
-        });
+        }); */
     }
 
 

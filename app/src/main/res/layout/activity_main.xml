@@ -19,7 +19,7 @@
         android:layout_marginRight="258dp"
         android:layout_marginBottom="365dp"
         android:background="@drawable/signup_button"
-        android:text=""
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +38,7 @@
         android:layout_marginRight="36dp"
         android:layout_marginBottom="366dp"
         android:background="@drawable/login_button"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,5 +46,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.342" />
+
+    <Button
+        android:id="@+id/staffBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="89dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="276dp"
+        android:layout_marginLeft="276dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginBottom="673dp"
+        android:background="@drawable/staff_button"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

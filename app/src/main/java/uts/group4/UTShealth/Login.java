@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import maes.tech.intentanim.CustomIntent;
 
-// Login page
+// Patient Login Page
 
 public class Login extends AppCompatActivity {
     private EditText emailTf, passwordTf;
@@ -32,6 +32,7 @@ public class Login extends AppCompatActivity {
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
         Button userLoginBtn = findViewById(R.id.userLoginBtn);
+        Button forgotpassBtn = findViewById(R.id.forgotpassBtn);
         fAuth = FirebaseAuth.getInstance();
 
         userLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +40,6 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String email = emailTf.getText().toString().trim();
                 String password = passwordTf.getText().toString().trim();
-
                 if (TextUtils.isEmpty(password)) {
                     passwordTf.setError("Cannot have Empty Field");
                     return;
@@ -52,7 +52,6 @@ public class Login extends AppCompatActivity {
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
                         if (task.isSuccessful()) {
                             Toast.makeText(Login.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), Dashboard.class));
@@ -61,6 +60,14 @@ public class Login extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+
+        forgotpassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ResetPassword.class));
+                CustomIntent.customType(Login.this, "left-to-right");
             }
         });
     }

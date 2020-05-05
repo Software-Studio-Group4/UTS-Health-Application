@@ -18,22 +18,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button signup_button = findViewById(R.id.signup_button);
-        signup_button.setOnClickListener(new View.OnClickListener() {
+        Button signupBtn = findViewById(R.id.signup_button);
+        signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RegisterEmailPge.class); //opens Register class when sign up btn is clicked
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), PatientRegistration.class));
                 CustomIntent.customType(MainActivity.this, "right-to-left");
             }
         });
 
-        Button login_button = findViewById(R.id.login_button);
-        login_button.setOnClickListener(new View.OnClickListener() {
+        Button loginBtn = findViewById(R.id.login_button);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Login.class); //opens Login class when login_bg btn is clicked
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), Login.class));
+                CustomIntent.customType(MainActivity.this, "left-to-right");
+            }
+        });
+
+        Button staffBtn = findViewById(R.id.staffBtn);
+        staffBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), StaffHomepage.class));
                 CustomIntent.customType(MainActivity.this, "left-to-right");
             }
         });
