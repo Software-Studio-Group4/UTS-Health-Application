@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class Dashboard extends AppCompatActivity {
+public class PatientDashboard extends AppCompatActivity {
 
     Button logoutBtn;
     Button chatBtn;
@@ -27,8 +27,7 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), Login.class);//opens login_bg class when login_bg btn is clicked
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             }
         });

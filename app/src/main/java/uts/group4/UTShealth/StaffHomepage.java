@@ -47,8 +47,7 @@ public class StaffHomepage extends AppCompatActivity {
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StaffHomepage.this, StaffRequestAcc.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), StaffRequestAcc.class));
                 CustomIntent.customType(StaffHomepage.this, "left-to-right");
             }
         });
@@ -56,8 +55,7 @@ public class StaffHomepage extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StaffHomepage.this, StaffCreateProfile.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), StaffCreateProfile.class));
                 CustomIntent.customType(StaffHomepage.this, "right-to-left");
             }
         });

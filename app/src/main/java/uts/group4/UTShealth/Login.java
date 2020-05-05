@@ -54,7 +54,7 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(Login.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), Dashboard.class));
+                            startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
                         } else {
                             Toast.makeText(Login.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                         }

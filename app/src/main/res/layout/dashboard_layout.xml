@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4d4365"
-    tools:context=".Dashboard">
+    tools:context=".PatientDashboard">
 
     <TextView style="@style/uts_header" />
 

@@ -2,10 +2,10 @@ package uts.group4.UTShealth;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,7 +46,7 @@ public class ResetPassword extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent");
+                            Toast.makeText(ResetPassword.this, "Password reset email sent", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
