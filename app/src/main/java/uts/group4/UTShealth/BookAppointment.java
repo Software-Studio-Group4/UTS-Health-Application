@@ -1,10 +1,5 @@
 package uts.group4.UTShealth;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,13 +7,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.util.Calendar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -31,6 +28,8 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     Button bookBtn;
     private static String date;
     private static String time;
+    private DatabaseReference gDatabase;
+    Appointment appointment;
 
 
     @Override
@@ -40,6 +39,10 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         bookBtn = findViewById(R.id.bookBtn);
         timeTextView = findViewById(R.id.timeTextView);
         dateTextView = findViewById(R.id.dateTextView);
+
+        appointment = new Appointment();
+        gDatabase = FirebaseDatabase.getInstance().getReference().child("Appointments");
+
 
 
         Spinner spinner = findViewById(R.id.doctorSpinner);
@@ -71,9 +74,13 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                 startActivity(new Intent(getApplicationContext(), RegisterPassPge.class));
                 CustomIntent.customType(BookAppointment.this, "fadein-to-fadeout");
 
+
+                gDatabase.child("Appointments").push().setValue(appointment);
+
             }
         });
     }
+
 
         public void btn_PickerTime (View view){
             DialogFragment fragment = new TimePickerFragment();
@@ -113,4 +120,33 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         public void onNothingSelected (AdapterView < ? > parent){
 
         }
+
+    public static class Appointment {
+        private String date;
+        private String time;
+
+        public Appointment() {
+
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public String getTime() {
+            return time;
+        }
+
+        public void setTime(String time) {
+            this.time = time;
+        }
+
+
+    }
+
+
 }
