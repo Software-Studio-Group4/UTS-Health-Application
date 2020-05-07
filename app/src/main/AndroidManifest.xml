@@ -8,8 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".PatientDashboard"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".Dashboard"></activity>
         <activity android:name=".DatabaseTester">
             <intent-filter>
                 <action android:name="com.company.package.FOO"/>
@@ -23,20 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PatientLogin"></activity>
-        <activity android:name=".Chat" />
-        <activity android:name=".PatientRegistration" />
-        <activity android:name=".PatientResetPass" />
-        <activity android:name=".StaffCreateProfile" />
-        <activity android:name=".StaffCreateProfile$StaffAddDetails" />
-        <activity android:name=".StaffCreateProfile$StaffFinishPage" />
-        <activity android:name=".PatientRegistration$RegisterPassPge" />
-        <activity android:name=".PatientRegistration$RegisterDetailsPge" />
-        <activity android:name=".PatientRegistration$RegisterFinishPge" />
-        <activity android:name=".StaffRequestAcc" />
-        <activity android:name=".StaffHomepage" />
-        <activity android:name=".StaffDashboard" />
-        <activity android:name=".StaffResetPass" />
+        <activity android:name=".Homepage"></activity>
+        <activity android:name=".Login"></activity>
+        <activity android:name=".Register"></activity>
     </application>
 
 </manifest>

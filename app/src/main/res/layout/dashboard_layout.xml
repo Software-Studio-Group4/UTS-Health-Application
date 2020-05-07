@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4d4365"
-    tools:context=".PatientDashboard">
+    tools:context=".Dashboard">
 
     <TextView style="@style/uts_header" />
 
@@ -13,23 +13,11 @@
         style="@style/heading"
         android:layout_marginTop="100dp"
         android:text="Dashboard Page" />
-
     <Button
+        style="@style/button_1"
+        android:layout_centerVertical="true"
+        android:text="Logout"
         android:id="@+id/logoutBtn"
-        style="@style/button_1"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="258dp"
-        android:text="Logout" />
-
-    <Button
-        android:id="@+id/chatBtn"
-
-        style="@style/button_1"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="243dp"
-        android:text="Chatroom" />
-
+        />
 
 </RelativeLayout>

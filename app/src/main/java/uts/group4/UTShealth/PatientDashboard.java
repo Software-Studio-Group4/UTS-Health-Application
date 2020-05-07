@@ -1,18 +1,17 @@
 package uts.group4.UTShealth;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 
-public class PatientDashboard extends AppCompatActivity {
+public class Dashboard extends AppCompatActivity {
 
     Button logoutBtn;
-    Button chatBtn;
 
 
     @Override
@@ -20,22 +19,15 @@ public class PatientDashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard_layout);
 
-        logoutBtn = findViewById(R.id.logoutBtn);
-        chatBtn = findViewById(R.id.chatBtn);
+        logoutBtn = (Button) findViewById(R.id.logoutBtn);
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                Intent intent = new Intent(getApplicationContext(), Login.class);//opens login class when login btn is clicked
+                startActivity(intent);
                 finish();
-            }
-        });
-
-        chatBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Chat.class));
             }
         });
     }
