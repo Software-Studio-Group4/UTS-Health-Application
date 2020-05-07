@@ -175,14 +175,14 @@ public class StaffCreateProfile extends AppCompatActivity {
                     userID = fAuth.getCurrentUser().getUid();
                     DocumentReference documentReference = fStore.collection("Doctor").document(userID);
                     Map<String, Object> user = new HashMap<>();
-                    user.put("firstName", firstName);
-                    user.put("lastName", lastName);
-                    user.put("email", userEmail);
-                    user.put("phoneNumber", phoneNumber);
-                    user.put("streetAddress", streetAddress);
-                    user.put("city", city);
-                    user.put("state", state);
-                    user.put("postCode", postCode);
+                    user.put("First Name", firstName);
+                    user.put("Last Name", lastName);
+                    user.put("Email", userEmail);
+                    user.put("Phone Number", phoneNumber);
+                    user.put("Street Address", streetAddress);
+                    user.put("Suburb", city);
+                    user.put("State", state);
+                    user.put("Post Code", postCode);
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
