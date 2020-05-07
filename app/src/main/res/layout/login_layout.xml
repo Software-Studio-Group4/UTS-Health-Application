@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_bg"
-    tools:context=".Login">
+    tools:context=".PatientLogin">
 
     <EditText
         android:id="@+id/emailTf"
@@ -14,7 +14,12 @@
         android:layout_height="38dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="66dp"
+        android:layout_marginLeft="66dp"
+        android:layout_marginTop="228dp"
+        android:layout_marginEnd="66dp"
+        android:layout_marginRight="66dp"
+        android:layout_marginBottom="469dp"
         android:autofillHints=""
         android:background="@drawable/shape"
         android:fontFamily="sans-serif-light"
@@ -25,9 +30,11 @@
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/passwordTf"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.368"
         tools:ignore="MissingConstraints" />
 
     <EditText
@@ -39,7 +46,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/shape"
         android:fontFamily="sans-serif-light"
         android:hint="Password"
@@ -49,28 +56,28 @@
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/userLoginBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailTf"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/userLoginBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="110dp"
-        android:layout_height="59dp"
+        android:layout_height="55dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp"
         android:background="@drawable/login_button"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/forgotpassBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.915"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTf"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -78,12 +85,16 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="117dp"
         android:layout_height="16dp"
-        android:layout_marginBottom="240dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="264dp"
         android:background="@drawable/forgot_pass"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userLoginBtn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

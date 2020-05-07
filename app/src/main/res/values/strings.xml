@@ -4,15 +4,9 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="e_healthcare_solution">E-Healthcare Solution</string>
-    <string name ="patient_registration">Patient Registration</string>
-    <string name = "register">register</string>
-    <string name ="submit">submit</string>
+    <string name="patient_registration">Patient Registration</string>
+    <string name="register">register</string>
+    <string name="submit">submit</string>
     <string name="uts">UTS</string>
-    <string name = "example_email">someone@domain.com</string>>
-
-    <string-array name="doctorNames">
-        <item>Doctor A</item>
-        <item>Doctor B</item>
-    </string-array>
-
+    <string name="example_email">someone@domain.com</string>>
 </resources>
