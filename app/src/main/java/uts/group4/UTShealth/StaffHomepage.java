@@ -118,6 +118,6 @@ public class StaffHomepage extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        CustomIntent.customType(this, "right-to-left");
+        CustomIntent.customType(this, "bottom-to-up");
     } // Fade transition
 }

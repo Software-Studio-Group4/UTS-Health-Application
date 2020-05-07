@@ -61,6 +61,6 @@ public class PatientResetPass extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        CustomIntent.customType(this, "right-to-left");
+        CustomIntent.customType(this, "fadein-to-fadeout");
     } // Fade transition
 }
