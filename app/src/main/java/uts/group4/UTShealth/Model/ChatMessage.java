@@ -3,24 +3,27 @@ package uts.group4.UTShealth.Model;
 import android.os.Message;
 
 import java.util.Date;
+import java.util.Map;
 
 public class ChatMessage {
 
     private String messageText;
-    private long messageTime;
+    public Map time;
     private String messageUser;
 
 
 
-    public ChatMessage(String messageText, String messageUser) {
+
+    public ChatMessage(String messageText, String messageUser, Map Time) {
         this.messageText = messageText;
         this.messageUser = messageUser;
-        messageTime = new Date().getTime();
+        this.time = time;
     }
 
     public ChatMessage(){
 
     }
+
 
     public String getMessageText() {
         return messageText;
@@ -30,12 +33,12 @@ public class ChatMessage {
         this.messageText = messageText;
     }
 
-    public long getMessageTime() {
-        return messageTime;
+    public Map getTime() {
+        return time;
     }
 
-    public void setMesssageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public void setTime(long messageTime) {
+        this.time = time;
     }
 
     public String getMessageUser() {
@@ -44,5 +47,10 @@ public class ChatMessage {
 
     public void setMessageUser(String messageUser) {
         this.messageUser = messageUser;
+    }
+
+    public String toString(){
+
+        return this.messageUser + " sent " + messageText ;
     }
 }

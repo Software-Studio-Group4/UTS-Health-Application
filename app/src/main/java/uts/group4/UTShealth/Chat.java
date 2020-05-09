@@ -66,6 +66,7 @@ public class Chat extends AppCompatActivity {
         });
 
     }
+    //shows chat message
     private void readDatabase() {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Chats");
         messageList = (ListView)findViewById(R.id.messageList);
@@ -74,7 +75,7 @@ public class Chat extends AppCompatActivity {
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String message = dataSnapshot.child("messageText").getValue().toString();
+                String message = dataSnapshot.child("messageText").getValue(ChatMessage.class).toString();
 
 
 
