@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import maes.tech.intentanim.CustomIntent;
 public class PatientLogin extends AppCompatActivity {
     private EditText emailTf, passwordTf;
     FirebaseAuth fAuth;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +36,16 @@ public class PatientLogin extends AppCompatActivity {
         Button userLoginBtn = findViewById(R.id.userLoginBtn);
         Button forgotpassBtn = findViewById(R.id.forgotpassBtn);
         fAuth = FirebaseAuth.getInstance();
+        progressBar = findViewById(R.id.progressBar2);
+
+        progressBar.setVisibility(View.INVISIBLE);
 
         userLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = emailTf.getText().toString().trim();
                 String password = passwordTf.getText().toString().trim();
+
                 if (TextUtils.isEmpty(password)) {
                     passwordTf.setError("Cannot have Empty Field");
                     return;
@@ -48,6 +54,8 @@ public class PatientLogin extends AppCompatActivity {
                     emailTf.setError("Cannot have Empty Field");
                     return;
                 }
+
+                progressBar.setVisibility(View.VISIBLE);
 
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override

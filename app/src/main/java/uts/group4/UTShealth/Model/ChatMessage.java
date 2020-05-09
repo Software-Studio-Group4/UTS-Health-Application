@@ -7,50 +7,50 @@ import java.util.Map;
 
 public class ChatMessage {
 
-    private String messageText;
-    public Map time;
-    private String messageUser;
+    private String id;
+    private String text;
+    private String name;
+    private String imageUrl;
 
-
-
-
-    public ChatMessage(String messageText, String messageUser, Map Time) {
-        this.messageText = messageText;
-        this.messageUser = messageUser;
-        this.time = time;
+    public ChatMessage() {
     }
 
-    public ChatMessage(){
+    public ChatMessage(String text, String name, String imageUrl) {
+        this.text = text;
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 
-    public String getMessageText() {
-        return messageText;
+    public String getText() {
+        return text;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public Map getTime() {
-        return time;
-    }
-
-    public void setTime(long messageTime) {
-        this.time = time;
-    }
-
-    public String getMessageUser() {
-        return messageUser;
-    }
-
-    public void setMessageUser(String messageUser) {
-        this.messageUser = messageUser;
-    }
-
-    public String toString(){
-
-        return this.messageUser + " sent " + messageText ;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
