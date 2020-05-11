@@ -1,8 +1,6 @@
 package uts.group4.UTShealth;
 
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+// Old registration method
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,17 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,9 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Register extends AppCompatActivity {
-    public static final String TAG = "TAG";
+    public static final String TAG = "Register";
     EditText emailTf, passwordTf, firstNameTf, lastNameTf, ageTf, medicareNumberTf, streetAddressTf,
-             cityTf, stateTf, postCodeTf, confirmPasswordTf, phoneNumberTf;
+            cityTf, stateTf, postCodeTf, confirmPasswordTf, phoneNumberTf;
     Button registerBtn;
     DatabaseReference dbRef;
     Patient patient;
@@ -48,24 +45,22 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.register_layout);
 
         // GET ALL THE OBJECTS FROM THE VIEW TO MANIPULATE
-        registerBtn = (Button) findViewById(R.id.registerBtn);
-
-        emailTf = (EditText)findViewById(R.id.emailTf);
-        passwordTf = (EditText)findViewById(R.id.passwordTf);
-        firstNameTf = (EditText)findViewById(R.id.firstNameTf);
-        lastNameTf = (EditText) findViewById(R.id.lastNameTf);
-        confirmPasswordTf = (EditText) findViewById((R.id.confirmPasswordTf));
-        ageTf = (EditText) findViewById(R.id.ageTf);
-        medicareNumberTf = (EditText) findViewById(R.id.medicareNumberTf);
-        streetAddressTf = (EditText) findViewById(R.id.streetAddressTf);
-        cityTf = (EditText) findViewById(R.id.cityTf);
-        stateTf = (EditText) findViewById(R.id.stateTf);
-        postCodeTf = (EditText) findViewById(R.id.postCodeTf);
-        phoneNumberTf = (EditText) findViewById(R.id.phoneNumberTf);
+        registerBtn = findViewById(R.id.registerBtn);
+        emailTf = findViewById(R.id.emailTf);
+        passwordTf = findViewById(R.id.passwordTf);
+        firstNameTf = findViewById(R.id.firstNameTf);
+        lastNameTf = findViewById(R.id.lastNameTf);
+        confirmPasswordTf = findViewById((R.id.confirmPasswordTf));
+        ageTf = findViewById(R.id.ageTf);
+        medicareNumberTf = findViewById(R.id.medicareNumberTf);
+        streetAddressTf = findViewById(R.id.streetAddressTf);
+        cityTf = findViewById(R.id.cityTf);
+        stateTf = findViewById(R.id.stateTf);
+        postCodeTf = findViewById(R.id.postCodeTf);
+        phoneNumberTf = findViewById(R.id.phoneNumberTf);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-
 
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,48 +78,49 @@ public class Register extends AppCompatActivity {
                 final String state = stateTf.getText().toString().trim();
                 final String streetAddress = streetAddressTf.getText().toString().trim();
 
-                if(TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     passwordTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(city)){
+                if (TextUtils.isEmpty(city)) {
                     cityTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(firstName)){
+                if (TextUtils.isEmpty(firstName)) {
                     firstNameTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(lastName)){
+                if (TextUtils.isEmpty(lastName)) {
                     lastNameTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(medicareNumber)){
+                if (TextUtils.isEmpty(medicareNumber)) {
                     medicareNumberTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(phoneNumber)){
+                if (TextUtils.isEmpty(phoneNumber)) {
                     phoneNumberTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(postCode)){
+                if (TextUtils.isEmpty(postCode)) {
                     postCodeTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(state)){
+                if (TextUtils.isEmpty(state)) {
                     stateTf.setError("Cannot have Empty Field");
                     return;
                 }
-                if(TextUtils.isEmpty(streetAddress)){
+                if (TextUtils.isEmpty(streetAddress)) {
                     streetAddressTf.setError("Cannot have Empty Field");
                     return;
                 }
+
                 fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                                Toast.makeText(Register.this, "User Created", Toast.LENGTH_SHORT).show();
-                                userID = fAuth.getCurrentUser().getUid();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                            userID = fAuth.getCurrentUser().getUid();
                             DocumentReference documentReference = fStore.collection("Patients").document(userID);
                             Map<String, Object> user = new HashMap<>();
                             user.put("email", email);
@@ -148,8 +144,8 @@ public class Register extends AppCompatActivity {
                                     Log.d(TAG, "onFailure" + e.toString());
                                 }
                             });
-                                startActivity(new Intent(getApplicationContext(), Dashboard.class));
-                        }else{
+                            startActivity(new Intent(getApplicationContext(), PatientLogin.class));
+                        } else {
                             Toast.makeText(Register.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -157,35 +153,8 @@ public class Register extends AppCompatActivity {
             }
         });
 
-
-        }
-
-       /* patient = new Patient();
-
-        dbRef = FirebaseDatabase.getInstance().getReference().child("Patient");
-
-
-        registerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                patient.setEmail(emailTf.getText().toString().trim());
-                patient.setAge(Integer.parseInt(ageTf.getText().toString().trim()));
-                patient.setCity(cityTf.getText().toString().trim());
-                patient.setFirstName(firstNameTf.getText().toString().trim());
-                patient.setLastName(lastNameTf.getText().toString().trim());
-                patient.setMedicareNumber(medicareNumberTf.getText().toString().trim());
-                patient.setPhoneNumber(phoneNumberTf.getText().toString().trim());
-                patient.setPassword(passwordTf.getText().toString().trim());
-                patient.setPostCode(passwordTf.getText().toString().trim());
-                patient.setState(stateTf.getText().toString().trim());
-                patient.setStreetAddress(streetAddressTf.getText().toString().trim());
-
-                String patientEmail = patient.getEmail();
-
-               dbRef.child(patientEmail).setValue(patient);
-                Toast.makeText(Register.this, "data inserted successfully", Toast.LENGTH_LONG).show();
-            }
-        }); */
     }
 
-    /*To Do : add limiters for phone numbers, medicare numbers, postcode length, etc. ****/
+}
+
+

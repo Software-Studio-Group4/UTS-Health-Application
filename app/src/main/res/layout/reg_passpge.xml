@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/regpass_bg">
+
+    <Button
+        android:id="@+id/nextBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="111dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginBottom="199dp"
+        android:background="@drawable/next_button"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTf"
+        app:layout_constraintVertical_bias="0.125" />
+
+    <EditText
+        android:id="@+id/passwordTf"
+        android:layout_width="250dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/shape"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:textColor="#000000"
+        android:textColorHint="@color/common_google_signin_btn_text_light"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choosepassword" />
+
+    <TextView
+        android:id="@+id/choosepassword"
+        android:layout_width="219dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginTop="296dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginRight="96dp"
+        android:layout_marginBottom="339dp"
+        android:background="@drawable/regpass_text"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
