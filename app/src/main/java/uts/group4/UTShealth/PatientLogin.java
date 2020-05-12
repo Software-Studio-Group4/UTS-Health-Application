@@ -75,7 +75,7 @@ public class PatientLogin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), PatientResetPass.class));
-                CustomIntent.customType(PatientLogin.this, "left-to-right");
+                CustomIntent.customType(PatientLogin.this, "fadein-to-fadeout");
             }
         });
     }

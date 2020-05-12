@@ -13,13 +13,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import maes.tech.intentanim.CustomIntent;
 
 public class StaffDashboard extends AppCompatActivity {
+    FirebaseAuth fAuth;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staffdashboard_layout);
         Button logoutBtn = findViewById(R.id.logoutBtn);
-
+        fAuth = FirebaseAuth.getInstance();
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,7 +30,6 @@ public class StaffDashboard extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     @Override
