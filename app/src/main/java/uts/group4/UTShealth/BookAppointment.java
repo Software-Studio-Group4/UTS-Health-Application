@@ -35,7 +35,11 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
         Spinner spinner = findViewById(R.id.doctorSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.doctorNames,  android.R.layout.simple_spinner_item);
+
+        timeTextView = findViewById(R.id.timeTextView);
+        dateTextView = findViewById(R.id.dateTextView);
+        
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.doctorNames, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
@@ -46,7 +50,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     public void btn_PickerDate(View view) {
         DialogFragment fragment = new DatePickerFragment();
         fragment.show(getSupportFragmentManager(), "date picker");
-        dateTextView = findViewById(R.id.dateTextView);
     }
 
     public static void populateSetDateText(int year, int month, int day) {
@@ -56,7 +59,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     public void btn_PickerTime(View view) {
         DialogFragment fragment = new TimePickerFragment();
         fragment.show(getSupportFragmentManager(), "time picker");
-        timeTextView = findViewById(R.id.timeTextView);
     }
 
     public static void populateSetTimeText(int hour, int minute) {
@@ -84,38 +86,37 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String userID = fAuth.getCurrentUser().getUid();
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
-        DocumentReference docRef = fStore.collection("Patients").document(userID).collection("Appointments").document();
-        Map<String, Object> appointment = new HashMap<>();
-        appointment.put("Date", date);
-        appointment.put("Time", time);
 
         if (TextUtils.isEmpty(date)) {
-            dateTextView.setError("Must select date");
             Toast.makeText(BookAppointment.this, "Must select date", Toast.LENGTH_SHORT).show();
             return;
         }
         else if (TextUtils.isEmpty(time)) {
-            timeTextView.setError("Must select time");
             Toast.makeText(BookAppointment.this, "Must select time", Toast.LENGTH_SHORT).show();
             return;
         }
+        else {
 
-        fStore.collection("Patients").document(userID).collection("Appointments").document(String.valueOf(docRef))
-                .set(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
+                DocumentReference docRef = fStore.collection("Patients").document(userID).collection("Appointments").document();
+                Map<String, Object> appointment = new HashMap<>();
+                appointment.put("Date", date);
+                appointment.put("Time", time);
+                fStore.collection("Patients").document(userID).collection("Appointments").document(String.valueOf(docRef))
+                        .set(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
                     }
-                });
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+        }
 
+            startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
 
-        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-
-    }
+        }
     }
