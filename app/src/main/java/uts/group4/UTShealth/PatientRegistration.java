@@ -38,10 +38,16 @@ public class PatientRegistration extends AppCompatActivity {
     EditText emailTf;
     Button nextBtn;
 
+
     public static String getEmail() {
         return email;
     }
 
+    /*PAGE MANIPULATION METHODS*/
+    /**********************************************************************************************
+     * onCreate
+        *manipulates the page where the patient inputs email.
+    **********************************************************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,14 +72,10 @@ public class PatientRegistration extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        CustomIntent.customType(this, "left-to-right");
-    } // Fade transition
-
-    // Enter password page
-
+    /**********************************************************************************************
+     * RegisterPassPge
+     *manipulates the page where the patient registers password
+     ************************************************************************************************/
     public static class RegisterPassPge extends AppCompatActivity {
         private static final String TAG = "RegisterPassPge";
         private static String password;
@@ -119,8 +121,10 @@ public class PatientRegistration extends AppCompatActivity {
         } // Fade transition
     }
 
-    // Enter details page
-
+    /**********************************************************************************************
+     * RegisterDetailsPge
+     * manipulates the page where the patient inputs registration details (such as name, address etc)
+     ************************************************************************************************/
     public static class RegisterDetailsPge extends AppCompatActivity {
         private static final String TAG = "RegisterDetailsPge";
         String userEmail = getEmail();
@@ -164,6 +168,7 @@ public class PatientRegistration extends AppCompatActivity {
                     final String postCode = postCodeTf.getText().toString().trim();
                     final String state = stateTf.getText().toString().trim();
                     final String streetAddress = streetAddressTf.getText().toString().trim();
+                    final Map<String, Object> appointments = new HashMap<>();
 
                     if (TextUtils.isEmpty(firstName)) {
                         firstNameTf.setError("Cannot have Empty Field");
@@ -217,6 +222,7 @@ public class PatientRegistration extends AppCompatActivity {
                                 user.put("Post Code", postCode);
                                 user.put("State", state);
                                 user.put("Street Address", streetAddress);
+                                user.put("Appointments", appointments);
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -247,8 +253,10 @@ public class PatientRegistration extends AppCompatActivity {
         } // Fade transition
     }
 
-    // Registration finish page
-
+    /**********************************************************************************************
+     * RegisterFinishPge
+     * manipulates the page where it informs the patient that the registration is complete
+     ************************************************************************************************/
     public static class RegisterFinishPge extends AppCompatActivity {
 
         Button loginBtn;
@@ -275,4 +283,15 @@ public class PatientRegistration extends AppCompatActivity {
             CustomIntent.customType(this, "right-to-left");
         } // Fade transition
     }
+
+
+    /**********************************************************************************************
+     * OTHER METHODS
+     ************************************************************************************************/
+    @Override
+    public void finish() {
+        super.finish();
+        CustomIntent.customType(this, "left-to-right");
+    } // Fade transition
+
 }
