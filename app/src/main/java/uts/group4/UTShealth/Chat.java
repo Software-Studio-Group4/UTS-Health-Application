@@ -94,18 +94,19 @@ public class Chat extends AppCompatActivity {
     private ImageView mAddMessageImageView;
 
     private DatabaseReference mFirebaseDatabaseReference;
-    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser mFirebaseUser;
     private FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>
             mFirebaseAdapter;
     DocumentReference docRef;
+    FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_layout);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
-        mUsername = ANONYMOUS;
+        mUsername = firebaseUser.getEmail();
 
         // Initialize ProgressBar and RecyclerView.
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -147,6 +148,7 @@ public class Chat extends AppCompatActivity {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (Message.getText() != null) {
                     viewHolder.messageTextView.setText(Message.getText());
+                    viewHolder.messengerTextView.setText(Message.getName());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
                     viewHolder.messageImageView.setVisibility(ImageView.GONE);
                 } else if (Message.getImageUrl() != null) {
@@ -317,8 +319,6 @@ public class Chat extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in.
-        // TODO: Add code to check if user is signed in.
     }
 
     @Override
@@ -337,7 +337,6 @@ public class Chat extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
     }
-
 
 }
 

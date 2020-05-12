@@ -220,8 +220,10 @@
         android:layout_height="wrap_content"
         android:text="Billing Address"
         android:textColor="#5C5858"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="429dp" />
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/medicareNumberTf" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
