@@ -161,8 +161,8 @@ public class Chat extends AppCompatActivity {
                     viewHolder.messageTextView.setText(Message.getText());
                     viewHolder.messengerTextView.setText(Message.getName());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
-                    viewHolder.messageImageView.setVisibility(ImageView.GONE);
-                } else if (Message.getImageUrl() != null) {
+                    //viewHolder.messageImageView.setVisibility(ImageView.GONE);
+                } else if (Message.hasImageUrl()) {
                     imageUrl = Message.getImageUrl();
                     if (imageUrl.startsWith("gs://")) {
                         StorageReference storageReference = FirebaseStorage.getInstance()
