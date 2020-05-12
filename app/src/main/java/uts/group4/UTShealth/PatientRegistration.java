@@ -208,15 +208,15 @@ public class PatientRegistration extends AppCompatActivity {
                                 userID = fAuth.getCurrentUser().getUid();
                                 DocumentReference documentReference = fStore.collection("Patients").document(userID);
                                 Map<String, Object> user = new HashMap<>();
-                                user.put("email", userEmail);
-                                user.put("firstName", firstName);
-                                user.put("lastName", lastName);
-                                user.put("city", city);
-                                user.put("medicareNumber", medicareNumber);
-                                user.put("phoneNumber", phoneNumber);
-                                user.put("postCode", postCode);
-                                user.put("state", state);
-                                user.put("streetAddress", streetAddress);
+                                user.put("Email", userEmail);
+                                user.put("First Name", firstName);
+                                user.put("Last Name", lastName);
+                                user.put("City", city);
+                                user.put("Medicare Number", medicareNumber);
+                                user.put("Phone Number", phoneNumber);
+                                user.put("Post Code", postCode);
+                                user.put("State", state);
+                                user.put("Street Address", streetAddress);
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -276,4 +276,3 @@ public class PatientRegistration extends AppCompatActivity {
         } // Fade transition
     }
 }
-
