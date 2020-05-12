@@ -3,46 +3,54 @@ package uts.group4.UTShealth.Model;
 import android.os.Message;
 
 import java.util.Date;
+import java.util.Map;
 
 public class ChatMessage {
 
-    private String messageText;
-    private long messageTime;
-    private String messageUser;
+    private String id;
+    private String text;
+    private String name;
+    private String imageUrl;
 
-
-
-    public ChatMessage(String messageText, String messageUser) {
-        this.messageText = messageText;
-        this.messageUser = messageUser;
-        messageTime = new Date().getTime();
+    public ChatMessage() {
     }
 
-    public ChatMessage(){
-
+    public ChatMessage(String text, String name, String imageUrl) {
+        this.text = text;
+        this.name = name;
+        this.imageUrl = imageUrl;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public String getId() {
+        return id;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public long getMessageTime() {
-        return messageTime;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public void setMesssageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public String getName() {
+        return name;
     }
 
-    public String getMessageUser() {
-        return messageUser;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setMessageUser(String messageUser) {
-        this.messageUser = messageUser;
+
+    public String getText() {
+        return text;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

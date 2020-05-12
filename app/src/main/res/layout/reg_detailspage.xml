@@ -159,7 +159,7 @@
         android:id="@+id/streetAddressTf"
         android:layout_width="205dp"
         android:layout_height="38dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="44dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -193,7 +193,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.814" />
+        app:layout_constraintVertical_bias="0.277" />
 
     <TextView
         android:id="@+id/pleasefilldetails"
@@ -213,6 +213,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.546" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Billing Address"
+        android:textColor="#5C5858"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/medicareNumberTf" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
