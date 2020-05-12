@@ -65,6 +65,8 @@ import java.util.ArrayList;
 
 import uts.group4.UTShealth.Model.ChatMessage;
 public class Chat extends AppCompatActivity {
+    private static final java.util.UUID UUID = null;
+
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         ImageView messageImageView;
@@ -74,13 +76,13 @@ public class Chat extends AppCompatActivity {
         public MessageViewHolder(View v) {
             super(v);
             messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
-
+            messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
             messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
 
         }
     }
 
-    private static final String TAG = "Chat";
+    private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
     private static final int REQUEST_INVITE = 1;
     private static final int REQUEST_IMAGE = 2;
@@ -91,8 +93,8 @@ public class Chat extends AppCompatActivity {
     private String mUsername;
     private SharedPreferences mSharedPreferences;
     private static final String MESSAGE_URL = "https://uts-health-application.firebaseio.com/Chats";
-    String imageUrl;
     private Uri filePath;
+    String imageUrl;
 
     private Button mSendButton;
     private RecyclerView mMessageRecyclerView;
@@ -106,7 +108,7 @@ public class Chat extends AppCompatActivity {
     private FirebaseUser mFirebaseUser;
     private FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>
             mFirebaseAdapter;
-    private FirebaseStorage firebaseStorage;
+    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     DocumentReference docRef;
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
     @Override
@@ -159,8 +161,8 @@ public class Chat extends AppCompatActivity {
                     viewHolder.messageTextView.setText(Message.getText());
                     viewHolder.messengerTextView.setText(Message.getName());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
-                    viewHolder.messageImageView.setVisibility(ImageView.GONE);
-                } else if (Message.getImageUrl() != null) {
+                    //viewHolder.messageImageView.setVisibility(ImageView.GONE);
+                } else if (Message.hasImageUrl()) {
                     imageUrl = Message.getImageUrl();
                     if (imageUrl.startsWith("gs://")) {
                         StorageReference storageReference = FirebaseStorage.getInstance()
@@ -235,6 +237,7 @@ public class Chat extends AppCompatActivity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Send messages on click.
                 ChatMessage Message = new
                         ChatMessage(mMessageEditText.getText().toString(),
                         mUsername,
@@ -242,69 +245,59 @@ public class Chat extends AppCompatActivity {
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD)
                         .push().setValue(Message);
                 mMessageEditText.setText("");
+
             }
         });
 
-
-    }
-
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
+        mAddMessageImageView = (ImageView) findViewById(R.id.addMessageImageView);
+        mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // opens page to  Select image for image message.
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE);
+            }
+        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_IMAGE && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
+        // in the mAddMessageImageView page, this saves the path from the device then calls putImageInStorage()
+        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
             filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                mAddMessageImageView.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-    private void uploadImage() {
+            putImageInStorage();
 
-        if(filePath != null)
-        {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
 
-            StorageReference ref = firebaseStorage.getInstance().getReference().child("images").child(filePath.getLastPathSegment());
-            ref.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(Chat.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(Chat.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
         }
+
     }
+
+
+
+    private void putImageInStorage() {
+        // uploads the image into the database under the file named images
+        StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+        ref.putFile(filePath)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(Chat.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Chat.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        String dlURL = ref.getDownloadUrl().toString();
+    }
+
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -328,3 +321,5 @@ public class Chat extends AppCompatActivity {
     }
 
 }
+
+

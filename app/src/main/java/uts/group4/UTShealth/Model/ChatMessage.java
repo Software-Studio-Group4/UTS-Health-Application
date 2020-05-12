@@ -50,6 +50,10 @@ public class ChatMessage {
         return imageUrl;
     }
 
+    public boolean hasImageUrl(){
+        return imageUrl == null;
+    }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
