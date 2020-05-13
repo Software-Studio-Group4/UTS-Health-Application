@@ -2,12 +2,11 @@ package uts.group4.UTShealth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,22 +15,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firestore.v1.WriteResult;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import maes.tech.intentanim.CustomIntent;
 
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -39,6 +33,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     public static TextView timeTextView;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
+    Button backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +50,21 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         spinner.setOnItemSelectedListener(this);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+        backBtn = findViewById(R.id.backBtn14);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                CustomIntent.customType(BookAppointment.this, "fadein-to-fadeout");
+            }
+        });
+    }
+
+
+    @Override
+    public <T extends View> T findViewById(int id) {
+        return super.findViewById(id);
     }
 
     public void btn_PickerDate(View view) {

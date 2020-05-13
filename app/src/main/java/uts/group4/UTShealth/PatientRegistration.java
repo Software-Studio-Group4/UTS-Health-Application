@@ -178,11 +178,11 @@ public class PatientRegistration extends AppCompatActivity {
 
 
             backBtn3.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                startActivity(new Intent(getApplicationContext(), RegisterPassPge.class));
-                                                CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
-                                            }
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), RegisterPassPge.class));
+                    CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
+                }
             });
 
             nextBtn2.setOnClickListener(new View.OnClickListener() {
