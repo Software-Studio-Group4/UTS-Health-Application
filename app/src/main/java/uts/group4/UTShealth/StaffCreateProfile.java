@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,15 +28,19 @@ import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
 
-// Staff Profile Login Page
+/**********************************************************************************************
+ * Staff create profile login page
+ * manipulates the page where the staff member can login to create their profile
+ ************************************************************************************************/
 
 public class StaffCreateProfile extends AppCompatActivity {
-    Button nextBtn;
+    Button loginBtn;
     EditText emailTf, passwordTf;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
     private static String userEmail;
+    private static  String userPass;
 
     public static String getEmail() {
         return userEmail;
@@ -45,18 +50,21 @@ public class StaffCreateProfile extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staffcreateacc_layout);
-
+        final ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
-        nextBtn = findViewById(R.id.nextBtn);
+        loginBtn = findViewById(R.id.loginBtn);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        nextBtn.setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginBtn.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 userEmail = emailTf.getText().toString().trim();
-                final String userPass = passwordTf.getText().toString().trim();
+                userPass = passwordTf.getText().toString().trim();
                 if (TextUtils.isEmpty(userEmail)) {
                     emailTf.setError("Cannot have Empty Field");
                     return;
@@ -78,18 +86,27 @@ public class StaffCreateProfile extends AppCompatActivity {
                                     if (documentSnapshot.exists()) {
                                         startActivity(new Intent(getApplicationContext(), StaffAddDetails.class));
                                         CustomIntent.customType(StaffCreateProfile.this, "fadein-to-fadeout");
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        loginBtn.setVisibility(View.VISIBLE);
                                     } else {
                                         Toast.makeText(StaffCreateProfile.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        loginBtn.setVisibility(View.VISIBLE);
+                                        FirebaseAuth.getInstance().signOut();
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(StaffCreateProfile.this, "Database Error", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    loginBtn.setVisibility(View.VISIBLE);
                                 }
                             });
                         } else {
                             Toast.makeText(StaffCreateProfile.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                            loginBtn.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -104,7 +121,10 @@ public class StaffCreateProfile extends AppCompatActivity {
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
 
-    // Staff Profile Add Details
+    /**********************************************************************************************
+     * Staff add details page
+     * manipulates the page where the staff inputs registration details (such as name, address etc)
+     ************************************************************************************************/
 
     public static class StaffAddDetails extends AppCompatActivity {
         EditText firstNameTf, lastNameTf, phoneNumberTf, streetAddressTf,
@@ -201,7 +221,10 @@ public class StaffCreateProfile extends AppCompatActivity {
         } // Fade transition
     }
 
-    // Staff Profile finish page
+    /**********************************************************************************************
+     * Staff registration complete page
+     * manipulates the page where it informs the staff that registration is complete
+     ************************************************************************************************/
 
     public static class StaffFinishPage extends AppCompatActivity {
 

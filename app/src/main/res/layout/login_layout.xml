@@ -70,7 +70,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="36dp"
         android:background="@drawable/login_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
@@ -86,28 +86,37 @@
         android:layout_width="117dp"
         android:layout_height="16dp"
         android:layout_marginTop="28dp"
-        android:layout_marginBottom="264dp"
         android:background="@drawable/forgot_pass"
         android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:text=""
         android:onClick="forgotPass"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userLoginBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/userLoginBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ProgressBar
-        android:id="@+id/progressBar2"
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="172dp"
+        android:layout_marginLeft="172dp"
+        android:layout_marginTop="360dp"
+        android:layout_marginEnd="87dp"
+        android:layout_marginRight="87dp"
+        android:layout_marginBottom="327dp"
+        android:indeterminateDrawable="@drawable/progress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userLoginBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.276"
         tools:ignore="MissingConstraints" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

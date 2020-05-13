@@ -8,6 +8,27 @@
     tools:layout_editor_absoluteY="25dp">
 
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="172dp"
+        android:layout_marginLeft="172dp"
+        android:layout_marginTop="670dp"
+        android:layout_marginEnd="86dp"
+        android:layout_marginRight="86dp"
+        android:layout_marginBottom="17dp"
+        android:background="#FFFFFF"
+        android:indeterminateDrawable="@drawable/progress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.085"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        tools:ignore="MissingConstraints" />
+
     <EditText
         android:id="@+id/firstNameTf"
         android:layout_width="150dp"
@@ -191,10 +212,10 @@
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.101"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.736" />
 
     <TextView
         android:id="@+id/pleasefilldetails"
@@ -228,17 +249,17 @@
         android:fontFamily="sans-serif-black"
         android:switchPadding="5sp"
         android:text="Same as Billing Address"
-        android:theme="@style/SwitchTheme"
         android:textColor="#185586"
         android:textColorHighlight="#E7BA08"
         android:textColorHint="#0C0808"
         android:textColorLink="#FFFFFF"
+        android:theme="@style/SwitchTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintHorizontal_bias="0.187"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.714"
         tools:ignore="MissingConstraints" />
 
 

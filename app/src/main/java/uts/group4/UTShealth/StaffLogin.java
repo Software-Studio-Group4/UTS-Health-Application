@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,7 +53,9 @@ public class StaffLogin extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stafflogin_layout);
-        Button loginBtn = findViewById(R.id.loginBtn);
+        final Button loginBtn = findViewById(R.id.loginBtn);
+        final ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
         fAuth = FirebaseAuth.getInstance();
@@ -61,6 +64,8 @@ public class StaffLogin extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginBtn.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 final String userEmail = emailTf.getText().toString().trim();
                 final String userPass = passwordTf.getText().toString().trim();
                 if (TextUtils.isEmpty(userEmail)) {
@@ -84,19 +89,27 @@ public class StaffLogin extends AppCompatActivity {
                                     if (documentSnapshot.exists()) {
                                         startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
                                         CustomIntent.customType(StaffLogin.this, "fadein-to-fadeout");
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        loginBtn.setVisibility(View.VISIBLE);
                                     } else {
                                         Toast.makeText(StaffLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                                         FirebaseAuth.getInstance().signOut();
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        loginBtn.setVisibility(View.VISIBLE);
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(StaffLogin.this, "Database Error", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    loginBtn.setVisibility(View.VISIBLE);
                                 }
                             });
                         } else {
                             Toast.makeText(StaffLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                            loginBtn.setVisibility(View.VISIBLE);
                         }
                     }
                 });

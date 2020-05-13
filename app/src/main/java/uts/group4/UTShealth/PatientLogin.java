@@ -19,17 +19,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import maes.tech.intentanim.CustomIntent;
 
-// Patient Login Page
+/**********************************************************************************************
+ * Patient Login
+ * manipulates the page where the patient logs into their account
+ ************************************************************************************************/
 
 public class PatientLogin extends AppCompatActivity {
     private EditText emailTf, passwordTf;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
-
-    public void forgotPass(View view) {
-        startActivity(new Intent(getApplicationContext(), PatientResetPass.class));
-        CustomIntent.customType(PatientLogin.this, "left-to-right");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +36,17 @@ public class PatientLogin extends AppCompatActivity {
 
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
-        Button userLoginBtn = findViewById(R.id.userLoginBtn);
+        final Button userLoginBtn = findViewById(R.id.userLoginBtn);
         fAuth = FirebaseAuth.getInstance();
-        progressBar = findViewById(R.id.progressBar2);
-
+        progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
         userLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userLoginBtn.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+
                 String email = emailTf.getText().toString().trim();
                 String password = passwordTf.getText().toString().trim();
 
@@ -59,8 +59,6 @@ public class PatientLogin extends AppCompatActivity {
                     return;
                 }
 
-                progressBar.setVisibility(View.VISIBLE);
-
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -68,14 +66,21 @@ public class PatientLogin extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
                             CustomIntent.customType(PatientLogin.this, "left-to-right");
                             progressBar.setVisibility(View.INVISIBLE);
+                            userLoginBtn.setVisibility(View.VISIBLE);
                         } else {
                             Toast.makeText(PatientLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.INVISIBLE);
+                            userLoginBtn.setVisibility(View.VISIBLE);
                         }
                     }
                 });
             }
         });
+    }
+
+    public void forgotPass(View view) {
+        startActivity(new Intent(getApplicationContext(), PatientResetPass.class));
+        CustomIntent.customType(PatientLogin.this, "left-to-right");
     }
 
     @Override

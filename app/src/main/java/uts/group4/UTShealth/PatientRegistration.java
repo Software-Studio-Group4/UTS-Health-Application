@@ -3,10 +3,10 @@ package uts.group4.UTShealth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -30,8 +30,6 @@ import maes.tech.intentanim.CustomIntent;
 
 import static uts.group4.UTShealth.PatientRegistration.RegisterPassPge.getPass;
 
-// Enter email address page
-
 public class PatientRegistration extends AppCompatActivity {
     private static String email;
     EditText emailTf;
@@ -43,6 +41,7 @@ public class PatientRegistration extends AppCompatActivity {
     }
 
     /*PAGE MANIPULATION METHODS*/
+
     /**********************************************************************************************
      * onCreate
      *manipulates the page where the patient inputs email.
@@ -76,7 +75,6 @@ public class PatientRegistration extends AppCompatActivity {
      *manipulates the page where the patient registers password
      ************************************************************************************************/
     public static class RegisterPassPge extends AppCompatActivity {
-        private static final String TAG = "RegisterPassPge";
         private static String password;
         EditText passwordTf;
         Button nextBtn2;
@@ -90,11 +88,8 @@ public class PatientRegistration extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.reg_passpge);
-            Log.d(TAG, "oncreate: " + userEmail);
-
             passwordTf = findViewById(R.id.passwordTf);
             nextBtn2 = findViewById(R.id.nextBtn);
-
 
             nextBtn2.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,7 +102,6 @@ public class PatientRegistration extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), RegisterDetailsPge.class));
                         CustomIntent.customType(RegisterPassPge.this, "fadein-to-fadeout");
                     }
-
                 }
             });
 
@@ -125,13 +119,13 @@ public class PatientRegistration extends AppCompatActivity {
      * manipulates the page where the patient inputs registration details (such as name, address etc)
      ************************************************************************************************/
     public static class RegisterDetailsPge extends AppCompatActivity {
-        private static final String TAG = "RegisterDetailsPge";
         String userEmail = getEmail();
         String userPass = getPass();
 
         EditText firstNameTf, lastNameTf, medicareNumberTf, streetAddressTf,
                 cityTf, stateTf, postCodeTf, phoneNumberTf;
         Button nextBtn2;
+        ProgressBar progressBar;
         Switch billingSwitch;
         FirebaseAuth fAuth;
         FirebaseFirestore fStore;
@@ -141,7 +135,6 @@ public class PatientRegistration extends AppCompatActivity {
         protected void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.reg_detailspage);
-            Log.d(TAG, "onCreate " + userEmail + userPass);
 
             // GET ALL THE OBJECTS FROM THE VIEW TO MANIPULATE
             nextBtn2 = findViewById(R.id.nextBtn2);
@@ -154,6 +147,9 @@ public class PatientRegistration extends AppCompatActivity {
             stateTf = findViewById(R.id.stateTf);
             postCodeTf = findViewById(R.id.postCodeTf);
             phoneNumberTf = findViewById(R.id.phoneNumberTf);
+            progressBar = findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.INVISIBLE);
+
 
             fAuth = FirebaseAuth.getInstance();
             fStore = FirebaseFirestore.getInstance();
@@ -161,15 +157,19 @@ public class PatientRegistration extends AppCompatActivity {
             nextBtn2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    nextBtn2.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     final String city = cityTf.getText().toString().trim();
                     final String firstName = firstNameTf.getText().toString().trim();
                     final String lastName = lastNameTf.getText().toString().trim();
                     final String medicareNumber = medicareNumberTf.getText().toString().trim();
-                    final String phoneNumber = medicareNumberTf.getText().toString().trim();
+                    final String phoneNumber = phoneNumberTf.getText().toString().trim();
                     final String postCode = postCodeTf.getText().toString().trim();
                     final String state = stateTf.getText().toString().trim();
                     final String streetAddress = streetAddressTf.getText().toString().trim();
                     final Map<String, Object> appointments = new HashMap<>();
+
+                    String code = phoneNumber.substring(0,2);
 
                     if (TextUtils.isEmpty(firstName)) {
                         firstNameTf.setError("Cannot have Empty Field");
@@ -181,6 +181,10 @@ public class PatientRegistration extends AppCompatActivity {
                     }
                     if (TextUtils.isEmpty(phoneNumber)) {
                         phoneNumberTf.setError("Cannot have Empty Field");
+                        return;
+                    }
+                    if (!code.equals("04")){
+                        phoneNumberTf.setError("Must be a valid number");
                         return;
                     }
                     if (TextUtils.isEmpty(medicareNumber)) {
@@ -204,88 +208,50 @@ public class PatientRegistration extends AppCompatActivity {
                         return;
                     }
 
-                    String switchStatus;
-                    if (billingSwitch.isChecked()) {
-                        fAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(RegisterDetailsPge.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplicationContext(), RegisterFinishPge.class));
-                                    CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
-                                    userID = fAuth.getCurrentUser().getUid();
-                                    DocumentReference documentReference = fStore.collection("Patients").document(userID);
-                                    Map<String, Object> user = new HashMap<>();
-                                    user.put("Email", userEmail);
-                                    user.put("First Name", firstName);
-                                    user.put("Last Name", lastName);
-                                    user.put("City", city);
-                                    user.put("Medicare Number", medicareNumber);
-                                    user.put("Phone Number", phoneNumber);
-                                    user.put("Postcode", postCode);
-                                    user.put("State", state);
-                                    user.put("Street Address", streetAddress);
-                                    user.put("Appointments", appointments);
-                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "onSucess: user profile has been created for user" + userID);
+                    fAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                userID = fAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = fStore.collection("Patients").document(userID);
+                                Map<String, Object> user = new HashMap<>();
+                                user.put("Email", userEmail);
+                                user.put("First Name", firstName);
+                                user.put("Last Name", lastName);
+                                user.put("City", city);
+                                user.put("Medicare Number", medicareNumber);
+                                user.put("Phone Number", phoneNumber);
+                                user.put("Post Code", postCode);
+                                user.put("State", state);
+                                user.put("Street Address", streetAddress);
+                                user.put("Appointments", appointments);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        if (billingSwitch.isChecked()) {
+                                            Toast.makeText(RegisterDetailsPge.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getApplicationContext(), RegisterFinishPge.class));
+                                            CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            nextBtn2.setVisibility(View.VISIBLE);
+                                        } else {
+                                            Toast.makeText(RegisterDetailsPge.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getApplicationContext(), reg_billing_address.class));
+                                            CustomIntent.customType(RegisterDetailsPge.this, "left-to-right");
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            nextBtn2.setVisibility(View.VISIBLE);
                                         }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "onFailure" + e.toString());
-                                        }
-                                    });
-
-                                } else {
-                                    Toast.makeText(RegisterDetailsPge.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(RegisterDetailsPge.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.INVISIBLE);
+                                nextBtn2.setVisibility(View.VISIBLE);
                             }
-                        });
-
-                    } else {
-                        fAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(RegisterDetailsPge.this, "Registration successful", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplicationContext(), reg_billing_address.class));
-                                    CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
-                                    userID = fAuth.getCurrentUser().getUid();
-                                    DocumentReference documentReference = fStore.collection("Patients").document(userID);
-                                    Map<String, Object> user = new HashMap<>();
-                                    user.put("Email", userEmail);
-                                    user.put("First Name", firstName);
-                                    user.put("Last Name", lastName);
-                                    user.put("City", city);
-                                    user.put("Medicare Number", medicareNumber);
-                                    user.put("Phone Number", phoneNumber);
-                                    user.put("Post Code", postCode);
-                                    user.put("State", state);
-                                    user.put("Street Address", streetAddress);
-                                    user.put("Appointments", appointments);
-                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "onSucess: user profile has been created for user" + userID);
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "onFailure" + e.toString());
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(RegisterDetailsPge.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
+                        }
+                    });
                 }
             });
-
         }
 
         @Override
@@ -297,7 +263,7 @@ public class PatientRegistration extends AppCompatActivity {
 
     /**********************************************************************************************
      * Register Billing Address
-     * manipulates the page where the patient can enter their billing address
+     * manipulates the page where the patient enters their billing address
      ************************************************************************************************/
     public static class reg_billing_address extends AppCompatActivity {
         FirebaseAuth fAuth;
@@ -351,23 +317,21 @@ public class PatientRegistration extends AppCompatActivity {
             documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Log.d(TAG, "onSucess: user profile has been created for user" + userID);
+                    startActivity(new Intent(getApplicationContext(), RegisterFinishPge.class));
+                    CustomIntent.customType(reg_billing_address.this, "fadein-to-fadeout");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "onFailure" + e.toString());
+                    Toast.makeText(reg_billing_address.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            startActivity(new Intent(getApplicationContext(), RegisterFinishPge.class));
-            CustomIntent.customType(reg_billing_address.this, "fadein-to-fadeout");
         }
     }
 
     /**********************************************************************************************
      * RegisterFinishPge
-     * manipulates the page where it informs the patient that the registration is complete
+     * manipulates the page where it informs the patient that registration is complete
      ************************************************************************************************/
     public static class RegisterFinishPge extends AppCompatActivity {
 
@@ -405,5 +369,4 @@ public class PatientRegistration extends AppCompatActivity {
         super.finish();
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
-
 }
