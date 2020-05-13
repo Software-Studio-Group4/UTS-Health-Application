@@ -41,8 +41,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.UUID;
-
 import uts.group4.UTShealth.Model.ChatMessage;
 public class Chat extends AppCompatActivity {
     private static final java.util.UUID UUID = null;
