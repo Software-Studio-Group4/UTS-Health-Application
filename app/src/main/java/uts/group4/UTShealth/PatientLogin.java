@@ -35,10 +35,19 @@ public class PatientLogin extends AppCompatActivity {
         passwordTf = findViewById(R.id.passwordTf);
         Button userLoginBtn = findViewById(R.id.userLoginBtn);
         Button forgotpassBtn = findViewById(R.id.forgotpassBtn);
+        Button backBtn = findViewById(R.id.backBtn11);
         fAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar2);
 
         progressBar.setVisibility(View.INVISIBLE);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                CustomIntent.customType(PatientLogin.this, "fadein-to-fadeout");
+            }
+        });
 
         userLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

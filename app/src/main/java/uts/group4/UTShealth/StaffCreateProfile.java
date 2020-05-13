@@ -31,6 +31,7 @@ import maes.tech.intentanim.CustomIntent;
 
 public class StaffCreateProfile extends AppCompatActivity {
     Button nextBtn;
+    Button backBtn;
     EditText emailTf, passwordTf;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
@@ -49,8 +50,17 @@ public class StaffCreateProfile extends AppCompatActivity {
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
         nextBtn = findViewById(R.id.nextBtn);
+        backBtn = findViewById(R.id.backBtn7);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), StaffHomepage.class));
+                CustomIntent.customType(StaffCreateProfile.this, "fadein-to-fadeout");
+            }
+        });
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +120,7 @@ public class StaffCreateProfile extends AppCompatActivity {
         EditText firstNameTf, lastNameTf, phoneNumberTf, streetAddressTf,
                 cityTf, stateTf, postCodeTf;
         Button createProfileBtn;
+        Button backBtn;
         FirebaseAuth fAuth;
         FirebaseFirestore fStore;
         String userID;
@@ -121,6 +132,7 @@ public class StaffCreateProfile extends AppCompatActivity {
             setContentView(R.layout.staffadddetails_layout);
 
             createProfileBtn = findViewById(R.id.createProfileBtn);
+            backBtn =findViewById(R.id.backBtn8);
             firstNameTf = findViewById(R.id.firstNameTf);
             lastNameTf = findViewById(R.id.lastNameTf);
             phoneNumberTf = findViewById(R.id.phoneNumberTf);
@@ -128,9 +140,16 @@ public class StaffCreateProfile extends AppCompatActivity {
             cityTf = findViewById(R.id.cityTf);
             stateTf = findViewById(R.id.stateTf);
             postCodeTf = findViewById(R.id.postCodeTf);
-
             fAuth = FirebaseAuth.getInstance();
             fStore = FirebaseFirestore.getInstance();
+
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), StaffCreateProfile.class));
+                    CustomIntent.customType(StaffAddDetails.this, "fadein-to-fadeout");
+                }
+            });
 
             createProfileBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -210,6 +229,15 @@ public class StaffCreateProfile extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.stafffinish_layout);
             Button loginBtn = findViewById(R.id.loginBtn);
+            Button backBtn = findViewById(R.id.backBtn9);
+
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), StaffAddDetails.class));
+                    CustomIntent.customType(StaffFinishPage.this, "fadein-to-fadeout");
+                }
+            });
 
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

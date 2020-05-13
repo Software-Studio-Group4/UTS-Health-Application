@@ -64,6 +64,7 @@
         android:paddingLeft="5sp"
         android:paddingRight="5sp"
         android:text=""
+        android:maxLength= "10"
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
@@ -84,6 +85,7 @@
         android:paddingLeft="5sp"
         android:paddingRight="5sp"
         android:text=""
+        android:maxLength= "10"
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
@@ -124,6 +126,7 @@
         android:paddingLeft="5sp"
         android:paddingRight="5sp"
         android:text=""
+        android:maxLength= "4"
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
@@ -147,6 +150,7 @@
         android:paddingLeft="5sp"
         android:paddingRight="5sp"
         android:text=""
+        android:maxLength= "3"
         android:textColor="#000000"
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
@@ -183,17 +187,16 @@
         android:layout_marginStart="141dp"
         android:layout_marginLeft="141dp"
         android:layout_marginTop="630dp"
-        android:layout_marginEnd="141dp"
-        android:layout_marginRight="141dp"
         android:layout_marginBottom="26dp"
         android:background="@drawable/next_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/backBtn3"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.277" />
+        app:layout_constraintVertical_bias="0.37" />
 
     <TextView
         android:id="@+id/pleasefilldetails"
@@ -224,6 +227,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/medicareNumberTf" />
+
+    <Button
+        android:id="@+id/backBtn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="112dp"
+        android:layout_marginRight="112dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

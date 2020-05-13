@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +23,7 @@ public class PatientResetPass extends AppCompatActivity {
     private EditText emailTf;
     private String userEmail;
     Button resetBtn;
+    Button backBtn;
     FirebaseAuth fAuth;
 
     @Override
@@ -29,8 +31,17 @@ public class PatientResetPass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resetpass_layout);
         resetBtn = findViewById(R.id.resetBtn);
+        backBtn = findViewById(R.id.backBtn12);
         emailTf = findViewById(R.id.emailTf);
         fAuth = FirebaseAuth.getInstance();
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), PatientLogin.class));
+                CustomIntent.customType(PatientResetPass.this, "fadein-to-fadeout");
+            }
+        });
 
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override

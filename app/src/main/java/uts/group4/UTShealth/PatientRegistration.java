@@ -19,8 +19,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -37,6 +35,7 @@ public class PatientRegistration extends AppCompatActivity {
     private static String email;
     EditText emailTf;
     Button nextBtn;
+    Button backBtn;
 
 
     public static String getEmail() {
@@ -55,6 +54,15 @@ public class PatientRegistration extends AppCompatActivity {
 
         nextBtn = findViewById(R.id.nextBtn);
         emailTf = findViewById(R.id.emailTf);
+        backBtn = findViewById(R.id.backBtn);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                CustomIntent.customType(PatientRegistration.this, "fadein-to-fadeout");
+            }
+        });
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +89,7 @@ public class PatientRegistration extends AppCompatActivity {
         private static String password;
         EditText passwordTf;
         Button nextBtn2;
+        Button backBtn2;
         String userEmail = getEmail();
 
         public static String getPass() {
@@ -95,6 +104,15 @@ public class PatientRegistration extends AppCompatActivity {
 
             passwordTf = findViewById(R.id.passwordTf);
             nextBtn2 = findViewById(R.id.nextBtn);
+            backBtn2 = findViewById(R.id.backBtn2);
+
+            backBtn2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), PatientRegistration.class));
+                    CustomIntent.customType(RegisterPassPge.this, "fadein-to-fadeout");
+                }
+            });
 
 
             nextBtn2.setOnClickListener(new View.OnClickListener() {
@@ -104,10 +122,9 @@ public class PatientRegistration extends AppCompatActivity {
 
                     if (TextUtils.isEmpty(password)) {
                         passwordTf.setError("Cannot have Empty Field");
-                    } else {
+                    }
                         startActivity(new Intent(getApplicationContext(), RegisterDetailsPge.class));
                         CustomIntent.customType(RegisterPassPge.this, "fadein-to-fadeout");
-                    }
 
                 }
             });
@@ -133,6 +150,7 @@ public class PatientRegistration extends AppCompatActivity {
         EditText firstNameTf, lastNameTf, medicareNumberTf, streetAddressTf,
                 cityTf, stateTf, postCodeTf, phoneNumberTf;
         Button nextBtn2;
+        Button backBtn3;
         FirebaseAuth fAuth;
         FirebaseFirestore fStore;
         String userID;
@@ -145,6 +163,7 @@ public class PatientRegistration extends AppCompatActivity {
 
             // GET ALL THE OBJECTS FROM THE VIEW TO MANIPULATE
             nextBtn2 = findViewById(R.id.nextBtn2);
+            backBtn3 = findViewById(R.id.backBtn3);
             firstNameTf = findViewById(R.id.firstNameTf);
             lastNameTf = findViewById(R.id.lastNameTf);
             medicareNumberTf = findViewById(R.id.medicareNumberTf);
@@ -157,6 +176,15 @@ public class PatientRegistration extends AppCompatActivity {
             fAuth = FirebaseAuth.getInstance();
             fStore = FirebaseFirestore.getInstance();
 
+
+            backBtn3.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                startActivity(new Intent(getApplicationContext(), RegisterPassPge.class));
+                                                CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
+                                            }
+            });
+
             nextBtn2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -164,11 +192,13 @@ public class PatientRegistration extends AppCompatActivity {
                     final String firstName = firstNameTf.getText().toString().trim();
                     final String lastName = lastNameTf.getText().toString().trim();
                     final String medicareNumber = medicareNumberTf.getText().toString().trim();
-                    final String phoneNumber = medicareNumberTf.getText().toString().trim();
+                    final String phoneNumber = phoneNumberTf.getText().toString().trim();
                     final String postCode = postCodeTf.getText().toString().trim();
                     final String state = stateTf.getText().toString().trim();
                     final String streetAddress = streetAddressTf.getText().toString().trim();
                     final Map<String, Object> appointments = new HashMap<>();
+
+                    String code = phoneNumber.substring(0,2);
 
                     if (TextUtils.isEmpty(firstName)) {
                         firstNameTf.setError("Cannot have Empty Field");
@@ -180,6 +210,10 @@ public class PatientRegistration extends AppCompatActivity {
                     }
                     if (TextUtils.isEmpty(phoneNumber)) {
                         phoneNumberTf.setError("Cannot have Empty Field");
+                        return;
+                    }
+                    if (!code.equals("04")){
+                        phoneNumberTf.setError("Must be a valid number");
                         return;
                     }
                     if (TextUtils.isEmpty(medicareNumber)) {
@@ -244,6 +278,7 @@ public class PatientRegistration extends AppCompatActivity {
                 }
             });
 
+
         }
 
         @Override
@@ -260,6 +295,7 @@ public class PatientRegistration extends AppCompatActivity {
     public static class RegisterFinishPge extends AppCompatActivity {
 
         Button loginBtn;
+        Button backBtn4;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -267,6 +303,15 @@ public class PatientRegistration extends AppCompatActivity {
             setContentView(R.layout.reg_finishpge);
 
             loginBtn = findViewById(R.id.loginBtn);
+            backBtn4 = findViewById(R.id.backBtn4);
+
+            backBtn4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), RegisterDetailsPge.class));
+                    CustomIntent.customType(RegisterFinishPge.this, "fadein-to-fadeout");
+                }
+            });
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

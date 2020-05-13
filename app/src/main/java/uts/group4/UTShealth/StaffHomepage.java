@@ -41,10 +41,19 @@ public class StaffHomepage extends AppCompatActivity {
         Button createBtn = findViewById(R.id.createBtn);
         Button loginBtn = findViewById(R.id.loginBtn);
         Button forgotPassBtn = findViewById(R.id.forgotpassBtn);
+        Button backBtn = findViewById(R.id.backBtn5);
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                CustomIntent.customType(StaffHomepage.this, "fadein-to-fadeout");
+            }
+        });
 
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
