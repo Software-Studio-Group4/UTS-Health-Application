@@ -24,6 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -68,9 +70,17 @@ public class PatientRegistration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 email = emailTf.getText().toString().trim();
+                String emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";  //Email regex. Change this to change email format required.
+                Pattern emailPattern = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
+                Matcher matcher = emailPattern.matcher(email);
+                boolean isValid = matcher.find();
 
                 if (TextUtils.isEmpty(email)) {
                     emailTf.setError("Cannot have an empty field");
+                    return;
+                }
+                if (isValid == false) {
+                    emailTf.setError("Not a valid email address");
                     return;
                 }
                 startActivity(new Intent(getApplicationContext(), RegisterPassPge.class));
@@ -119,9 +129,18 @@ public class PatientRegistration extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     password = passwordTf.getText().toString().trim();
+                    String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.{6,})";  //Password regex. Change this to change password complexity requirements
+                    Pattern emailPattern = Pattern.compile(passwordRegex);
+                    Matcher matcher = emailPattern.matcher(password);
+                    boolean isValid = matcher.find();
 
                     if (TextUtils.isEmpty(password)) {
                         passwordTf.setError("Cannot have Empty Field");
+                        return;
+                    }
+                    if (isValid == false) {
+                        passwordTf.setError("Password is not complex enough!");
+                        return;
                     }
                         startActivity(new Intent(getApplicationContext(), RegisterDetailsPge.class));
                         CustomIntent.customType(RegisterPassPge.this, "fadein-to-fadeout");
