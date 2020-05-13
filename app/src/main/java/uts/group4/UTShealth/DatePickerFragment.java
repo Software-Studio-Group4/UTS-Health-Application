@@ -2,7 +2,6 @@ package uts.group4.UTShealth;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
@@ -27,7 +26,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        populateSetDateText(year,month,day);
+        populateSetDateText(year,month + 1, day);
 
     }
 }

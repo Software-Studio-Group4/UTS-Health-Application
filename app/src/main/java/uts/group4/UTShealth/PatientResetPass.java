@@ -18,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import maes.tech.intentanim.CustomIntent;
 
 public class PatientResetPass extends AppCompatActivity {
-    private static final String TAG = "ResetPassword";
     private EditText emailTf;
     private String userEmail;
     Button resetBtn;
@@ -61,6 +60,6 @@ public class PatientResetPass extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        CustomIntent.customType(this, "fadein-to-fadeout");
+        CustomIntent.customType(this, "right-to-left");
     } // Fade transition
 }

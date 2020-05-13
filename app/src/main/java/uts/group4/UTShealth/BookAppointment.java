@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
         timeTextView = findViewById(R.id.timeTextView);
         dateTextView = findViewById(R.id.dateTextView);
-        
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.doctorNames, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -61,6 +62,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         fragment.show(getSupportFragmentManager(), "time picker");
     }
 
+    //Changes the heading of the calendar view
     public static void populateSetTimeText(int hour, int minute) {
         String amPm;
         if (hour >= 12) {
@@ -81,11 +83,15 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
     }
 
-    // Save appointment in Firebase
+    // confirm the appointment (data stored in firestore)
     public void confirmAppt(View view) {
         String userID = fAuth.getCurrentUser().getUid();
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
+        String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
+
+        DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
+
 
         if (TextUtils.isEmpty(date)) {
             Toast.makeText(BookAppointment.this, "Must select date", Toast.LENGTH_SHORT).show();
@@ -96,27 +102,32 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             return;
         }
         else {
+            // sets the target document reference to the Appointment collection in the firestore.
+            Map<String, Object> appointmentData = new HashMap<>(); //
+            appointmentData.put("patientID", userID);
+            appointmentData.put("Date", date);
+            appointmentData.put("Time", time);
 
-                DocumentReference docRef = fStore.collection("Patients").document(userID).collection("Appointments").document();
-                Map<String, Object> appointment = new HashMap<>();
-                appointment.put("Date", date);
-                appointment.put("Time", time);
-                fStore.collection("Patients").document(userID).collection("Appointments").document(String.valueOf(docRef))
-                        .set(appointment).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+            //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
+            appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
+            DocumentReference patientDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
+            patientDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
         }
+        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
 
-            startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-
-        }
     }
+
+}

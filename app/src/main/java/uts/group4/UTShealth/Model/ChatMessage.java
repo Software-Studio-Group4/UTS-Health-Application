@@ -1,10 +1,5 @@
 package uts.group4.UTShealth.Model;
 
-import android.os.Message;
-
-import java.util.Date;
-import java.util.Map;
-
 public class ChatMessage {
 
     private String id;
@@ -50,7 +45,15 @@ public class ChatMessage {
         return imageUrl;
     }
 
+    public boolean hasImageUrl(){
+        return imageUrl == null;
+    }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void setMessageText(String toString) {
+
     }
 }

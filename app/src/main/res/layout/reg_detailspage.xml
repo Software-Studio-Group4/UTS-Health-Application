@@ -151,7 +151,7 @@
         android:textColorHint="@color/common_google_signin_btn_text_light"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/postCodeTf"
-        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintHorizontal_bias="0.083"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cityTf" />
 
@@ -159,7 +159,7 @@
         android:id="@+id/streetAddressTf"
         android:layout_width="205dp"
         android:layout_height="38dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/shape"
         android:ems="10"
         android:fontFamily="sans-serif-light"
@@ -182,18 +182,19 @@
         android:layout_height="57dp"
         android:layout_marginStart="141dp"
         android:layout_marginLeft="141dp"
-        android:layout_marginTop="630dp"
-        android:layout_marginEnd="141dp"
-        android:layout_marginRight="141dp"
-        android:layout_marginBottom="26dp"
+        android:layout_marginTop="661dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginBottom="17dp"
         android:background="@drawable/next_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.277" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/pleasefilldetails"
@@ -214,16 +215,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.546" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <Switch
+        android:id="@+id/billing_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Billing Address"
-        android:textColor="#5C5858"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="97dp"
+        android:layout_marginLeft="97dp"
+        android:layout_marginTop="627dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginBottom="75dp"
+        android:fontFamily="sans-serif-black"
+        android:switchPadding="5sp"
+        android:text="Same as Billing Address"
+        android:theme="@style/SwitchTheme"
+        android:textColor="#185586"
+        android:textColorHighlight="#E7BA08"
+        android:textColorHint="#0C0808"
+        android:textColorLink="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.217"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicareNumberTf" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

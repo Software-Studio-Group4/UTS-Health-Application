@@ -8,15 +8,5 @@
     <string name="register">register</string>
     <string name="submit">submit</string>
     <string name="uts">UTS</string>
-<<<<<<<<< Temporary merge branch 1
-    <string name = "example_email">someone@domain.com</string>>
-
-    <string-array name="doctorNames">
-        <item>Doctor A</item>
-        <item>Doctor B</item>
-    </string-array>
-
-=========
     <string name="example_email">someone@domain.com</string>>
->>>>>>>>> Temporary merge branch 2
 </resources>

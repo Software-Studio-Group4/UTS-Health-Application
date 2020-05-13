@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar" />
@@ -57,6 +57,10 @@
         <item name="android:background">#ffffff</item>
         <item name="android:textSize">18sp</item>
         <item name="android:inputType">textPassword</item>
+    </style>
+
+    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+        <item name="android:colorControlActivated" tools:targetApi="lollipop">#148E13</item>
     </style>
 
 </resources>

@@ -214,7 +214,7 @@ public class StaffCreateProfile extends AppCompatActivity {
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(getApplicationContext(), StaffHomepage.class));
+                    startActivity(new Intent(getApplicationContext(), StaffLogin.class));
                     CustomIntent.customType(StaffFinishPage.this, "left-to-right");
                 }
             });

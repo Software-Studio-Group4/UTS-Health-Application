@@ -27,48 +27,36 @@ import maes.tech.intentanim.CustomIntent;
 
 // Staff Homepage
 
-public class StaffHomepage extends AppCompatActivity {
+public class StaffLogin extends AppCompatActivity {
     EditText emailTf, passwordTf;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
 
+    public void forgotPass(View view) {
+        startActivity(new Intent(getApplicationContext(), StaffResetPass.class));
+        CustomIntent.customType(StaffLogin.this, "fadein-to-fadeout");
+    }
+
+    public void requestAcc(View view) {
+        startActivity(new Intent(getApplicationContext(), StaffRequestAcc.class));
+        CustomIntent.customType(StaffLogin.this, "left-to-right");
+    }
+
+    public void createAcc(View view) {
+        startActivity(new Intent(getApplicationContext(), StaffCreateProfile.class));
+        CustomIntent.customType(StaffLogin.this, "right-to-left");
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.staffhomepage_layout);
-        Button requestBtn = findViewById(R.id.requestBtn);
-        Button createBtn = findViewById(R.id.createBtn);
+        setContentView(R.layout.stafflogin_layout);
         Button loginBtn = findViewById(R.id.loginBtn);
-        Button forgotPassBtn = findViewById(R.id.forgotpassBtn);
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-
-        requestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StaffRequestAcc.class));
-                CustomIntent.customType(StaffHomepage.this, "left-to-right");
-            }
-        });
-
-        createBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StaffCreateProfile.class));
-                CustomIntent.customType(StaffHomepage.this, "right-to-left");
-            }
-        });
-
-        forgotPassBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StaffResetPass.class));
-                CustomIntent.customType(StaffHomepage.this, "fadein-to-fadeout");
-            }
-        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,19 +83,20 @@ public class StaffHomepage extends AppCompatActivity {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if (documentSnapshot.exists()) {
                                         startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
-                                        CustomIntent.customType(StaffHomepage.this, "fadein-to-fadeout");
+                                        CustomIntent.customType(StaffLogin.this, "fadein-to-fadeout");
                                     } else {
-                                        Toast.makeText(StaffHomepage.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(StaffLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                                        FirebaseAuth.getInstance().signOut();
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(StaffHomepage.this, "Database Error", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(StaffLogin.this, "Database Error", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } else {
-                            Toast.makeText(StaffHomepage.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(StaffLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

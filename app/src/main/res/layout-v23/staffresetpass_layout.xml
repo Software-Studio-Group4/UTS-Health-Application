@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/blue_rectangle"
-        android:layout_width="309dp"
-        android:layout_height="174dp"
+        android:layout_width="353dp"
+        android:layout_height="209dp"
         android:layout_marginStart="42dp"
         android:layout_marginLeft="42dp"
         android:layout_marginTop="124dp"
@@ -18,10 +18,10 @@
         android:layout_marginBottom="437dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.057"
         app:srcCompat="@drawable/rectangle_blue"
         tools:ignore="MissingConstraints" />
 
@@ -55,19 +55,20 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/blue_rectangle"
         app:layout_constraintEnd_toEndOf="@+id/blue_rectangle"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="@+id/blue_rectangle"
         app:layout_constraintTop_toBottomOf="@+id/reset_text"
-        app:layout_constraintVertical_bias="0.52"
+        app:layout_constraintVertical_bias="0.398"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/reset_text"
         android:layout_width="207dp"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/staffpassreset_text"
         app:layout_constraintEnd_toEndOf="@+id/blue_rectangle"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="@+id/blue_rectangle"
         app:layout_constraintTop_toTopOf="@+id/blue_rectangle"
         tools:ignore="MissingConstraints" />

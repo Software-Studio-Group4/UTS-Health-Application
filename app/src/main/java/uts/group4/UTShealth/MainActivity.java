@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         staffBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StaffHomepage.class));
+                startActivity(new Intent(getApplicationContext(), StaffLogin.class));
                 CustomIntent.customType(MainActivity.this, "up-to-bottom");
             }
         });

@@ -90,6 +90,7 @@
         android:background="@drawable/forgot_pass"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text=""
+        android:onClick="forgotPass"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"

@@ -26,6 +26,11 @@ public class PatientLogin extends AppCompatActivity {
     FirebaseAuth fAuth;
     ProgressBar progressBar;
 
+    public void forgotPass(View view) {
+        startActivity(new Intent(getApplicationContext(), PatientResetPass.class));
+        CustomIntent.customType(PatientLogin.this, "left-to-right");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +39,6 @@ public class PatientLogin extends AppCompatActivity {
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);
         Button userLoginBtn = findViewById(R.id.userLoginBtn);
-        Button forgotpassBtn = findViewById(R.id.forgotpassBtn);
         fAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar2);
 
@@ -61,25 +65,18 @@ public class PatientLogin extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(PatientLogin.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                            CustomIntent.customType(PatientLogin.this, "left-to-right");
+                            progressBar.setVisibility(View.INVISIBLE);
                         } else {
                             Toast.makeText(PatientLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
             }
         });
-
-        forgotpassBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), PatientResetPass.class));
-                CustomIntent.customType(PatientLogin.this, "fadein-to-fadeout");
-            }
-        });
     }
-
 
     @Override
     public void finish() {
