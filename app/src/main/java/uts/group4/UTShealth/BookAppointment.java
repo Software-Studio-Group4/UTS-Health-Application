@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,12 +25,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import maes.tech.intentanim.CustomIntent;
+
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
     public static TextView timeTextView;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
+    Button backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,21 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         spinner.setOnItemSelectedListener(this);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+        backBtn = findViewById(R.id.backBtn14);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                CustomIntent.customType(BookAppointment.this, "fadein-to-fadeout");
+            }
+        });
+    }
+
+
+    @Override
+    public <T extends View> T findViewById(int id) {
+        return super.findViewById(id);
     }
 
     public void btn_PickerDate(View view) {

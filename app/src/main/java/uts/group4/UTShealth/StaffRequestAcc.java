@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +22,7 @@ import maes.tech.intentanim.CustomIntent;
 public class StaffRequestAcc extends AppCompatActivity {
     EditText fullNameTf, emailTf, phoneNumberTf;
     Button requestBtn;
+    Button backBtn;
     DatabaseReference ref;
     Member member;
 
@@ -33,6 +35,15 @@ public class StaffRequestAcc extends AppCompatActivity {
         emailTf = findViewById(R.id.emailTf);
         phoneNumberTf = findViewById(R.id.phoneNumberTf);
         requestBtn = findViewById(R.id.requestBtn);
+        backBtn = findViewById(R.id.backBtn6);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), StaffHomepage.class));
+                CustomIntent.customType(StaffRequestAcc.this, "fadein-to-fadeout");
+            }
+        });
 
         member = new Member();
         ref = FirebaseDatabase.getInstance().getReference().child("StaffAccReq");
