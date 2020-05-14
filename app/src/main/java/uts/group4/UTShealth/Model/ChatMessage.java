@@ -52,8 +52,4 @@ public class ChatMessage {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
-    public void setMessageText(String toString) {
-
-    }
 }

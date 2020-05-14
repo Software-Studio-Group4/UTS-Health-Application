@@ -31,14 +31,13 @@ public class StaffResetPass extends AppCompatActivity {
         setContentView(R.layout.staffresetpass_layout);
 
         resetBtn = findViewById(R.id.resetBtn);
-        backBtn = findViewById(R.id.backBtn13);
         emailTf = findViewById(R.id.emailTf);
         fAuth = FirebaseAuth.getInstance();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StaffHomepage.class));
+                startActivity(new Intent(getApplicationContext(), StaffLogin.class));
                 CustomIntent.customType(StaffResetPass.this, "fadein-to-fadeout");
             }
         });

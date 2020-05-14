@@ -21,15 +21,7 @@ public class StaffDashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staffdashboard_layout);
         Button logoutBtn = findViewById(R.id.logoutBtn);
-        Button backBtn = findViewById(R.id.backBtn10);
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StaffHomepage.class));
-                CustomIntent.customType(StaffDashboard.this, "fadein-to-fadeout");
-            }
-        });
         fAuth = FirebaseAuth.getInstance();
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override

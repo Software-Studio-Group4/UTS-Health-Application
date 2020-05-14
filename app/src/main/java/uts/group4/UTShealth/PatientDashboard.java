@@ -80,7 +80,7 @@ public class PatientDashboard extends AppCompatActivity {
     }
 
     /**********************************************************************************************
-     * Onlclick methods and other methods
+     * Onlclick and other methods
      ************************************************************************************************/
 
     public void pastAppt(View view) {

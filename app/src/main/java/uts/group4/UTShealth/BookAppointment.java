@@ -27,7 +27,6 @@ import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
 
-
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
     public static TextView timeTextView;

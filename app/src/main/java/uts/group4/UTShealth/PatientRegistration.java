@@ -25,16 +25,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import maes.tech.intentanim.CustomIntent;
 
 import static uts.group4.UTShealth.PatientRegistration.RegisterPassPge.getPass;
 
+// Enter email address page
+
 public class PatientRegistration extends AppCompatActivity {
     private static String email;
     EditText emailTf;
     Button nextBtn;
-
 
     public static String getEmail() {
         return email;
@@ -58,9 +61,17 @@ public class PatientRegistration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 email = emailTf.getText().toString().trim();
+                String emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";  //Email regex. Change this to change email format required.
+                Pattern emailPattern = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
+                Matcher matcher = emailPattern.matcher(email);
+                boolean isValid = matcher.find();
 
                 if (TextUtils.isEmpty(email)) {
                     emailTf.setError("Cannot have an empty field");
+                    return;
+                }
+                if (!isValid) {
+                    emailTf.setError("Not a valid email address");
                     return;
                 }
                 startActivity(new Intent(getApplicationContext(), RegisterPassPge.class));
@@ -95,13 +106,29 @@ public class PatientRegistration extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     password = passwordTf.getText().toString().trim();
+                    String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.{6,})";  //Password regex. Change this to change password complexity requirements
+                    Pattern emailPattern = Pattern.compile(passwordRegex);
+                    Matcher matcher = emailPattern.matcher(password);
+                    boolean isValid = matcher.find();
 
                     if (TextUtils.isEmpty(password)) {
                         passwordTf.setError("Cannot have Empty Field");
-                    } else {
+                        return;
+                    }
+                    if (!isValid) {                                            //Checks for password complexity and lets users know what they're missing
+                        if (!password.matches("(.{6,})")) {
+                            passwordTf.setError("Password must contain 6 characters or more");
+                            return;
+                        }else if (!password.matches("(.*[a-z])")) {
+                            passwordTf.setError("Password must contain at least one lowercase character");
+                            return;
+                        }else if (!password.matches("(.*[A-Z])")) {
+                            passwordTf.setError("Password must contain at least one uppercase character");
+                            return;
+                        }
+                    }
                         startActivity(new Intent(getApplicationContext(), RegisterDetailsPge.class));
                         CustomIntent.customType(RegisterPassPge.this, "fadein-to-fadeout");
-                    }
                 }
             });
 
@@ -331,7 +358,7 @@ public class PatientRegistration extends AppCompatActivity {
 
     /**********************************************************************************************
      * RegisterFinishPge
-     * manipulates the page where it informs the patient that registration is complete
+     * manipulates the page where it informs the patient that the registration is complete
      ************************************************************************************************/
     public static class RegisterFinishPge extends AppCompatActivity {
 

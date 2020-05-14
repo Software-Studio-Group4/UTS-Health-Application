@@ -36,7 +36,7 @@ public class StaffLogin extends AppCompatActivity {
 
     public void forgotPass(View view) {
         startActivity(new Intent(getApplicationContext(), StaffResetPass.class));
-        CustomIntent.customType(StaffLogin.this, "fadein-to-fadeout");
+        CustomIntent.customType(StaffLogin.this, "left-to-right");
     }
 
     public void requestAcc(View view) {
