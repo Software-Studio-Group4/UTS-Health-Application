@@ -79,7 +79,7 @@ public class PatientRegistration extends AppCompatActivity {
                     emailTf.setError("Cannot have an empty field");
                     return;
                 }
-                if (isValid == false) {
+                if (!isValid) {
                     emailTf.setError("Not a valid email address");
                     return;
                 }
@@ -138,9 +138,17 @@ public class PatientRegistration extends AppCompatActivity {
                         passwordTf.setError("Cannot have Empty Field");
                         return;
                     }
-                    if (isValid == false) {
-                        passwordTf.setError("Password is not complex enough!");
-                        return;
+                    if (!isValid) {                                            //Checks for password complexity and lets users know what they're missing
+                        if (!password.matches("(.{6,})")) {
+                            passwordTf.setError("Password must contain 6 characters or more");
+                            return;
+                        }else if (!password.matches("(.*[a-z])")) {
+                            passwordTf.setError("Password must contain at least one lowercase character");
+                            return;
+                        }else if (!password.matches("(.*[A-Z])")) {
+                            passwordTf.setError("Password must contain at least one uppercase character");
+                            return;
+                        }
                     }
                         startActivity(new Intent(getApplicationContext(), RegisterDetailsPge.class));
                         CustomIntent.customType(RegisterPassPge.this, "fadein-to-fadeout");
