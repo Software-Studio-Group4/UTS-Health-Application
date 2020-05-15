@@ -39,15 +39,15 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
-        Spinner spinner = findViewById(R.id.doctorSpinner);
+        Spinner docSpinner = findViewById(R.id.doctorSpinner);
 
         timeTextView = findViewById(R.id.timeTextView);
         dateTextView = findViewById(R.id.dateTextView);
         
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.doctorNames, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        docSpinner.setAdapter(adapter);
+        docSpinner.setOnItemSelectedListener(this);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
