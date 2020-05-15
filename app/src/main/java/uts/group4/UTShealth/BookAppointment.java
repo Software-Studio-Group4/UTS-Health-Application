@@ -107,15 +107,14 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
         String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
-
-        DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
-
+        DocumentReference appointmentRef = fStore.collection("Appointment").document(userID).collection("Appointments").document(appointmentID); //sets reference to this appointment object
+        DocumentReference docRef = fStore.collection("Appointment").document(userID);
 
         if (TextUtils.isEmpty(date)) {
             Toast.makeText(BookAppointment.this, "Must select date", Toast.LENGTH_SHORT).show();
             return;
         }
-        else if (TextUtils.isEmpty(time)) {
+        if (TextUtils.isEmpty(time)) {
             Toast.makeText(BookAppointment.this, "Must select time", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -125,6 +124,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("patientID", userID);
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
+
+            Map<String, Object> patientData = new HashMap<> ();
+            patientData.put("patientID", userID);
 
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -140,12 +142,12 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                         }
                     });
 
+            docRef.set(patientData);
+
             //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
             DocumentReference patientDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
             patientDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
         }
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-
     }
-
 }
