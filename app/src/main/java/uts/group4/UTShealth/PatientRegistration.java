@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -223,7 +224,7 @@ public class PatientRegistration extends AppCompatActivity {
                     final String postCode = postCodeTf.getText().toString().trim();
                     final String state = stateTf.getText().toString().trim();
                     final String streetAddress = streetAddressTf.getText().toString().trim();
-                    final Map<String, Object> appointments = new HashMap<>();
+                    final ArrayList<String> appointments = new ArrayList<String>();
 
                     String code = phoneNumber.substring(0,2);
 
