@@ -1,13 +1,20 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+
+import android.text.TextWatcher;
+
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -181,6 +188,32 @@ public class PatientRegistration extends AppCompatActivity {
 
             fAuth = FirebaseAuth.getInstance();
             fStore = FirebaseFirestore.getInstance();
+            phoneNumberTf.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    final String phoneNumber = phoneNumberTf.getText().toString().trim();
+                    if (phoneNumber.length()>2) {
+                        String code = phoneNumber.substring(0, 2);
+                        if (!code.equals("04")){
+                            phoneNumberTf.setError("Must be a valid number");
+                            Toast toast = Toast.makeText(RegisterDetailsPge.this, "Invalid Number entered!", Toast.LENGTH_SHORT);
+                            TextView v = toast.getView().findViewById(android.R.id.message);
+                            toast.getView().setBackgroundColor(Color.RED);
+                            v.setTextColor(Color.WHITE);
+                            toast.show();
+                        }
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
 
             nextBtn2.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,7 +230,6 @@ public class PatientRegistration extends AppCompatActivity {
                     final String streetAddress = streetAddressTf.getText().toString().trim();
                     final ArrayList<String> appointments = new ArrayList<String>();
 
-                    String code = phoneNumber.substring(0,2);
 
                     if (TextUtils.isEmpty(firstName)) {
                         firstNameTf.setError("Cannot have Empty Field");
@@ -211,10 +243,7 @@ public class PatientRegistration extends AppCompatActivity {
                         phoneNumberTf.setError("Cannot have Empty Field");
                         return;
                     }
-                    if (!code.equals("04")){
-                        phoneNumberTf.setError("Must be a valid number");
-                        return;
-                    }
+
                     if (TextUtils.isEmpty(medicareNumber)) {
                         medicareNumberTf.setError("Cannot have Empty Field");
                         return;

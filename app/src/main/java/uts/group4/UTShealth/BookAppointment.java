@@ -84,9 +84,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     public static void populateSetTimeText(int hour, int minute) {
         String amPm;
         if (hour >= 12) {
-            amPm = "PM";
+            amPm = " PM";
         } else
-            amPm = "AM";
+            amPm = " AM";
         timeTextView.setText(String.format("%02d:%02d", hour, minute) + amPm);
     }
 
@@ -107,8 +107,8 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
         String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
-        DocumentReference appointmentRef = fStore.collection("Appointment").document(userID).collection("Appointments").document(appointmentID); //sets reference to this appointment object
-        DocumentReference docRef = fStore.collection("Appointment").document(userID);
+
+        DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
 
         if (TextUtils.isEmpty(date)) {
             Toast.makeText(BookAppointment.this, "Must select date", Toast.LENGTH_SHORT).show();
@@ -125,9 +125,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
 
-            Map<String, Object> patientData = new HashMap<> ();
-            patientData.put("patientID", userID);
-
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -141,8 +138,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                             Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-            docRef.set(patientData);
 
             //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
             DocumentReference patientDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path

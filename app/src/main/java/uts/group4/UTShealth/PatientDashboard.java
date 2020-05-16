@@ -29,12 +29,10 @@ import maes.tech.intentanim.CustomIntent;
 
 public class PatientDashboard extends AppCompatActivity {
     private static final String KEY_NAME = "First Name";
-    private static final String KEY_DATE = "Date";
-    private static final String KEY_TIME = "Time";
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
-    CollectionReference appointmentRef = fStore.collection("Appointment").document(userID).collection("Appointments");
+    CollectionReference appointmentRef = fStore.collection("Appointment");
     DocumentReference nameRef;
     TextView welcomeText;
     TextView textViewData;
@@ -50,8 +48,9 @@ public class PatientDashboard extends AppCompatActivity {
         showAppts();
     }
 
-public void showAppts () {
-        appointmentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+public void showAppts () { // Method to display upcoming appointments from Firestore
+        appointmentRef.whereEqualTo("patientID", userID) // Filter by patientID in Firestore "Appointment" collection
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 String data = "";
@@ -68,7 +67,7 @@ public void showAppts () {
                 textViewData.setText(data);
             }
         });
-} // Method to display upcoming appointments from Firestore
+}
 
     @Override
     public void finish() {
