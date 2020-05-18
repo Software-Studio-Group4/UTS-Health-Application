@@ -62,6 +62,7 @@ public class Chat extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
+    public static final String CHATS_PATH = "Chats/";
     private static final int REQUEST_INVITE = 1;
     private static final int REQUEST_IMAGE = 2;
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
@@ -118,7 +119,19 @@ public class Chat extends AppCompatActivity {
             }
         };
 
-        DatabaseReference messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
+        DatabaseReference messagesRef;
+        Bundle extras = getIntent().getExtras();
+        String chatCode = null;
+        if(extras != null){
+            chatCode = extras.getString("chatroomcode");
+             messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
+        }
+        else{
+             messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
+        }
+
+        final String chatRoomPath = CHATS_PATH + chatCode;
+
         FirebaseRecyclerOptions<ChatMessage> options =
                 new FirebaseRecyclerOptions.Builder<ChatMessage>()
                         .setQuery(messagesRef, parser)
@@ -220,7 +233,7 @@ public class Chat extends AppCompatActivity {
                         ChatMessage(mMessageEditText.getText().toString(),
                         mUsername,
                         null /* no image */);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD)
+                mFirebaseDatabaseReference.child(chatRoomPath)
                         .push().setValue(Message);
                 mMessageEditText.setText("");
 

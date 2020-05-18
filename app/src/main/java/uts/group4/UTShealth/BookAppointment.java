@@ -165,7 +165,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("patientID", userID);
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
-            appointmentData.put("Chat Code", "CHAT" + appointmentID);
+            appointmentData.put("ChatCode", "CHAT" + appointmentID);
 
             //grab the doctorID of the currently selected doctor in the spinner
             String selectedDoc = docSpinner.getSelectedItem().toString();

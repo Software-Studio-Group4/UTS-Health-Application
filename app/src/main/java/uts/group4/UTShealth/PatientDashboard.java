@@ -64,7 +64,7 @@ public class PatientDashboard extends AppCompatActivity {
         appointmentAdapter = new FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull AppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
-                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName());
+                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName(), appointmentModel.getChatCode());
             }
 
             @NonNull
@@ -177,9 +177,24 @@ public class PatientDashboard extends AppCompatActivity {
             view = itemView;
         }
 
-        void setAppointmentName(String date, String time, String doctor) {
+        void setAppointmentName(String date, String time, String doctor, final String chatCode) {
             TextView textView = view.findViewById(R.id.appointmentTextView);
             textView.setText("Date: " + date + "\nTime: " + time  + "\nDoctor: " + doctor + "\n");
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(chatCode != null){
+
+                        Intent i = new Intent(PatientDashboard.this, Chat.class);
+                        i.putExtra("chatroomcode", chatCode);
+                        startActivity(i);
+                    }
+                    else{
+                        Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 }
