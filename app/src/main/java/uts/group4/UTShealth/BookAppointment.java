@@ -3,6 +3,7 @@ package uts.group4.UTShealth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,17 +16,25 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.QueryDB;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
@@ -33,20 +42,19 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     Button backBtn;
+    Spinner docSpinner;
+    final List<String> doctors = new ArrayList<>();
+    final List<String> doctorIds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
-        Spinner docSpinner = findViewById(R.id.doctorSpinner);
+        docSpinner = findViewById(R.id.doctorSpinner);
 
         timeTextView = findViewById(R.id.timeTextView);
         dateTextView = findViewById(R.id.dateTextView);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.doctorNames, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        docSpinner.setAdapter(adapter);
-        docSpinner.setOnItemSelectedListener(this);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
@@ -58,6 +66,29 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                 CustomIntent.customType(BookAppointment.this, "fadein-to-fadeout");
             }
         });
+
+
+
+        /******************This code block sets the options in the spinner to doctor names from the database****************************/
+        CollectionReference doctorsRef = fStore.collection("Doctor");
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, doctors);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        docSpinner.setAdapter(adapter);
+        doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot>task){
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        String doctorName = document.getString("First Name") + " " + document.getString("Last Name");
+                        doctors.add(doctorName);
+                        doctorIds.add(document.getId());
+                        Log.i("INFO", "DOCTOR FOUND: " + document.getString("First Name"));
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
 
@@ -106,7 +137,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String userID = fAuth.getCurrentUser().getUid();
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
-        String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
+        String appointmentID = (userID + date + time).replaceAll("[/: ]", ""); //this makes an appointment easier to find.
 
         DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
 
@@ -125,6 +156,11 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
 
+
+            //grab the doctorID of the currently selected doctor in the spinner
+            String selectedDoc = docSpinner.getSelectedItem().toString();
+            appointmentData.put("doctorID", (doctorIds.get(doctors.indexOf(selectedDoc))));
+
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -142,6 +178,10 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
             DocumentReference patientDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
             patientDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
+
+            //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE DOCTOR OBJECT.
+            DocumentReference doctorDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
+            doctorDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
         }
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
     }

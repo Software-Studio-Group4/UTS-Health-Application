@@ -26,7 +26,7 @@ import java.util.List;
 
 
 public class QueryDB {
-
+    static final ArrayList<String> doctors = new ArrayList<String>();
 
     //returns a list of doctorIDs for all doctors with a certain specialisation
     //Status : COMPLETE  NOT TESTED
@@ -87,20 +87,28 @@ public class QueryDB {
     }
 
     //returns a list of all FULL NAMES of doctors
-    //Status : COMPLETE  NOT TESTED
-    public static List<String> getAllDocNames(FirebaseFirestore fStore){
-
-        final ArrayList<String> doctors = new ArrayList<String>();
+    //Status : COMPLETE  NOT TESTED - does not work as intended due to the nature of asynchronous calls.
+    public static void fillAllDocNames(FirebaseFirestore fStore){
 
         fStore.collection("Doctor").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task){
                 for(QueryDocumentSnapshot document : task.getResult()){
-                    doctors.add(document.get("First Name").toString() + " " + document.get("Last Name").toString());
+                    if(document.get("First Name") != null){
+                        Log.i("INFO", "FOUND DOCUMENT: " + document.get("First Name"));
+                        doctors.add(document.get("First Name").toString() + " " + document.get("Last Name").toString());
+                    }
+                    else{
+                        Log.i("INFO", "FOUND NULL: " + document.get("First Name"));
+                    }
+                    Log.i("INFO", "SIZE OF DOCTORS LIST : " + doctors.size());
                 }
             }
         });
-        return doctors;
     }
 
+    public static ArrayList<String> getAllDocNames(){
+        Log.i("INFO", "RETURNING DOC LIST THE SIZE OF : " + doctors.size());
+        return doctors;
+    }
 }
