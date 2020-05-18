@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +17,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -28,52 +31,72 @@ import maes.tech.intentanim.CustomIntent;
  ************************************************************************************************/
 
 public class PatientDashboard extends AppCompatActivity {
-    private static final String KEY_NAME = "First Name";
+    private static final String FIELD_NAME = "First Name";
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference appointmentRef = fStore.collection("Appointment");
-    DocumentReference nameRef;
-    TextView welcomeText;
+    DocumentReference nameRef = fStore.collection("Patients").document(userID);
     TextView textViewData;
+    TextView welcomeText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.patient_dashboard);
-        welcomeText = findViewById(R.id.welcomeText);
         textViewData = findViewById(R.id.textViewData);
-        nameRef = fStore.collection("Patients").document(userID);
-        welcomeMessage();
-        showAppts();
+        welcomeText = findViewById(R.id.welcomeText);
     }
 
-public void showAppts () { // Method to display upcoming appointments from Firestore
+    @Override
+    protected void onStart() {
+        super.onStart();
         appointmentRef.whereEqualTo("patientID", userID) // Filter by patientID in Firestore "Appointment" collection
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+                        String data = "";
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Appointment appointment = documentSnapshot.toObject(Appointment.class);
+                            appointment.setAppointmentID(documentSnapshot.getId());
+
+                            String date = appointment.getDate();
+                            String time = appointment.getTime();
+
+                            data += "Date: " + date + "\nTime: " + time + "\n\n";
+                        }
+                        textViewData.setText(data); // Display upcoming appointments
+                    }
+                });
+
+        nameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @SuppressLint("SetTextI18n")
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                String data = "";
-
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    Appointment appointment = documentSnapshot.toObject(Appointment.class);
-                    appointment.setAppointmentID(documentSnapshot.getId());
-
-                    String date = appointment.getDate();
-                    String time = appointment.getTime();
-
-                    data += "Date: " + date + "\nTime: " + time + "\n\n";
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String name = documentSnapshot.getString(FIELD_NAME);
+                    welcomeText.setText("Welcome, " + name + "!"); // Display welcome text
+                } else {
+                    Toast.makeText(PatientDashboard.this, "Error: Welcome message", Toast.LENGTH_SHORT).show();
                 }
-                textViewData.setText(data);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(PatientDashboard.this, "Error: Welcome message", Toast.LENGTH_SHORT).show();
             }
         });
-}
+    }
 
+    // Fade transition
     @Override
     public void finish() {
         super.finish();
-        CustomIntent.customType(this, "fadein-to-fadeout");
-    } // Fade transition
+        CustomIntent.customType(this, "right-to-left");
+    }
 
     /**********************************************************************************************
      * Past appointmetns page
@@ -124,25 +147,6 @@ public void showAppts () { // Method to display upcoming appointments from Fires
     public void openChat(View view) {
         startActivity(new Intent(getApplicationContext(), Chat.class));
     }
-
-    public void welcomeMessage() {
-        nameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    String name = documentSnapshot.getString(KEY_NAME);
-                    welcomeText.setText("Welcome, " + name + "!");
-                } else {
-                    Toast.makeText(PatientDashboard.this, "Error: Welcome message", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(PatientDashboard.this, "Error: Welcome message", Toast.LENGTH_SHORT).show();
-            }
-        });
-    } // Method to display welcome message and get name from Firestore
 }
 
 
