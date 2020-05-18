@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -28,12 +30,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.ChatMessage;
 import uts.group4.UTShealth.Model.QueryDB;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -41,6 +45,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     public static TextView timeTextView;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
+    DatabaseReference dbRef;
     Button backBtn;
     Spinner docSpinner;
     final List<String> doctors = new ArrayList<>();
@@ -150,12 +155,17 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             return;
         }
         else {
+            //initialise A Chat Object in the RealTimeDatabase
+            dbRef = FirebaseDatabase.getInstance().getReference().child("Chats/" + "CHAT" + appointmentID);
+            ChatMessage initMessage = new ChatMessage("Welcome to your appointment!", "SYSTEM", null);
+            dbRef.push().setValue(initMessage);
+
             // sets the target document reference to the Appointment collection in the firestore.
             Map<String, Object> appointmentData = new HashMap<>(); //
             appointmentData.put("patientID", userID);
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
-
+            appointmentData.put("Chat Code", "CHAT" + appointmentID);
 
             //grab the doctorID of the currently selected doctor in the spinner
             String selectedDoc = docSpinner.getSelectedItem().toString();
@@ -182,7 +192,11 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE DOCTOR OBJECT.
             DocumentReference doctorDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
             doctorDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
+
         }
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
     }
+
 }
+
+
