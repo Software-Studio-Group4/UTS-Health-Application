@@ -3,14 +3,20 @@ package uts.group4.UTShealth;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,10 +26,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.AppointmentModel;
 
 /**********************************************************************************************
  * Patient Dashboard / Upcoming appointments
@@ -39,38 +47,40 @@ public class PatientDashboard extends AppCompatActivity {
     DocumentReference nameRef = fStore.collection("Patients").document(userID);
     TextView textViewData;
     TextView welcomeText;
+    private RecyclerView appointmentsRecyclerView;
+    private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.patient_dashboard);
-        textViewData = findViewById(R.id.textViewData);
+        appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
+        appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         welcomeText = findViewById(R.id.welcomeText);
+        Query appointmentQuery = appointmentRef.whereEqualTo("patientID", userID).orderBy("Date", Query.Direction.DESCENDING);
+        FirestoreRecyclerOptions<AppointmentModel> options = new FirestoreRecyclerOptions.Builder<AppointmentModel>().setQuery(appointmentQuery, AppointmentModel.class).build();
+
+        appointmentAdapter = new FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull AppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
+                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName());
+            }
+
+            @NonNull
+            @Override
+            public AppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_appointment, parent, false);
+                return new AppointmentViewHolder(view);
+            }
+        };
+      appointmentsRecyclerView.setAdapter(appointmentAdapter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        appointmentRef.whereEqualTo("patientID", userID) // Filter by patientID in Firestore "Appointment" collection
-                .addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            return;
-                        }
-                        String data = "";
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Appointment appointment = documentSnapshot.toObject(Appointment.class);
-                            appointment.setAppointmentID(documentSnapshot.getId());
-
-                            String date = appointment.getDate();
-                            String time = appointment.getTime();
-
-                            data += "Date: " + date + "\nTime: " + time + "\n\n";
-                        }
-                        textViewData.setText(data); // Display upcoming appointments
-                    }
-                });
+        appointmentAdapter.startListening();
 
         nameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @SuppressLint("SetTextI18n")
@@ -96,6 +106,15 @@ public class PatientDashboard extends AppCompatActivity {
     public void finish() {
         super.finish();
         CustomIntent.customType(this, "right-to-left");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (appointmentAdapter != null) {
+            appointmentAdapter.stopListening();
+        }
     }
 
     /**********************************************************************************************
@@ -146,6 +165,22 @@ public class PatientDashboard extends AppCompatActivity {
 
     public void openChat(View view) {
         startActivity(new Intent(getApplicationContext(), Chat.class));
+    }
+    /**********************************************************************************************
+     * Private Class for the recycler
+     ************************************************************************************************/
+    private class AppointmentViewHolder extends RecyclerView.ViewHolder {
+        private View view;
+
+        AppointmentViewHolder(View itemView) {
+            super(itemView);
+            view = itemView;
+        }
+
+        void setAppointmentName(String date, String time, String doctor) {
+            TextView textView = view.findViewById(R.id.appointmentTextView);
+            textView.setText("Date: " + date + "\nTime: " + time  + "\nDoctor: " + doctor + "\n");
+        }
     }
 }
 

@@ -6,7 +6,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/patient_bg">
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/appointmentsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/bookBtn"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText" />
+        
     <ImageView
         android:id="@+id/UTSLogo"
         android:layout_width="164dp"
@@ -99,8 +106,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
+        app:layout_constraintVertical_bias="0.682"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -121,25 +130,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.05"
         app:srcCompat="@drawable/user_icon" />
-
-    <Button
-        android:id="@+id/chatBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
-        android:layout_marginLeft="152dp"
-        android:layout_marginTop="594dp"
-        android:layout_marginEnd="77dp"
-        android:layout_marginRight="77dp"
-        android:layout_marginBottom="93dp"
-        android:onClick="openChat"
-        android:text="Chat"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.095"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/welcomeText"
@@ -162,7 +152,10 @@
         app:layout_constraintVertical_bias="0.0" />
 
 
+
+<!--
     <TextView
+
         android:id="@+id/textViewData"
         android:layout_width="349dp"
         android:layout_height="340dp"
@@ -180,6 +173,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
-
+-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

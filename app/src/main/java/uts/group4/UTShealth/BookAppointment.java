@@ -170,6 +170,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             //grab the doctorID of the currently selected doctor in the spinner
             String selectedDoc = docSpinner.getSelectedItem().toString();
             appointmentData.put("doctorID", (doctorIds.get(doctors.indexOf(selectedDoc))));
+            appointmentData.put("DoctorFullName", selectedDoc);
 
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
