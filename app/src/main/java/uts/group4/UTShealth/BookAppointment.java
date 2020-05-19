@@ -30,7 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +37,6 @@ import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.ChatMessage;
-import uts.group4.UTShealth.Model.QueryDB;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
@@ -72,8 +70,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             }
         });
 
-
-
         /******************This code block sets the options in the spinner to doctor names from the database****************************/
         CollectionReference doctorsRef = fStore.collection("Doctor");
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, doctors);
@@ -81,9 +77,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         docSpinner.setAdapter(adapter);
         doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot>task){
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document : task.getResult()){
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
                         String doctorName = document.getString("First Name") + " " + document.getString("Last Name");
                         doctors.add(doctorName);
                         doctorIds.add(document.getId());
@@ -142,7 +138,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String userID = fAuth.getCurrentUser().getUid();
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
-        String appointmentID = (userID + date + time).replaceAll("[/: ]", ""); //this makes an appointment easier to find.
+        String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
 
         DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
 
@@ -197,7 +193,4 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         }
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
     }
-
 }
-
-

@@ -23,13 +23,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
+import com.google.firebase.firestore.Query;
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 
@@ -45,7 +41,6 @@ public class PatientDashboard extends AppCompatActivity {
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference appointmentRef = fStore.collection("Appointment");
     DocumentReference nameRef = fStore.collection("Patients").document(userID);
-    TextView textViewData;
     TextView welcomeText;
     private RecyclerView appointmentsRecyclerView;
     private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;
@@ -81,7 +76,6 @@ public class PatientDashboard extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         appointmentAdapter.startListening();
-
         nameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @SuppressLint("SetTextI18n")
             @Override
