@@ -41,6 +41,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import uts.group4.UTShealth.Model.ChatMessage;
 public class Chat extends AppCompatActivity {
     private static final java.util.UUID UUID = null;
@@ -49,6 +52,7 @@ public class Chat extends AppCompatActivity {
         TextView messageTextView;
         ImageView messageImageView;
         TextView messengerTextView;
+        TextView messengerTimeView;
 
 
         public MessageViewHolder(View v) {
@@ -56,6 +60,7 @@ public class Chat extends AppCompatActivity {
             messageTextView = itemView.findViewById(R.id.messageTextView);
             messageImageView = itemView.findViewById(R.id.messageImageView);
             messengerTextView = itemView.findViewById(R.id.messengerTextView);
+            messengerTimeView = itemView.findViewById(R.id.messengerTimeView);
 
         }
     }
@@ -75,6 +80,9 @@ public class Chat extends AppCompatActivity {
     private Uri filePath;
     String imageUrl;
     String chatCode;
+    Date date = new Date();
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+    String dateAndTime = formatter.format(date);
 
     private Button mSendButton;
     private RecyclerView mMessageRecyclerView;
@@ -151,38 +159,10 @@ public class Chat extends AppCompatActivity {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                     viewHolder.messageTextView.setText(Message.getText());
                     viewHolder.messengerTextView.setText(Message.getName());
+                    viewHolder.messengerTimeView.setText(Message.getDateAndTime());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
                     viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
                 Glide.with(viewHolder.messageImageView.getContext()).load(imageUrl).into(viewHolder.messageImageView);
-/*
-                 else if (Message.hasImageUrl()) {
-                    if (imageUrl.startsWith("gs://")) {
-                        storageReference = FirebaseStorage.getInstance()
-                                .getReferenceFromUrl(imageUrl);
-                        storageReference.getDownloadUrl().addOnCompleteListener(
-                                new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Uri> task) {
-                                        if (task.isSuccessful()) {
-                                            String downloadUrl = task.getResult().toString();
-                                            Glide.with(viewHolder.messageImageView.getContext())
-                                                    .load(downloadUrl)
-                                                    .into(viewHolder.messageImageView);
-                                        } else {
-                                            Log.w(TAG, "Getting download url was not successful.",
-                                                    task.getException());
-                                        }
-                                    }
-                                });
-                    } else {
-                        Glide.with(viewHolder.messageImageView.getContext())
-                                .load(imageUrl)
-                                .into(viewHolder.messageImageView);
-                    }
-                    viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
-                    viewHolder.messageTextView.setVisibility(TextView.GONE);
-                }*/
-
 
             }
         };
@@ -233,7 +213,7 @@ public class Chat extends AppCompatActivity {
                 ChatMessage Message = new
                         ChatMessage(mMessageEditText.getText().toString(),
                         mUsername,
-                        null);
+                        null, dateAndTime);
                 mFirebaseDatabaseReference.child(chatRoomPath)
                         .push().setValue(Message);
                 mMessageEditText.setText("");
@@ -280,7 +260,7 @@ public class Chat extends AppCompatActivity {
                                         ChatMessage Message = new
                                                 ChatMessage(null,
                                                 mUsername,
-                                                imageUrl);
+                                                imageUrl, dateAndTime);
                                         mFirebaseDatabaseReference.child(CHATS_PATH + chatCode)
                                                 .push().setValue(Message);
                                     }
