@@ -45,7 +45,6 @@ public class PatientDashboard extends AppCompatActivity {
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference appointmentRef = fStore.collection("Appointment");
     DocumentReference nameRef = fStore.collection("Patients").document(userID);
-    TextView textViewData;
     TextView welcomeText;
     private RecyclerView appointmentsRecyclerView;
     private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;

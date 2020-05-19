@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -50,6 +51,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     Spinner docSpinner;
     final List<String> doctors = new ArrayList<>();
     final List<String> doctorIds = new ArrayList<>();
+    String patientFullName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +70,27 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-                CustomIntent.customType(BookAppointment.this, "fadein-to-fadeout");
-            }
-        });
+                CustomIntent.customType(BookAppointment.this, "fadein-to-fadeout");}});
+
+
+    // the following block of code populates the patientName string with their full name to be used to be stored in the appointments object;
+                DocumentReference nameRef = fStore.collection("Patients").document(fAuth.getUid());
+                nameRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                patientFullName = document.getString("First Name") + " " + document.getString("Last Name");
+                            } else {
+                                Log.d("LOGGER", "No such document");
+                            }
+                        } else {
+                            Log.d("LOGGER", "get failed with ", task.getException());
+                        }
+                    }
+                });
+
 
 
 
@@ -171,6 +191,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             String selectedDoc = docSpinner.getSelectedItem().toString();
             appointmentData.put("doctorID", (doctorIds.get(doctors.indexOf(selectedDoc))));
             appointmentData.put("DoctorFullName", selectedDoc);
+            appointmentData.put("PatientFullName", patientFullName);
 
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
