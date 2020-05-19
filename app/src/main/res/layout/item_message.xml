@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:text="Message:"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <ImageView
@@ -40,6 +41,13 @@
                 android:layout_weight="0"
                 android:text="Name:"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <TextView
+                android:id="@+id/messengerTimeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="Name:"
+                android:textSize="10sp"/>
         </LinearLayout>
 
     </LinearLayout>

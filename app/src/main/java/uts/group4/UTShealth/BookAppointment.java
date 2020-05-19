@@ -32,7 +32,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     final List<String> doctors = new ArrayList<>();
     final List<String> doctorIds = new ArrayList<>();
     String patientFullName = null;
+    Date date = new Date();
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+    String dateAndTime = formatter.format(date);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +182,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         else {
             //initialise A Chat Object in the RealTimeDatabase
             dbRef = FirebaseDatabase.getInstance().getReference().child("Chats/" + "CHAT" + appointmentID);
-            ChatMessage initMessage = new ChatMessage("Welcome to your appointment!", "SYSTEM", null);
+            ChatMessage initMessage = new ChatMessage("Welcome to your appointment!", "SYSTEM", null, dateAndTime);
             dbRef.push().setValue(initMessage);
 
             // sets the target document reference to the Appointment collection in the firestore.
