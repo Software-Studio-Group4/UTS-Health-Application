@@ -12,6 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,5 +43,19 @@ public class DoctorAvailability extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctoravailability_layout);
+    }
+
+    /**********************************************************************************************
+     * Edit Shifts
+     *********************************************************************************************/
+    public void newShift(View view){
+        NewShiftFragment shiftEditorFragment = new NewShiftFragment();
+        shiftEditorFragment.show(getSupportFragmentManager(), "New Shift");
+
+    }
+
+
+    public void editShift(){
+
     }
 }

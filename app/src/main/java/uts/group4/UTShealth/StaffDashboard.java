@@ -111,6 +111,20 @@ public class StaffDashboard extends AppCompatActivity {
         }
     }
 
+    /**********************************************************************************************
+     * Methods for AVAILABILITY, PROFILE and PATIENT buttons
+     ************************************************************************************************/
+    public void goToAvailabilityPage(View view){
+        startActivity(new Intent(getApplicationContext(), DoctorAvailability.class));
+
+    }
+    public void goToProfilePage(){
+
+    }
+    public void goToPatientsPage(){
+
+    }
+
 
     /**********************************************************************************************
      * Private Class for the recycler
