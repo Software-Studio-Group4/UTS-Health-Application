@@ -22,22 +22,31 @@ public class DATParser {
     }
 
     public static String timeIntToStr(int time){
-        char[] chars = ("" + time).toCharArray();
+        String AMPM;
+        int parsedTime;
+        if(time < 1200){
+            AMPM = "AM";
+            parsedTime = time;
+        }
+        else{
+            AMPM ="PM";
+            parsedTime = time - 1200;
+        }
+
+        char[] chars = ("" + parsedTime).toCharArray();
         if(chars.length == 1){
-            return ("00:0" + chars[0] + "AM");
+            return ("00:0" + chars[0] + AMPM);
         }
         else if(chars.length == 2){
-            return ("00:" + chars[0] + chars[1] + "AM");
+            return ("00:" + chars[0] + chars[1] + AMPM);
         }
         else if(chars.length == 3){
-            return ("0" + chars[0] + ":" + chars[1] + chars[2] + "AM");
+            return ("0" + chars[0] + ":" + chars[1] + chars[2] + AMPM);
         }
-        else if(time < 1200 && chars.length == 4){
-            return (chars[0] + chars[1] +":"+ chars[2] + chars[3] + "AM");
+        else if(chars.length == 4){
+            return (chars[0] + "" + chars[1] +":"+ chars[2] + "" + chars[3] + AMPM);
         }
-        else if(time >= 1200 && chars.length == 4){
-            return (chars[0] + chars[1] +":"+ chars[2] + chars[3] + "PM");
-        }
+
         return "NOT A VALID TIME FORMAT";
     }
 
@@ -73,5 +82,19 @@ public class DATParser {
     public static int getMonthAsInt(String date){
         String[] stringArr = date.split("/");
         return Integer.parseInt(stringArr[1]);
+    }
+
+    public static int weekDayAsInt(String day){
+        String weekDay = day.toLowerCase().trim();
+        switch(weekDay){
+            case"sunday": return 1;
+            case"monday": return 2;
+            case"tuesday": return 3;
+            case"wednesday": return 4;
+            case"thursday": return 5;
+            case"friday": return 6;
+            case"saturday": return 7;
+            default: return 0;
+        }
     }
 }

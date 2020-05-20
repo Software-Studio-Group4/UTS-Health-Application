@@ -1,8 +1,5 @@
 package uts.group4.UTShealth;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,37 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Util.DATParser;
 
 
-public class NewShiftFragment extends DialogFragment {
+public class EditShiftFragment extends DialogFragment {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
@@ -50,32 +37,26 @@ public class NewShiftFragment extends DialogFragment {
     Spinner startTimeSpinner;
     Spinner endTimeSpinner;
     Button confirmButton;
-    ArrayList<ArrayList<ArrayList<String>>> AllShifts = new ArrayList<>();
-    ArrayList<ArrayList<String>> sundayShifts = new ArrayList<>();
-    ArrayList<ArrayList<String>> mondayShifts = new ArrayList<>();
-    ArrayList<ArrayList<String>> tuesdayShifts = new ArrayList<>();
-    ArrayList<ArrayList<String>> wednesdayShifts = new ArrayList<>();
-    ArrayList<ArrayList<String>> thursdayShifts = new ArrayList<>();
-    ArrayList<ArrayList<String>> fridayShifts = new ArrayList<>();
-    ArrayList<ArrayList<String>> saturdayShifts = new ArrayList<>();
+    Button deleteButton;
 
 
 
 
     //mandatory empty constructor
-    public NewShiftFragment(){
+    public EditShiftFragment(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        super.onCreateView(inflater, container, savedInstanceState);
-       View view = inflater.inflate(R.layout.newshiftfragment_layout, container, false);
+       View view = inflater.inflate(R.layout.editshiftfragment_layout, container, false);
 
        fAuth = FirebaseAuth.getInstance();
        fStore = FirebaseFirestore.getInstance();
        userID = fAuth.getCurrentUser().getUid();
        confirmButton = view.findViewById(R.id.confirmBtn);
+       deleteButton = view.findViewById(R.id.cancelBtn);
 
        //initialise the spinners and all information in the spinners
        daySpinner = (Spinner) view.findViewById(R.id.daySpinner);
@@ -91,31 +72,6 @@ public class NewShiftFragment extends DialogFragment {
        daySpinner.setAdapter(daySpinnerAdapter);
        startTimeSpinner.setAdapter(startTimeSpinnerAdapter);
        endTimeSpinner.setAdapter(endTimeSpinnerAdapter);
-
-        //fills a list full of this doctor's shifts
-        AllShifts.add(sundayShifts);
-        AllShifts.add(mondayShifts);
-        AllShifts.add(tuesdayShifts);
-        AllShifts.add(wednesdayShifts);
-        AllShifts.add(thursdayShifts);
-        AllShifts.add(fridayShifts);
-        AllShifts.add(saturdayShifts);
-        CollectionReference shiftsRef = fStore.collection("Doctor").document(userID).collection("Shifts");
-        shiftsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document : task.getResult()){
-                        ArrayList<String> data = new ArrayList<>();
-                        data.add(document.getString("Day"));
-                        data.add(document.getString("StartTime"));
-                        data.add(document.getString("EndTime"));
-                        AllShifts.get((DATParser.weekDayAsInt(document.getString("Day")) - 1)).add(data);
-                    }
-                }
-            }
-        });
-
 
 
 
@@ -171,8 +127,6 @@ public class NewShiftFragment extends DialogFragment {
             case 3:
                 Toast.makeText( getActivity(), "Your shift can't overlap with another shift!", Toast.LENGTH_SHORT).show();
                 break;
-
-            default : Toast.makeText( getActivity(), "OOPS SOMETHING WENT REALLY WRONG", Toast.LENGTH_SHORT).show(); break;
         }
 
 
@@ -192,22 +146,9 @@ public class NewShiftFragment extends DialogFragment {
         if((DATParser.timeStrToInt(endTime) - DATParser.timeStrToInt(startTime) > 900)){
             return 2;
         }
+        // -two shifts cannot be within an hour of each other (because why make them two separate shifts then)
         // -start time cannot be within the time of another shift
         // -end time cannot be within the time of another shift
-        for (ArrayList<String> shift : AllShifts.get((DATParser.weekDayAsInt(day) - 1))){
-
-            if(DATParser.timeStrToInt(startTime) <= DATParser.timeStrToInt(shift.get(2))){
-                Log.i("Tag", "" + DATParser.timeStrToInt(startTime) + " is smaller than " + DATParser.timeStrToInt(shift.get(2)));
-                return 3;
-            }
-            else if(DATParser.timeStrToInt(startTime) <= DATParser.timeStrToInt(shift.get(1)) && DATParser.timeStrToInt(endTime) >= DATParser.timeStrToInt(shift.get(1))){
-                Log.i("Tag", "" + DATParser.timeStrToInt(endTime) + " is larger than " + DATParser.timeStrToInt(shift.get(1)));
-                return 3;
-            }
-        }
-
-
-
         return 0;
     }
     /**********************************************************************************************

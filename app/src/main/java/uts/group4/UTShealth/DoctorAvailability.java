@@ -2,6 +2,7 @@ package uts.group4.UTShealth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,10 +116,14 @@ public class DoctorAvailability extends AppCompatActivity {
             LinearLayout block = view.findViewById(R.id.availBlockInstance);
             TextView startTimeTv = view.findViewById(R.id.startTime);
             TextView endTimeTv = view.findViewById(R.id.endTime);
-            startTimeTv.setText(startTime);
-            endTimeTv.setText(endTime);
-            //startTimeTv.setText(DATParser.timeIntToStr(Integer.parseInt(startTime)));
-            //endTimeTv.setText(DATParser.timeIntToStr(Integer.parseInt(endTime)));
+
+            Log.i("TAG", "Start Time: " + startTime);
+            Log.i("TAG", "End Time: " + endTime);
+            Log.i("TAG", "Parsed Start Time: " + DATParser.timeIntToStr(Integer.parseInt(startTime)));
+            Log.i("TAG", "Parsed End Time: " + DATParser.timeIntToStr(Integer.parseInt(endTime)));
+
+            startTimeTv.setText(DATParser.timeIntToStr(Integer.parseInt(startTime)));
+            endTimeTv.setText(DATParser.timeIntToStr(Integer.parseInt(endTime)));
 
             block.setOnClickListener(new View.OnClickListener() {
                 @Override

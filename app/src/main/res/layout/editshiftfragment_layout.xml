@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center|center_horizontal"
-        android:text="NEW SHIFT"
+        android:text="EDIT SHIFT"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -106,6 +106,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#A7D32F2F"
+                android:text="remove" />
 
             <Button
                 android:id="@+id/confirmBtn"
