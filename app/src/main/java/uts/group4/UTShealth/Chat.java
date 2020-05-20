@@ -39,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.ChatMessage;
 public class Chat extends AppCompatActivity {
     private static final java.util.UUID UUID = null;
@@ -80,6 +81,7 @@ public class Chat extends AppCompatActivity {
     String dateAndTime = formatter.format(date);
 
     private Button mSendButton;
+    private Button endBtn;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private ProgressBar mProgressBar;
@@ -128,10 +130,10 @@ public class Chat extends AppCompatActivity {
         chatCode = null;
         if(extras != null){
             chatCode = extras.getString("chatroomcode");
-             messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
+            messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
         }
         else{
-             messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
+            messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
         }
 
         final String chatRoomPath = CHATS_PATH + chatCode;
@@ -152,11 +154,11 @@ public class Chat extends AppCompatActivity {
                                             int position,
                                             ChatMessage Message) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                    viewHolder.messageTextView.setText(Message.getText());
-                    viewHolder.messengerTextView.setText(Message.getName());
-                    viewHolder.messengerTimeView.setText(Message.getDateAndTime());
-                    viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
-                    viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
+                viewHolder.messageTextView.setText(Message.getText());
+                viewHolder.messengerTextView.setText(Message.getName());
+                viewHolder.messengerTimeView.setText(Message.getDateAndTime());
+                viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
+                viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
                 Glide.with(viewHolder.messageImageView.getContext()).load(imageUrl).into(viewHolder.messageImageView);
 
             }
@@ -215,6 +217,15 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+        endBtn = findViewById(R.id.endBtn);
+        endBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Notes.class));
+                CustomIntent.customType(Chat.this, "fadein-to-fadeout");
+            }
+        });
+
 
         mAddMessageImageView = findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
@@ -291,5 +302,3 @@ public class Chat extends AppCompatActivity {
     }
 
 }
-
-
