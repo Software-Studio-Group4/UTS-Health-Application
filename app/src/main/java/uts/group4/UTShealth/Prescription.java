@@ -31,7 +31,6 @@ public class Prescription extends AppCompatActivity {
     EditText docNameTf, docSpecialisationTf, patNameTf, dateTf, recipeTf, medInsTf, dispInsTf;
     Button doneBtn;
     private static String docName;
-    private static String docSpe;
     private static String patName;
     private static String date;
     private static String recipe;
@@ -49,7 +48,6 @@ public class Prescription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prescription);
         docNameTf = findViewById(R.id.docNameTf);
-        docSpecialisationTf = findViewById(R.id.docSpecialisationTf);
         patNameTf = findViewById(R.id.patNameTf);
         dateTf = findViewById(R.id.dateTf);
         recipeTf = findViewById(R.id.recipeTf);
@@ -91,7 +89,6 @@ public class Prescription extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 docName = docNameTf.getText().toString().trim();
-                docSpe = docSpecialisationTf.getText().toString().trim();
                 patName = patNameTf.getText().toString().trim();
                 date = dateTf.getText().toString().trim();
                 recipe = recipeTf.getText().toString().trim();
@@ -100,10 +97,6 @@ public class Prescription extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(docName)) {
                     docNameTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(docSpe)) {
-                    docSpecialisationTf.setError("Cannot have Empty Field");
                     return;
                 }
                 if (TextUtils.isEmpty(patName)) {
