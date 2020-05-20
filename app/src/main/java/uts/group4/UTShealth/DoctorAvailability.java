@@ -48,7 +48,7 @@ public class DoctorAvailability extends AppCompatActivity {
         sunAdapter = new FirestoreRecyclerAdapter<ShiftModel, ShiftViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ShiftViewHolder shiftViewHolder, int position, @NonNull ShiftModel shiftModel) {
-                shiftViewHolder.setShiftData(shiftModel.getStartTime(), shiftModel.getEndTime(), shiftModel.getDay());
+                shiftViewHolder.setShiftData(shiftModel.getStartTime(), shiftModel.getEndTime(), shiftModel.getDay(), getSnapshots().getSnapshot(position).getId());
             }
 
             @NonNull
@@ -97,8 +97,10 @@ public class DoctorAvailability extends AppCompatActivity {
     }
 
 
-    public void editShift(){
-
+    public void editShift(Bundle bundle){
+        EditShiftFragment editShiftFragment = new EditShiftFragment();
+        editShiftFragment.setArguments(bundle);
+        editShiftFragment.show(getSupportFragmentManager(), "Edit Shift");
     }
 
     /**********************************************************************************************
@@ -112,23 +114,26 @@ public class DoctorAvailability extends AppCompatActivity {
             view = itemView;
         }
 
-        void setShiftData(String startTime, String endTime, String day) {
+        void setShiftData(String startTime, String endTime, String day, String id) {
             LinearLayout block = view.findViewById(R.id.availBlockInstance);
             TextView startTimeTv = view.findViewById(R.id.startTime);
             TextView endTimeTv = view.findViewById(R.id.endTime);
 
-            Log.i("TAG", "Start Time: " + startTime);
-            Log.i("TAG", "End Time: " + endTime);
-            Log.i("TAG", "Parsed Start Time: " + DATParser.timeIntToStr(Integer.parseInt(startTime)));
-            Log.i("TAG", "Parsed End Time: " + DATParser.timeIntToStr(Integer.parseInt(endTime)));
 
             startTimeTv.setText(DATParser.timeIntToStr(Integer.parseInt(startTime)));
             endTimeTv.setText(DATParser.timeIntToStr(Integer.parseInt(endTime)));
+
+            final Bundle bundle = new Bundle();
+            bundle.putString("currentStart", startTime);
+            bundle.putString("currentEnd", endTime);
+            bundle.putString("currentDay", day);
+            bundle.putString("documentID", id);
 
             block.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(DoctorAvailability.this, "clicked on the shift", Toast.LENGTH_SHORT).show();
+                    editShift(bundle);
                 }
             });
         }

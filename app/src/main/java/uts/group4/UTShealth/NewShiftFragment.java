@@ -195,15 +195,17 @@ public class NewShiftFragment extends DialogFragment {
         // -start time cannot be within the time of another shift
         // -end time cannot be within the time of another shift
         for (ArrayList<String> shift : AllShifts.get((DATParser.weekDayAsInt(day) - 1))){
+            int selectedStart = DATParser.timeStrToInt(startTime);
+            int selectedEnd = DATParser.timeStrToInt(endTime);
+            int checkedStart = DATParser.timeStrToInt(shift.get(1));
+            int checkedEnd = DATParser.timeStrToInt(shift.get(2));
+            if(selectedStart >= checkedStart && selectedStart <= checkedEnd){
+                return 3;
+            }
+            else if(selectedEnd >= checkedStart && selectedEnd <= checkedEnd){
+                return 3;
+            }
 
-            if(DATParser.timeStrToInt(startTime) <= DATParser.timeStrToInt(shift.get(2))){
-                Log.i("Tag", "" + DATParser.timeStrToInt(startTime) + " is smaller than " + DATParser.timeStrToInt(shift.get(2)));
-                return 3;
-            }
-            else if(DATParser.timeStrToInt(startTime) <= DATParser.timeStrToInt(shift.get(1)) && DATParser.timeStrToInt(endTime) >= DATParser.timeStrToInt(shift.get(1))){
-                Log.i("Tag", "" + DATParser.timeStrToInt(endTime) + " is larger than " + DATParser.timeStrToInt(shift.get(1)));
-                return 3;
-            }
         }
 
 
