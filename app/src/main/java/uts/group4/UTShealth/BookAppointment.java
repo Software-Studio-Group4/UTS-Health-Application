@@ -119,7 +119,12 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     }
 
     public static void populateSetDateText(int year, int month, int day) {
-        dateTextView.setText(day + "/" + month + "/" + year);
+        if(month < 10){
+            dateTextView.setText(day + "/0" + month + "/" + year);
+        }
+        else{
+            dateTextView.setText(day + "/" + month + "/" + year);
+        }
     }
 
     public void btn_PickerTime(View view) {

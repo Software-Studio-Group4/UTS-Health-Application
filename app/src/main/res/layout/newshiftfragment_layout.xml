@@ -42,7 +42,7 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/spinner2"
+                android:id="@+id/daySpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -67,7 +67,7 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/spinner3"
+                android:id="@+id/startTimeSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -92,7 +92,7 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/spinner4"
+                android:id="@+id/endTimeSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
