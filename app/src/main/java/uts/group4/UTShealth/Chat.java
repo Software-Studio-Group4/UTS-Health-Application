@@ -221,7 +221,7 @@ public class Chat extends AppCompatActivity {
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Prescription.class));
+                startActivity(new Intent(getApplicationContext(), Notes.class));
                 CustomIntent.customType(Chat.this, "fadein-to-fadeout");
             }
         });
