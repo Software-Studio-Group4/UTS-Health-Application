@@ -41,7 +41,7 @@ public class Prescription extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
     DocumentReference patNameRef = fStore.collection("Patients").document(userID);
-    CollectionReference doctorsRef = fStore.collection("Doctor");
+    CollectionReference doctorsRef = fStore.collection("Appointment");
 
 
     @Override
@@ -74,19 +74,18 @@ public class Prescription extends AppCompatActivity {
                 Toast.makeText(Prescription.this, "Error: Patient name", Toast.LENGTH_SHORT).show();
             }
         });
-/*
         doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task){
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document : task.getResult()){
-                        String doctorName = document.getString("First Name") + " " + document.getString("Last Name");
-                        patNameTf.setText(doctorName);
+                        String doctorName = document.getString("DoctorFullName");
+                        docNameTf.setText(doctorName);
                     }
                 }
             }
         });
-  */
+
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
