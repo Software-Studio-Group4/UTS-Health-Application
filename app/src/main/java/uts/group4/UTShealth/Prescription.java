@@ -79,11 +79,12 @@ public class Prescription extends AppCompatActivity {
                     for(QueryDocumentSnapshot document : task.getResult()){
                         String doctorName = document.getString("DoctorFullName");
                         docNameTf.setText(doctorName);
+                        String date = document.getString("Date");
+                        dateTf.setText(date);
                     }
                 }
             }
         });
-
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
