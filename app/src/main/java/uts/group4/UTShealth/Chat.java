@@ -41,6 +41,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import uts.group4.UTShealth.Model.ChatMessage;
 public class Chat extends AppCompatActivity {
     private static final java.util.UUID UUID = null;
@@ -49,6 +52,7 @@ public class Chat extends AppCompatActivity {
         TextView messageTextView;
         ImageView messageImageView;
         TextView messengerTextView;
+        TextView messengerTimeView;
 
 
         public MessageViewHolder(View v) {
@@ -56,6 +60,7 @@ public class Chat extends AppCompatActivity {
             messageTextView = itemView.findViewById(R.id.messageTextView);
             messageImageView = itemView.findViewById(R.id.messageImageView);
             messengerTextView = itemView.findViewById(R.id.messengerTextView);
+            messengerTimeView = itemView.findViewById(R.id.messengerTimeView);
 
         }
     }
@@ -74,6 +79,10 @@ public class Chat extends AppCompatActivity {
     private static final String MESSAGE_URL = "https://uts-health-application.firebaseio.com/Chats";
     private Uri filePath;
     String imageUrl;
+    String chatCode;
+    Date date = new Date();
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+    String dateAndTime = formatter.format(date);
 
     private Button mSendButton;
     private RecyclerView mMessageRecyclerView;
@@ -121,7 +130,7 @@ public class Chat extends AppCompatActivity {
 
         DatabaseReference messagesRef;
         Bundle extras = getIntent().getExtras();
-        String chatCode = null;
+        chatCode = null;
         if(extras != null){
             chatCode = extras.getString("chatroomcode");
              messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
@@ -148,40 +157,12 @@ public class Chat extends AppCompatActivity {
                                             int position,
                                             ChatMessage Message) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                if (Message.getText() != null) {
                     viewHolder.messageTextView.setText(Message.getText());
                     viewHolder.messengerTextView.setText(Message.getName());
+                    viewHolder.messengerTimeView.setText(Message.getDateAndTime());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
-                    //viewHolder.messageImageView.setVisibility(ImageView.GONE);
-                } else if (Message.hasImageUrl()) {
-                    imageUrl = Message.getImageUrl();
-                    if (imageUrl.startsWith("gs://")) {
-                        StorageReference storageReference = FirebaseStorage.getInstance()
-                                .getReferenceFromUrl(imageUrl);
-                        storageReference.getDownloadUrl().addOnCompleteListener(
-                                new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Uri> task) {
-                                        if (task.isSuccessful()) {
-                                            String downloadUrl = task.getResult().toString();
-                                            Glide.with(viewHolder.messageImageView.getContext())
-                                                    .load(downloadUrl)
-                                                    .into(viewHolder.messageImageView);
-                                        } else {
-                                            Log.w(TAG, "Getting download url was not successful.",
-                                                    task.getException());
-                                        }
-                                    }
-                                });
-                    } else {
-                        Glide.with(viewHolder.messageImageView.getContext())
-                                .load(Message.getImageUrl())
-                                .into(viewHolder.messageImageView);
-                    }
                     viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
-                    viewHolder.messageTextView.setVisibility(TextView.GONE);
-                }
-
+                Glide.with(viewHolder.messageImageView.getContext()).load(imageUrl).into(viewHolder.messageImageView);
 
             }
         };
@@ -232,7 +213,7 @@ public class Chat extends AppCompatActivity {
                 ChatMessage Message = new
                         ChatMessage(mMessageEditText.getText().toString(),
                         mUsername,
-                        null /* no image */);
+                        null, dateAndTime);
                 mFirebaseDatabaseReference.child(chatRoomPath)
                         .push().setValue(Message);
                 mMessageEditText.setText("");
@@ -260,31 +241,34 @@ public class Chat extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             filePath = data.getData();
             putImageInStorage();
-
-
-                                }
-
-                }
-
-
-
+        }
+    }
     private void putImageInStorage() {
         // uploads the image into the database under the file named images
-        StorageReference ref = storageReference.child("images/" + java.util.UUID.randomUUID().toString());
+        final StorageReference ref = storageReference.child("images/" + java.util.UUID.randomUUID().toString());
         ref.putFile(filePath)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(Chat.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Chat.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (taskSnapshot.getMetadata() != null) {
+                            if (taskSnapshot.getMetadata().getReference() != null) {
+                                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        imageUrl = uri.toString();
+                                        ChatMessage Message = new
+                                                ChatMessage(null,
+                                                mUsername,
+                                                imageUrl, dateAndTime);
+                                        mFirebaseDatabaseReference.child(CHATS_PATH + chatCode)
+                                                .push().setValue(Message);
+                                    }
+                                });
+                            }
+                        }
                     }
                 });
-        String dlURL = ref.getDownloadUrl().toString();
     }
 
 

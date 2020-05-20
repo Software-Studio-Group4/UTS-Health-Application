@@ -6,14 +6,18 @@ public class ChatMessage {
     private String text;
     private String name;
     private String imageUrl;
+    private String dateAndTime;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(String text, String name, String imageUrl) {
+
+
+    public ChatMessage(String text, String name, String imageUrl, String dateAndTime) {
         this.text = text;
         this.name = name;
         this.imageUrl = imageUrl;
+        this.dateAndTime = dateAndTime;
     }
 
     public String getId() {
@@ -52,4 +56,8 @@ public class ChatMessage {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public String getDateAndTime() { return dateAndTime; }
+
+    public void setDateAndTime(String dateAndTime) { this.dateAndTime = dateAndTime; }
 }
