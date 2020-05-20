@@ -15,23 +15,9 @@
         android:ems="10"
         android:hint="Doctor Name"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/docSpecialisationTf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Prescription" />
-
-    <EditText
-        android:id="@+id/docSpecialisationTf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:hint="Doctor Specialisation"
-        android:inputType="textShortMessage"
-        app:layout_constraintBottom_toTopOf="@+id/patNameTf"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/docNameTf" />
 
     <TextView
         android:id="@+id/Prescription"
@@ -49,21 +35,18 @@
         android:id="@+id/patNameTf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="24dp"
         android:ems="10"
         android:hint="Patient Name"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/dateTf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/docSpecialisationTf" />
+        app:layout_constraintTop_toBottomOf="@+id/docNameTf" />
 
     <EditText
         android:id="@+id/dateTf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:ems="10"
         android:hint="Date"
         android:inputType="date"
@@ -76,7 +59,6 @@
         android:id="@+id/recipeTf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Recipe"
         android:inputType="textShortMessage"
@@ -89,8 +71,6 @@
         android:id="@+id/medInsTf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="24dp"
         android:ems="10"
         android:hint="Medication Instruction"
         android:inputType="textLongMessage"
@@ -103,8 +83,6 @@
         android:id="@+id/dispInsTf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:ems="10"
         android:hint="Dispensing Instruction"
         android:inputType="textLongMessage"
