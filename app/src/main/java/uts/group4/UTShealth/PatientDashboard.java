@@ -24,8 +24,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import com.google.firebase.firestore.Query;
+
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 
@@ -133,6 +133,11 @@ public class PatientDashboard extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), BookAppointment.class));
         }
 
+        public void userProfile(View view) {
+            startActivity(new Intent(getApplicationContext(), PatientProfilePage.class));
+            CustomIntent.customType(PatientPastAppointments.this, "left-to-right");
+        }
+
         @Override
         public void finish() {
             super.finish();
@@ -155,11 +160,9 @@ public class PatientDashboard extends AppCompatActivity {
 
     public void userProfile(View view) {
         startActivity(new Intent(getApplicationContext(), PatientProfilePage.class));
+        CustomIntent.customType(PatientDashboard.this, "left-to-right");
     }
 
-    public void openChat(View view) {
-        startActivity(new Intent(getApplicationContext(), Chat.class));
-    }
     /**********************************************************************************************
      * Private Class for the recycler
      ************************************************************************************************/
@@ -173,7 +176,7 @@ public class PatientDashboard extends AppCompatActivity {
 
         void setAppointmentName(String date, String time, String doctor, final String chatCode) {
             TextView textView = view.findViewById(R.id.appointmentTextView);
-            textView.setText("Date: " + date + "\nTime: " + time  + "\nDoctor: " + doctor + "\n");
+            textView.setText("Date: " + date + "\nTime: " + time  + "\nPhysician: Dr. " + doctor + "\n");
 
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override

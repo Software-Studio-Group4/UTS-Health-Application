@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -55,6 +56,11 @@ public class PatientResetPass extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void backBtnPressed (View view) {
+        startActivity(new Intent(getApplicationContext(), PatientLogin.class));
+        CustomIntent.customType(PatientResetPass.this, "right-to-left");
     }
 
     @Override

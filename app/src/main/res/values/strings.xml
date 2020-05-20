@@ -8,5 +8,6 @@
     <string name="register">register</string>
     <string name="submit">submit</string>
     <string name="uts">UTS</string>
-    <string name="example_email">someone@domain.com</string>>
+    <string name="example_email">someone@domain.com</string>
+    <string name="hint">Please select a doctor</string>>
 </resources>

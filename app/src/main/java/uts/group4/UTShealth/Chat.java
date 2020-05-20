@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,8 +24,6 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -241,8 +236,8 @@ public class Chat extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             filePath = data.getData();
             putImageInStorage();
-        }
-    }
+                                }
+                }
     private void putImageInStorage() {
         // uploads the image into the database under the file named images
         final StorageReference ref = storageReference.child("images/" + java.util.UUID.randomUUID().toString());
@@ -254,7 +249,7 @@ public class Chat extends AppCompatActivity {
                             if (taskSnapshot.getMetadata().getReference() != null) {
                                 Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
+                                                @Override
                                     public void onSuccess(Uri uri) {
                                         imageUrl = uri.toString();
                                         ChatMessage Message = new

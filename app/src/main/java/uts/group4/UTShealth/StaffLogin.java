@@ -33,6 +33,7 @@ public class StaffLogin extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
+    Button backBtn;
 
     public void forgotPass(View view) {
         startActivity(new Intent(getApplicationContext(), StaffResetPass.class));
@@ -49,12 +50,18 @@ public class StaffLogin extends AppCompatActivity {
         CustomIntent.customType(StaffLogin.this, "right-to-left");
     }
 
+    public void backBtnPressed (View view) {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        CustomIntent.customType(StaffLogin.this, "bottom-to-up");
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.stafflogin_layout);
         final Button loginBtn = findViewById(R.id.loginBtn);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
+        backBtn = findViewById(R.id.backBtn);
         progressBar.setVisibility(View.INVISIBLE);
         emailTf = findViewById(R.id.emailTf);
         passwordTf = findViewById(R.id.passwordTf);

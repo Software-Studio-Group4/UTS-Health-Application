@@ -40,7 +40,7 @@ public class StaffCreateProfile extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userID;
     private static String userEmail;
-    private static  String userPass;
+    private static String userPass;
 
     public static String getEmail() {
         return userEmail;
@@ -115,6 +115,11 @@ public class StaffCreateProfile extends AppCompatActivity {
         });
     }
 
+    public void backBtnPressed(View view) {
+        startActivity(new Intent(getApplicationContext(), StaffLogin.class));
+        CustomIntent.customType(StaffCreateProfile.this, "left-to-right");
+    }
+
     @Override
     public void finish() {
         super.finish();
@@ -129,7 +134,7 @@ public class StaffCreateProfile extends AppCompatActivity {
     public static class StaffAddDetails extends AppCompatActivity {
         EditText firstNameTf, lastNameTf, phoneNumberTf, streetAddressTf,
                 cityTf, stateTf, postCodeTf;
-        Button createProfileBtn;
+        Button createProfileBtn, backBtn;
         FirebaseAuth fAuth;
         FirebaseFirestore fStore;
         String userID;
@@ -141,6 +146,7 @@ public class StaffCreateProfile extends AppCompatActivity {
             setContentView(R.layout.staffadddetails_layout);
 
             createProfileBtn = findViewById(R.id.createProfileBtn);
+            backBtn = findViewById(R.id.backBtn);
             firstNameTf = findViewById(R.id.firstNameTf);
             lastNameTf = findViewById(R.id.lastNameTf);
             phoneNumberTf = findViewById(R.id.phoneNumberTf);
@@ -210,6 +216,14 @@ public class StaffCreateProfile extends AppCompatActivity {
                             CustomIntent.customType(StaffAddDetails.this, "fadein-to-fadeout");
                         }
                     });
+                }
+            });
+
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), StaffCreateProfile.class));
+                    CustomIntent.customType(StaffAddDetails.this, "fadein-to-fadeout");
                 }
             });
         }

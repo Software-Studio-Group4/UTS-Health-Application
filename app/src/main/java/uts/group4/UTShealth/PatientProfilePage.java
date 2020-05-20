@@ -27,4 +27,9 @@ public class PatientProfilePage extends AppCompatActivity {
         CustomIntent.customType(PatientProfilePage.this, "fadein-to-fadeout");
         finish();
     }
+
+    public void backBtnPressed (View view) {
+        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+        CustomIntent.customType(PatientProfilePage.this, "right-to-left");
+    }
 }

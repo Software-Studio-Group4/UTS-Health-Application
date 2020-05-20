@@ -1,15 +1,13 @@
 package uts.group4.UTShealth;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import android.text.format.DateFormat;
-import android.widget.TimePicker;
 
 import java.util.Calendar;
 
@@ -24,7 +22,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
 
-        return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getContext()));
+        return new TimePickerDialog(getActivity(), R.style.DatePickerTheme,this, hour, minute, DateFormat.is24HourFormat(getContext()));
     }
 
     @Override

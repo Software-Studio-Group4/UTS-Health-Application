@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,17 +24,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.ChatMessage;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -44,35 +45,49 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     DatabaseReference dbRef;
-    Button backBtn;
     Spinner docSpinner;
     final List<String> doctors = new ArrayList<>();
     final List<String> doctorIds = new ArrayList<>();
+    String patientFullName = null;
+    Date date = new Date();
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+    String dateAndTime = formatter.format(date);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
-        docSpinner = findViewById(R.id.doctorSpinner);
 
+        docSpinner = findViewById(R.id.doctorSpinner);
         timeTextView = findViewById(R.id.timeTextView);
         dateTextView = findViewById(R.id.dateTextView);
-
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        backBtn = findViewById(R.id.backBtn14);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-                CustomIntent.customType(BookAppointment.this, "fadein-to-fadeout");
+    // the following block of code populates the patientName string with their full name to be used to be stored in the appointments object;
+                DocumentReference nameRef = fStore.collection("Patients").document(fAuth.getUid());
+                nameRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                patientFullName = document.getString("First Name") + " " + document.getString("Last Name");
+                            } else {
+                                Log.d("LOGGER", "No such document");
+                            }
+                        } else {
+                            Log.d("LOGGER", "get failed with ", task.getException());
+                        }
             }
         });
 
+
+
+
         /******************This code block sets the options in the spinner to doctor names from the database****************************/
         CollectionReference doctorsRef = fStore.collection("Doctor");
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, doctors);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, doctors);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         docSpinner.setAdapter(adapter);
         doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -153,7 +168,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         else {
             //initialise A Chat Object in the RealTimeDatabase
             dbRef = FirebaseDatabase.getInstance().getReference().child("Chats/" + "CHAT" + appointmentID);
-            ChatMessage initMessage = new ChatMessage("Welcome to your appointment!", "SYSTEM", null);
+            ChatMessage initMessage = new ChatMessage("Welcome to your appointment!", "SYSTEM", null, dateAndTime);
             dbRef.push().setValue(initMessage);
 
             // sets the target document reference to the Appointment collection in the firestore.
@@ -167,6 +182,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             String selectedDoc = docSpinner.getSelectedItem().toString();
             appointmentData.put("doctorID", (doctorIds.get(doctors.indexOf(selectedDoc))));
             appointmentData.put("DoctorFullName", selectedDoc);
+            appointmentData.put("PatientFullName", patientFullName);
 
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -192,5 +208,10 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
         }
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+    }
+
+    public void backBtnPressed(View view) {
+        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+
     }
 }

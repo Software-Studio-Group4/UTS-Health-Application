@@ -83,6 +83,11 @@ public class PatientLogin extends AppCompatActivity {
         CustomIntent.customType(PatientLogin.this, "left-to-right");
     }
 
+    public void backBtnPressed(View view) {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        CustomIntent.customType(PatientLogin.this, "right-to-left");
+    }
+
     @Override
     public void finish() {
         super.finish();
