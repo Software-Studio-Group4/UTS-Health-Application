@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:text="Notes"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/notesTf"
+        app:layout_constraintBottom_toTopOf="@+id/notesTf1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.469"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/notesTf"
+        android:id="@+id/notesTf1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -40,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sendBtn1"
-        app:layout_constraintTop_toBottomOf="@+id/notesTf"
+        app:layout_constraintTop_toBottomOf="@+id/notesTf1"
         app:layout_constraintVertical_bias="0.269" />
 
     <Button
@@ -52,7 +52,7 @@
         app:layout_constraintEnd_toStartOf="@+id/prescriptionBtn"
         app:layout_constraintHorizontal_bias="0.222"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notesTf"
+        app:layout_constraintTop_toBottomOf="@+id/notesTf1"
         app:layout_constraintVertical_bias="0.269" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
