@@ -8,12 +8,13 @@ public class AppointmentModel {
     private String patientID;
     private String ChatCode;
     private String DoctorFullName;
+    private String PatientFullName;
 
     public AppointmentModel(){
 
     }
 
-    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName) {
+    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName, String patientFullName) {
         this.id = id;
         Date = date;
         Time = time;
@@ -21,6 +22,7 @@ public class AppointmentModel {
         this.patientID = patientID;
         ChatCode = chatCode;
         DoctorFullName = doctorFullName;
+        PatientFullName = patientFullName;
     }
 
     public String getId() {
@@ -77,5 +79,13 @@ public class AppointmentModel {
 
     public void setDoctorFullName(String doctorFullName) {
         DoctorFullName = doctorFullName;
+    }
+
+    public String getPatientFullName() {
+        return PatientFullName;
+    }
+
+    public void setPatientFullName(String patientFullName) {
+        PatientFullName = patientFullName;
     }
 }
