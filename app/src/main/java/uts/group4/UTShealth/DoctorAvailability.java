@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +23,12 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.sql.Date;
+
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ShiftModel;
+import uts.group4.UTShealth.Model.TimeOffModel;
 import uts.group4.UTShealth.Util.DATParser;
 
 public class DoctorAvailability extends AppCompatActivity {
@@ -32,6 +36,7 @@ public class DoctorAvailability extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference shiftRef = fStore.collection("Doctor").document(userID).collection("Shifts");
+    CollectionReference timeOffRef = fStore.collection("Doctor").document(userID).collection("Time Off");
     private RecyclerView sunRecyclerView;
     private FirestoreRecyclerAdapter<ShiftModel, ShiftViewHolder> sunAdapter;
     private RecyclerView monRecyclerView;
@@ -46,12 +51,33 @@ public class DoctorAvailability extends AppCompatActivity {
     private FirestoreRecyclerAdapter<ShiftModel, ShiftViewHolder> friAdapter;
     private RecyclerView satRecyclerView;
     private FirestoreRecyclerAdapter<ShiftModel, ShiftViewHolder> satAdapter;
+    private RecyclerView timeOffRecyclerView;
+    private FirestoreRecyclerAdapter<TimeOffModel, TimeOffViewHolder> timeOffAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctoravailability_layout);
+
+        timeOffRecyclerView = findViewById(R.id.timeOffRecycler);
+        timeOffRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Query timeOffQuery = timeOffRef.orderBy("Month", Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<TimeOffModel> timeOffOptions = new FirestoreRecyclerOptions.Builder<TimeOffModel>().setQuery(timeOffQuery, TimeOffModel.class).build();
+        timeOffAdapter = new FirestoreRecyclerAdapter<TimeOffModel, TimeOffViewHolder>(timeOffOptions) {
+            @Override
+            protected void onBindViewHolder(@NonNull TimeOffViewHolder timeOffViewHolder, int position, @NonNull TimeOffModel timeOffModel) {
+                timeOffViewHolder.setBlockData(timeOffModel.getDate(), getSnapshots().getSnapshot(position).getId());
+            }
+
+            @NonNull
+            @Override
+            public TimeOffViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_timeoff, parent, false);
+                return new TimeOffViewHolder(view);
+            }
+        };
+        timeOffRecyclerView.setAdapter(timeOffAdapter);
 
         /***********setting the recycler views**************/
         initShifts();
@@ -79,6 +105,7 @@ public class DoctorAvailability extends AppCompatActivity {
         thuAdapter.startListening();
         friAdapter.startListening();
         satAdapter.startListening();
+        timeOffAdapter.startListening();
     }
 
     @Override
@@ -106,6 +133,9 @@ public class DoctorAvailability extends AppCompatActivity {
         if (monAdapter != null) {
             monAdapter.stopListening();
         }
+        if (timeOffAdapter != null) {
+            timeOffAdapter.stopListening();
+        }
     }
 
     /**********************************************************************************************
@@ -116,11 +146,20 @@ public class DoctorAvailability extends AppCompatActivity {
         shiftEditorFragment.show(getSupportFragmentManager(), "New Shift");
     }
 
-
     public void editShift(Bundle bundle){
         EditShiftFragment editShiftFragment = new EditShiftFragment();
         editShiftFragment.setArguments(bundle);
         editShiftFragment.show(getSupportFragmentManager(), "Edit Shift");
+    }
+
+    public void addTimeOff(View view){
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("source", "DoctorAvailability");
+        bundle.putString("userID", userID);
+        datePickerFragment.setArguments(bundle);
+        datePickerFragment.show(getSupportFragmentManager(), "date picker");
+
     }
     /**********************************************************************************************
      * Initialise the shift recyclers (this is huge)
@@ -296,8 +335,32 @@ public class DoctorAvailability extends AppCompatActivity {
             block.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    
+
                     editShift(bundle);
+                }
+            });
+        }
+    }
+
+    private class TimeOffViewHolder extends RecyclerView.ViewHolder {
+        private View view;
+
+        TimeOffViewHolder(View itemView) {
+            super(itemView);
+            view = itemView;
+        }
+
+        void setBlockData(String date, String documentId) {
+           TextView data = view.findViewById(R.id.timeOffDateHeaderText);
+           LinearLayout block = view.findViewById(R.id.timeOffBlockInstance);
+
+           data.setText(DATParser.getMonthAsStr(date) + " " + DATParser.getDay(date) + "\n" + DATParser.getYear(date));
+
+            block.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Toast.makeText( DoctorAvailability.this, "Clicked a time off block", Toast.LENGTH_SHORT).show();
                 }
             });
         }
