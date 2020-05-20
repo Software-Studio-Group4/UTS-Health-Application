@@ -13,23 +13,23 @@ import maes.tech.intentanim.CustomIntent;
 
 public class Notes extends AppCompatActivity {
 
-    EditText notesTf1;
+    EditText notesTf;
     Button sendBtn, prescriptionBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
-        notesTf1 = findViewById(R.id.notesTf1);
+        notesTf = findViewById(R.id.notesTf1);
         sendBtn = findViewById(R.id.sendBtn1);
         prescriptionBtn = findViewById(R.id.prescriptionBtn);
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
-           String notes = notesTf1.getText().toString().trim();
+           String notes = notesTf.getText().toString().trim();
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(notes)) {
-                    notesTf1.setError("Cannot have Empty Field");
+                    notesTf.setError("Cannot have Empty Field");
                     return;
                 }
                 startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
