@@ -7,7 +7,11 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+
 import maes.tech.intentanim.CustomIntent;
+
 
 // Homepage
 
@@ -17,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.setFirestoreSettings(settings);
 
         Button signupBtn = findViewById(R.id.signup_button);
         signupBtn.setOnClickListener(new View.OnClickListener() {

@@ -115,11 +115,19 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
     public void btn_PickerDate(View view) {
         DialogFragment fragment = new DatePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("source", "BookAppointment");
+        fragment.setArguments(bundle);
         fragment.show(getSupportFragmentManager(), "date picker");
     }
 
     public static void populateSetDateText(int year, int month, int day) {
-        dateTextView.setText(day + "/" + month + "/" + year);
+        if(month < 10){
+            dateTextView.setText(day + "/0" + month + "/" + year);
+        }
+        else{
+            dateTextView.setText(day + "/" + month + "/" + year);
+        }
     }
 
     public void btn_PickerTime(View view) {

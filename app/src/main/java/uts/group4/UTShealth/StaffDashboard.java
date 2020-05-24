@@ -63,8 +63,8 @@ public class StaffDashboard extends AppCompatActivity {
             }
         };
         appointmentsRecyclerView.setAdapter(appointmentAdapter);
-
-        fAuth = FirebaseAuth.getInstance();
+        
+        //log out button set up 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

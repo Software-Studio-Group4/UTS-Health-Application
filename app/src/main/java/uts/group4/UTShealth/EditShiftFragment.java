@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,7 +41,7 @@ import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Util.DATParser;
 
 
-public class NewShiftFragment extends DialogFragment {
+public class EditShiftFragment extends DialogFragment {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
@@ -50,6 +51,7 @@ public class NewShiftFragment extends DialogFragment {
     Spinner startTimeSpinner;
     Spinner endTimeSpinner;
     Button confirmButton;
+    Button deleteButton;
     ArrayList<ArrayList<ArrayList<String>>> AllShifts = new ArrayList<>();
     ArrayList<ArrayList<String>> sundayShifts = new ArrayList<>();
     ArrayList<ArrayList<String>> mondayShifts = new ArrayList<>();
@@ -59,38 +61,42 @@ public class NewShiftFragment extends DialogFragment {
     ArrayList<ArrayList<String>> fridayShifts = new ArrayList<>();
     ArrayList<ArrayList<String>> saturdayShifts = new ArrayList<>();
 
+    String documentID;
+    ArrayList<String> currentShift = new ArrayList<>();
+
 
 
 
     //mandatory empty constructor
-    public NewShiftFragment(){
+    public EditShiftFragment(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       super.onCreateView(inflater, container, savedInstanceState);
-       View view = inflater.inflate(R.layout.newshiftfragment_layout, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.editshiftfragment_layout, container, false);
 
-       fAuth = FirebaseAuth.getInstance();
-       fStore = FirebaseFirestore.getInstance();
-       userID = fAuth.getCurrentUser().getUid();
-       confirmButton = view.findViewById(R.id.confirmBtn);
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        userID = fAuth.getCurrentUser().getUid();
+        confirmButton = view.findViewById(R.id.confirmBtn);
+        deleteButton = view.findViewById(R.id.cancelBtn);
 
-       //initialise the spinners and all information in the spinners
-       daySpinner = (Spinner) view.findViewById(R.id.daySpinner);
-       startTimeSpinner = (Spinner) view.findViewById(R.id.startTimeSpinner);
-       endTimeSpinner = (Spinner) view.findViewById(R.id.endTimeSpinner);
-       ArrayAdapter<String> daySpinnerAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, daySpinnerArray);
-       ArrayAdapter<String> startTimeSpinnerAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, timeSpinnerArray);
-       ArrayAdapter<String> endTimeSpinnerAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, timeSpinnerArray);
-       daySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       startTimeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       endTimeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       initSpinnerArrays();
-       daySpinner.setAdapter(daySpinnerAdapter);
-       startTimeSpinner.setAdapter(startTimeSpinnerAdapter);
-       endTimeSpinner.setAdapter(endTimeSpinnerAdapter);
+        //initialise the spinners and all information in the spinners
+        daySpinner = (Spinner) view.findViewById(R.id.daySpinner);
+        startTimeSpinner = (Spinner) view.findViewById(R.id.startTimeSpinner);
+        endTimeSpinner = (Spinner) view.findViewById(R.id.endTimeSpinner);
+        ArrayAdapter<String> daySpinnerAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, daySpinnerArray);
+        ArrayAdapter<String> startTimeSpinnerAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, timeSpinnerArray);
+        ArrayAdapter<String> endTimeSpinnerAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_spinner_item, timeSpinnerArray);
+        daySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startTimeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        endTimeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        initSpinnerArrays();
+        daySpinner.setAdapter(daySpinnerAdapter);
+        startTimeSpinner.setAdapter(startTimeSpinnerAdapter);
+        endTimeSpinner.setAdapter(endTimeSpinnerAdapter);
 
         //fills a list full of this doctor's shifts
         AllShifts.add(sundayShifts);
@@ -118,9 +124,7 @@ public class NewShiftFragment extends DialogFragment {
 
 
 
-
-
-       //onclick for the confirm button
+        //onclick for the confirm button
         confirmButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -130,7 +134,36 @@ public class NewShiftFragment extends DialogFragment {
             }
         });
 
+        deleteButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                deleteShift();
+            }}
+        );
+
         return view;
+
+        //onclick for the delete button
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            documentID = bundle.getString("documentID");
+            Log.i("Key", "documentID :" + bundle.getString("documentID"));
+            currentShift.add(bundle.getString("currentDay"));
+            Log.i("Key", "currentDay :" + bundle.getString("currentDay"));
+            currentShift.add(bundle.getString("currentStart"));
+            Log.i("Key", "currentStart :" + bundle.getString("currentStart"));
+            currentShift.add(bundle.getString("currentEnd"));
+            Log.i("Key", "currentEnd :" + bundle.getString("currentEnd"));
+
+            daySpinner.setSelection(DATParser.weekDayAsInt(currentShift.get(0)) - 1);
+            startTimeSpinner.setSelection((DATParser.timeStrToInt(currentShift.get(1)))/100);
+            endTimeSpinner.setSelection((DATParser.timeStrToInt(currentShift.get(2)))/100);
+        }
 
     }
     /**********************************************************************************************
@@ -147,11 +180,11 @@ public class NewShiftFragment extends DialogFragment {
 
         switch(checkShiftValidity(workDay, startTime, endTime)){
             case 0:
-                DocumentReference docRef = fStore.collection("Doctor").document(userID).collection("Shifts").document();
+                DocumentReference docRef = fStore.collection("Doctor").document(userID).collection("Shifts").document(documentID);
                 docRef.set(shiftData).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i("TAG", "successfully added new shift");
+                        Log.i("TAG", "successfully edited a shift");
                     }
                 })
                         .addOnFailureListener(new OnFailureListener() {
@@ -199,18 +232,41 @@ public class NewShiftFragment extends DialogFragment {
             int selectedEnd = DATParser.timeStrToInt(endTime);
             int checkedStart = DATParser.timeStrToInt(shift.get(1));
             int checkedEnd = DATParser.timeStrToInt(shift.get(2));
+            if(shift.equals(currentShift)){
+                continue;
+            }
             if(selectedStart >= checkedStart && selectedStart <= checkedEnd){
                 return 3;
             }
             else if(selectedEnd >= checkedStart && selectedEnd <= checkedEnd){
                 return 3;
             }
-
         }
 
 
 
         return 0;
+    }
+    /**********************************************************************************************
+     * Delete Shift
+     **********************************************************************************************/
+    public void deleteShift(){
+        DocumentReference shiftRef = fStore.collection("Doctor").document(userID).collection("Shifts").document(documentID);
+        shiftRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                AllShifts.get(DATParser.weekDayAsInt(currentShift.get(0)) - 1).remove(currentShift);
+                Toast.makeText( getActivity(), "Shift Deleted!", Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
     }
     /**********************************************************************************************
      * Initialisation and miscellaneous methods
