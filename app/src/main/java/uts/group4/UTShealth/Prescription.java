@@ -1,13 +1,29 @@
 package uts.group4.UTShealth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -15,12 +31,16 @@ public class Prescription extends AppCompatActivity {
     EditText docNameTf, docSpecialisationTf, patNameTf, dateTf, recipeTf, medInsTf, dispInsTf;
     Button doneBtn;
     private static String docName;
-    private static String docSpe;
     private static String patName;
     private static String date;
     private static String recipe;
     private static String medIns;
     private static String dispIns;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    String userID = fAuth.getCurrentUser().getUid();
+    DocumentReference patNameRef = fStore.collection("Patients").document(userID);
+    CollectionReference doctorsRef = fStore.collection("Appointment");
 
 
     @Override
@@ -28,7 +48,6 @@ public class Prescription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prescription);
         docNameTf = findViewById(R.id.docNameTf);
-        docSpecialisationTf = findViewById(R.id.docSpecialisationTf);
         patNameTf = findViewById(R.id.patNameTf);
         dateTf = findViewById(R.id.dateTf);
         recipeTf = findViewById(R.id.recipeTf);
@@ -36,11 +55,41 @@ public class Prescription extends AppCompatActivity {
         dispInsTf = findViewById(R.id.dispInsTf);
         doneBtn = findViewById(R.id.doneBtn);
 
+        patNameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String patientFullName = documentSnapshot.getString("First Name") + " " + documentSnapshot.getString("Last Name");
+                    patNameTf.setText(patientFullName);
+                } else {
+                    Toast.makeText(Prescription.this, "Error: Patient name", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Prescription.this, "Error: Patient name", Toast.LENGTH_SHORT).show();
+            }
+        });
+        doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task){
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        String doctorName = document.getString("DoctorFullName");
+                        docNameTf.setText(doctorName);
+                        String date = document.getString("Date");
+                        dateTf.setText(date);
+                    }
+                }
+            }
+        });
+
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 docName = docNameTf.getText().toString().trim();
-                docSpe = docSpecialisationTf.getText().toString().trim();
                 patName = patNameTf.getText().toString().trim();
                 date = dateTf.getText().toString().trim();
                 recipe = recipeTf.getText().toString().trim();
@@ -49,10 +98,6 @@ public class Prescription extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(docName)) {
                     docNameTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(docSpe)) {
-                    docSpecialisationTf.setError("Cannot have Empty Field");
                     return;
                 }
                 if (TextUtils.isEmpty(patName)) {
