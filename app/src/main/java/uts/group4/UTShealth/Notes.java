@@ -51,11 +51,6 @@ public class Notes extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String notes = notesTf.getText().toString().trim();
-                if (TextUtils.isEmpty(notes)) {
-                    notesTf.setError("Cannot have Empty Field");
-                    return;
-                }
                 Bundle extras = getIntent().getExtras();
                 assert extras != null;
                 String chatCode = extras.getString("chatroomcode1");
@@ -67,6 +62,11 @@ public class Notes extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String notes = notesTf.getText().toString().trim();
+                                        if (TextUtils.isEmpty(notes)) {
+                                            notesTf.setError("Cannot have Empty Field");
+                                            return;
+                                        }
                                         String id = document.getId();
                                         DocumentReference documentReference = fStore.collection("Appointment").document(id);
                                         Map<String, Object> notesData = new HashMap<>(); //
