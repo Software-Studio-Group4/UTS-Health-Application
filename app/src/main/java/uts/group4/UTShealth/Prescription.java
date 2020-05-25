@@ -44,9 +44,6 @@ public class Prescription extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference appointmentRef = fStore.collection("Appointment");
-    Intent intent = getIntent();
-    //code to receive appointmentID all the way from BookAppointment class
-    String appid = intent.getStringExtra("APPOINTMENT_ID");
     String id = appointmentRef.document().getId();
 
 
@@ -115,7 +112,7 @@ public class Prescription extends AppCompatActivity {
                     return;
                 }
 
-                DocumentReference documentReference = fStore.collection("Appointment").document(appid).collection("Prescription").document(userID);
+                DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(userID);
                 Map<String, Object> prescriptionData = new HashMap<>(); //
                 prescriptionData.put("DoctorFullName", docName);
                 prescriptionData.put("PatientFullName", patName);

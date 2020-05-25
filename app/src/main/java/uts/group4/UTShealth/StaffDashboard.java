@@ -72,11 +72,6 @@ public class StaffDashboard extends AppCompatActivity {
             }
         };
         appointmentsRecyclerView.setAdapter(appointmentAdapter);
-        //code to send appointmentID all the way to Prescription class
-        Bundle appid = getIntent().getExtras();
-        Intent intent = new Intent(this, Chat.class);
-        intent.putExtra("APPOINTMENT_ID", appid);
-        startActivity(intent);
 
         fAuth = FirebaseAuth.getInstance();
         logoutBtn.setOnClickListener(new View.OnClickListener() {
