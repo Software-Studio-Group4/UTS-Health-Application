@@ -163,6 +163,11 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String time = timeTextView.getText().toString();
         String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
 
+        //code to send appointmentID all the way to Prescription class
+        Intent intent = new Intent(this, StaffDashboard.class);
+        intent.putExtra("APPOINTMENT_ID", appointmentID);
+        startActivity(intent);
+
         DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
 
         if (TextUtils.isEmpty(date)) {
