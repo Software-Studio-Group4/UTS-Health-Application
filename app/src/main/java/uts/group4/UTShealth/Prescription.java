@@ -22,6 +22,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -44,10 +45,9 @@ public class Prescription extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference appointmentRef = fStore.collection("Appointment");
-    String id = appointmentRef.document().getId();
-
-
-
+    Bundle extras = getIntent().getExtras();
+    String chatCode = extras.getString("chatroomcode");
+    Query id = appointmentRef.whereEqualTo("ChatCode", chatCode);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +112,7 @@ public class Prescription extends AppCompatActivity {
                     return;
                 }
 
-                DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(userID);
+                DocumentReference documentReference = fStore.collection("Appointment").document(String.valueOf(id)).collection("Prescription").document(userID);
                 Map<String, Object> prescriptionData = new HashMap<>(); //
                 prescriptionData.put("DoctorFullName", docName);
                 prescriptionData.put("PatientFullName", patName);

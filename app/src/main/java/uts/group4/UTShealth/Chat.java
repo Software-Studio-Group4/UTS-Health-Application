@@ -130,6 +130,7 @@ public class Chat extends AppCompatActivity {
         chatCode = null;
         if(extras != null){
             chatCode = extras.getString("chatroomcode");
+
             messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
         }
         else{
@@ -217,15 +218,17 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+
+        final Intent i = new Intent(getApplicationContext(), Notes.class);
+        i.putExtra("Chatroomcode", chatCode);
         endBtn = findViewById(R.id.endBtn);
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Notes.class));
+                startActivity(i);
                 CustomIntent.customType(Chat.this, "fadein-to-fadeout");
             }
         });
-
 
         mAddMessageImageView = findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {

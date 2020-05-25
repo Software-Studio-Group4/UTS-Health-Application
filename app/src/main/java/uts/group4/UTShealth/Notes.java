@@ -23,11 +23,7 @@ public class Notes extends AppCompatActivity {
         notesTf = findViewById(R.id.notesTf1);
         sendBtn = findViewById(R.id.sendBtn1);
         prescriptionBtn = findViewById(R.id.prescriptionBtn);
-        //code to send appointmentID all the way to Prescription class
-        Bundle appid = getIntent().getExtras();
-        Intent intent = new Intent(this, Prescription.class);
-        intent.putExtra("APPOINTMENT_ID", appid);
-        startActivity(intent);
+
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
            String notes = notesTf.getText().toString().trim();
@@ -42,10 +38,14 @@ public class Notes extends AppCompatActivity {
             }
         });
 
+        Bundle extras = getIntent().getExtras();
+        String chatCode = extras.getString("Chatroomcode");
+        final Intent i = new Intent(getApplicationContext(), Prescription.class);
+        i.putExtra("chatroomcode", chatCode);
         prescriptionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Prescription.class));
+                startActivity(i);
                 CustomIntent.customType(Notes.this, "fadein-to-fadeout");
             }
         });
