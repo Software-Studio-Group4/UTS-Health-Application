@@ -30,73 +30,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
-import uts.group4.UTShealth.Model.AppointmentModel;
 
 public class Prescription extends AppCompatActivity {
-    EditText docNameTf, patNameTf, dateTf, recipeTf, medInsTf, dispInsTf;
+    EditText  recipeTf, medInsTf, dispInsTf;
     Button doneBtn;
-    private static String docName;
-    private static String patName;
-    private static String date;
     private static String recipe;
     private static String medIns;
     private static String dispIns;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
-    CollectionReference appointmentRef = fStore.collection("Appointment");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prescription);
-        docNameTf = findViewById(R.id.docNameTf);
-        patNameTf = findViewById(R.id.patNameTf);
-        dateTf = findViewById(R.id.dateTf);
         recipeTf = findViewById(R.id.recipeTf);
         medInsTf = findViewById(R.id.medInsTf);
         dispInsTf = findViewById(R.id.dispInsTf);
         doneBtn = findViewById(R.id.doneBtn);
 
-        appointmentRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task){
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document : task.getResult()){
-                        String doctorName = document.getString("DoctorFullName");
-                        docNameTf.setText(doctorName);
-                        String patientName = document.getString("PatientFullName");
-                        patNameTf.setText(patientName);
-                        String date = document.getString("Date");
-                        dateTf.setText(date);
-                    }
-                }
-            }
-        });
-
-
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                docName = docNameTf.getText().toString().trim();
-                patName = patNameTf.getText().toString().trim();
-                date = dateTf.getText().toString().trim();
                 recipe = recipeTf.getText().toString().trim();
                 medIns = medInsTf.getText().toString().trim();
                 dispIns = dispInsTf.getText().toString().trim();
 
-                if (TextUtils.isEmpty(docName)) {
-                    docNameTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(patName)) {
-                    patNameTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(date)) {
-                    dateTf.setError("Cannot have Empty Field");
-                    return;
-                }
                 if (TextUtils.isEmpty(recipe)) {
                     recipeTf.setError("Cannot have Empty Field");
                     return;
@@ -123,9 +83,6 @@ public class Prescription extends AppCompatActivity {
                                         String id = document.getId();
                                         DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(userID);
                                         Map<String, Object> prescriptionData = new HashMap<>(); //
-                                        prescriptionData.put("DoctorFullName", docName);
-                                        prescriptionData.put("PatientFullName", patName);
-                                        prescriptionData.put("Date", date);
                                         prescriptionData.put("Recipe", recipe);
                                         prescriptionData.put("MedicalInstruction", medIns);
                                         prescriptionData.put("DispensingInstruction", dispIns);

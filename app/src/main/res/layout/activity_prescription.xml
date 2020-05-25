@@ -7,65 +7,31 @@
     android:background="#4d4365"
     tools:context=".Prescription">
 
-    <EditText
-        android:id="@+id/docNameTf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:hint="Doctor Name"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Prescription" />
-
     <TextView
         android:id="@+id/Prescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Prescription"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/docNameTf"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/patNameTf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Patient Name"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/dateTf"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/docNameTf" />
-
-    <EditText
-        android:id="@+id/dateTf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Date"
-        android:inputType="date"
-        app:layout_constraintBottom_toTopOf="@+id/recipeTf"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/patNameTf" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.125" />
 
     <EditText
         android:id="@+id/recipeTf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
         android:ems="10"
         android:hint="Recipe"
         android:inputType="textShortMessage"
         app:layout_constraintBottom_toTopOf="@+id/medInsTf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateTf" />
+        app:layout_constraintTop_toBottomOf="@+id/Prescription" />
 
     <EditText
         android:id="@+id/medInsTf"
