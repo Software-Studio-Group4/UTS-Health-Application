@@ -137,6 +137,7 @@ public class Chat extends AppCompatActivity {
             messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
         }
 
+
         final String chatRoomPath = CHATS_PATH + chatCode;
 
         FirebaseRecyclerOptions<ChatMessage> options =
