@@ -26,9 +26,9 @@ public class Notes extends AppCompatActivity {
 
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
-           String notes = notesTf.getText().toString().trim();
             @Override
             public void onClick(View v) {
+                String notes = notesTf.getText().toString().trim();
                 if (TextUtils.isEmpty(notes)) {
                     notesTf.setError("Cannot have Empty Field");
                     return;
