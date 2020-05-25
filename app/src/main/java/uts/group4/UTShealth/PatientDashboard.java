@@ -1,8 +1,15 @@
 package uts.group4.UTShealth;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +18,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,6 +41,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -49,6 +65,7 @@ public class PatientDashboard extends AppCompatActivity {
     TextView welcomeText;
     private RecyclerView appointmentsRecyclerView;
     private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;
+
 
 
     @Override
@@ -166,6 +183,9 @@ public class PatientDashboard extends AppCompatActivity {
     public void openChat(View view) {
         startActivity(new Intent(getApplicationContext(), Chat.class));
     }
+    public void doctorProfile(View view){
+        startActivity(new Intent(getApplicationContext(), PatientDoctorView.class));
+    }
     /**********************************************************************************************
      * Private Class for the recycler
      ************************************************************************************************/
@@ -197,6 +217,7 @@ public class PatientDashboard extends AppCompatActivity {
             });
         }
     }
+
 }
 
 
