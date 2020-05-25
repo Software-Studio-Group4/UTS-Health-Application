@@ -40,22 +40,11 @@ public class Notes extends AppCompatActivity {
         notesTf = findViewById(R.id.notesTf1);
         sendBtn = findViewById(R.id.sendBtn1);
         prescriptionBtn = findViewById(R.id.prescriptionBtn);
-        Bundle extras = getIntent().getExtras();
-        String tempChatCode = null;
-        if(extras != null){
-            tempChatCode = extras.getString("Chatroomcode");
-        }
-        final String chatCode = tempChatCode;
 
         prescriptionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //code to send chatid to Prescription class
-                Intent i = new Intent(getApplicationContext(), Prescription.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("chatroomcode1", chatCode);
-                i.putExtras(bundle);
-                startActivity(i);
+                startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
                 CustomIntent.customType(Notes.this, "fadein-to-fadeout");
             }
         });
@@ -67,6 +56,9 @@ public class Notes extends AppCompatActivity {
                     notesTf.setError("Cannot have Empty Field");
                     return;
                 }
+                Bundle extras = getIntent().getExtras();
+                assert extras != null;
+                String chatCode = extras.getString("chatroomcode1");
                 fStore.collection("Appointment")
                         .whereEqualTo("ChatCode", chatCode)
                         .get()

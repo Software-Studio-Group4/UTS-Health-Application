@@ -72,7 +72,7 @@ public class Prescription extends AppCompatActivity {
                 //code to get the chat code
                 Bundle extras = getIntent().getExtras();
                 assert extras != null;
-                String chatCode = extras.getString("chatroomcode1");
+                String chatCode = extras.getString("Chatroomcode");
                 fStore.collection("Appointment")
                         .whereEqualTo("ChatCode", chatCode)
                         .get()
@@ -107,8 +107,11 @@ public class Prescription extends AppCompatActivity {
                         });
 
 
-
-                startActivity(new Intent(getApplicationContext(), Notes.class));
+                Intent i = new Intent(getApplicationContext(), Notes.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("chatroomcode1", chatCode);
+                i.putExtras(bundle);
+                startActivity(i);
                 CustomIntent.customType(Prescription.this, "fadein-to-fadeout");
             }
         });
