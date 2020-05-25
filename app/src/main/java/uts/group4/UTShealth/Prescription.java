@@ -76,7 +76,7 @@ public class Prescription extends AppCompatActivity {
 
         //code to get the chat code
         Bundle extras = getIntent().getExtras();
-        String chatCode = extras.getString("chatroomcode");
+        String chatCode = extras.getString("chatroomcode1");
         final Query id = appointmentRef.whereEqualTo("ChatCode", chatCode);
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override

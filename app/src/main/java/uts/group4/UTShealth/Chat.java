@@ -220,13 +220,15 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-        //code to send chatid to Notes class
-        final Intent i = new Intent(getApplicationContext(), Notes.class);
-        i.putExtra("Chatroomcode", chatCode);
         endBtn = findViewById(R.id.endBtn);
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //code to send chatid to Notes class
+                Intent i = new Intent(getApplicationContext(), Notes.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Chatroomcode", chatCode);
+                i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(Chat.this, "fadein-to-fadeout");
             }
