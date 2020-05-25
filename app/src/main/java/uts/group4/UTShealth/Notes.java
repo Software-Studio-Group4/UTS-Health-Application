@@ -70,6 +70,7 @@ public class Notes extends AppCompatActivity {
                                                 Toast.makeText(Notes.this, "Success", Toast.LENGTH_SHORT).show();
                                             }
                                         })
+
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
