@@ -220,6 +220,7 @@ public class Chat extends AppCompatActivity {
             }
         });
 
+        //code to send chatid to Notes class
         final Intent i = new Intent(getApplicationContext(), Notes.class);
         i.putExtra("Chatroomcode", chatCode);
         endBtn = findViewById(R.id.endBtn);

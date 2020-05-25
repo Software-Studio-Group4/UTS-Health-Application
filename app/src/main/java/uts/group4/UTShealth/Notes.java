@@ -38,7 +38,7 @@ public class Notes extends AppCompatActivity {
             }
         });
 
-
+        //code to send chatid to Notes class
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("Chatroomcode");
         final Intent i = new Intent(getApplicationContext(), Prescription.class);
