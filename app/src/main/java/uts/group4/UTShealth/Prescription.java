@@ -82,7 +82,7 @@ public class Prescription extends AppCompatActivity {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String id = document.getId();
                                         DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(userID);
-                                        Map<String, Object> prescriptionData = new HashMap<>(); //
+                                        Map<String, Object> prescriptionData = new HashMap<>();
                                         prescriptionData.put("Recipe", recipe);
                                         prescriptionData.put("MedicalInstruction", medIns);
                                         prescriptionData.put("DispensingInstruction", dispIns);

@@ -64,7 +64,7 @@ public class Notes extends AppCompatActivity {
                                         DocumentReference documentReference = fStore.collection("Appointment").document(id);
                                         Map<String, Object> notesData = new HashMap<>(); //
                                         notesData.put("Notes", notes);
-                                        documentReference.set(notesData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        documentReference.update(notesData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(Notes.this, "Success", Toast.LENGTH_SHORT).show();
