@@ -38,14 +38,16 @@ public class Notes extends AppCompatActivity {
             }
         });
 
-        //code to send chatid to Notes class
-        Bundle extras = getIntent().getExtras();
-        String chatCode = extras.getString("Chatroomcode");
-        final Intent i = new Intent(getApplicationContext(), Prescription.class);
-        i.putExtra("chatroomcode", chatCode);
         prescriptionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //code to send chatid to Prescription class
+                Bundle extras = getIntent().getExtras();
+                String chatCode = extras.getString("Chatroomcode");
+                Intent i = new Intent(getApplicationContext(), Prescription.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("chatroomcode1", chatCode);
+                i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(Notes.this, "fadein-to-fadeout");
             }
