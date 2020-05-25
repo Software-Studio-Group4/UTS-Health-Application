@@ -74,10 +74,7 @@ public class Prescription extends AppCompatActivity {
             }
         });
 
-        //code to get the chat code
-        Bundle extras = getIntent().getExtras();
-        String chatCode = extras.getString("chatroomcode1");
-        final Query id = appointmentRef.whereEqualTo("ChatCode", chatCode);
+
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,28 +109,45 @@ public class Prescription extends AppCompatActivity {
                     dispInsTf.setError("Cannot have Empty Field");
                     return;
                 }
-
-
-                DocumentReference documentReference = fStore.collection("Appointment").document(String.valueOf(id)).collection("Prescription").document(userID);
-                Map<String, Object> prescriptionData = new HashMap<>(); //
-                prescriptionData.put("DoctorFullName", docName);
-                prescriptionData.put("PatientFullName", patName);
-                prescriptionData.put("Date", date);
-                prescriptionData.put("Recipe", recipe);
-                prescriptionData.put("MedicalInstruction", medIns);
-                prescriptionData.put("DispensingInstruction", dispIns);
-                documentReference.set(prescriptionData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(Prescription.this, "Success", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                        .addOnFailureListener(new OnFailureListener() {
+                //code to get the chat code
+                Bundle extras = getIntent().getExtras();
+                String chatCode = extras.getString("chatroomcode1");
+                fStore.collection("Appointment")
+                        .whereEqualTo("ChatCode", chatCode)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(Prescription.this, "Error", Toast.LENGTH_SHORT).show();
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String id = document.getId();
+                                        DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(userID);
+                                        Map<String, Object> prescriptionData = new HashMap<>(); //
+                                        prescriptionData.put("DoctorFullName", docName);
+                                        prescriptionData.put("PatientFullName", patName);
+                                        prescriptionData.put("Date", date);
+                                        prescriptionData.put("Recipe", recipe);
+                                        prescriptionData.put("MedicalInstruction", medIns);
+                                        prescriptionData.put("DispensingInstruction", dispIns);
+                                        documentReference.set(prescriptionData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(Prescription.this, "Success", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Prescription.this, "Error", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    Toast.makeText(Prescription.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
+
 
 
                 startActivity(new Intent(getApplicationContext(), Notes.class));
