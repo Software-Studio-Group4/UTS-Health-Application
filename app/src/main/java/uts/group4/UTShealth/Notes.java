@@ -33,8 +33,6 @@ public class Notes extends AppCompatActivity {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
-    Bundle extras = getIntent().getExtras();
-    String chatCode = extras.getString("chatroomcode1");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +45,15 @@ public class Notes extends AppCompatActivity {
         prescriptionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Prescription.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Chatroomcode", chatCode);
-                i.putExtras(bundle);
-                startActivity(i);
+                startActivity(new Intent(getApplicationContext(), Prescription.class));
                 CustomIntent.customType(Notes.this, "fadein-to-fadeout");
             }
         });
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle extras = getIntent().getExtras();
+                String chatCode = extras.getString("chatroomcode1");
                 fStore.collection("Appointment")
                         .whereEqualTo("ChatCode", chatCode)
                         .get()

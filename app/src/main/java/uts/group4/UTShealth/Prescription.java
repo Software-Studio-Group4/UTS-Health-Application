@@ -41,10 +41,6 @@ public class Prescription extends AppCompatActivity {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
-    final int min = 1;
-    final int max = 9999;
-    final int random = new Random().nextInt((max - min) + 1) + min;
-    String presId = userID + random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +83,7 @@ public class Prescription extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String id = document.getId();
-                                        DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(presId);
+                                        DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(userID);
                                         Map<String, Object> prescriptionData = new HashMap<>();
                                         prescriptionData.put("Recipe", recipe);
                                         prescriptionData.put("MedicalInstruction", medIns);
