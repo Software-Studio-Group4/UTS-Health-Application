@@ -40,8 +40,21 @@ public class Notes extends AppCompatActivity {
         notesTf = findViewById(R.id.notesTf1);
         sendBtn = findViewById(R.id.sendBtn1);
         prescriptionBtn = findViewById(R.id.prescriptionBtn);
+        Bundle extras = getIntent().getExtras();
+        final String chatCode = extras.getString("Chatroomcode");
 
-
+        prescriptionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //code to send chatid to Prescription class
+                Intent i = new Intent(getApplicationContext(), Prescription.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("chatroomcode1", chatCode);
+                i.putExtras(bundle);
+                startActivity(i);
+                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
+            }
+        });
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,8 +63,6 @@ public class Notes extends AppCompatActivity {
                     notesTf.setError("Cannot have Empty Field");
                     return;
                 }
-                Bundle extras = getIntent().getExtras();
-                String chatCode = extras.getString("Chatroomcode");
                 fStore.collection("Appointment")
                         .whereEqualTo("ChatCode", chatCode)
                         .get()
@@ -87,19 +98,5 @@ public class Notes extends AppCompatActivity {
             }
         });
 
-        prescriptionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //code to send chatid to Prescription class
-                Bundle extras = getIntent().getExtras();
-                String chatCode = extras.getString("Chatroomcode");
-                Intent i = new Intent(getApplicationContext(), Prescription.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("chatroomcode1", chatCode);
-                i.putExtras(bundle);
-                startActivity(i);
-                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
-            }
-        });
     }
 }
