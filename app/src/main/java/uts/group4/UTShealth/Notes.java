@@ -29,7 +29,7 @@ import maes.tech.intentanim.CustomIntent;
 public class Notes extends AppCompatActivity {
 
     EditText notesTf;
-    Button sendBtn, prescriptionBtn;
+    Button sendBtn;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
