@@ -71,6 +71,7 @@ public class Prescription extends AppCompatActivity {
                 }
                 //code to get the chat code
                 Bundle extras = getIntent().getExtras();
+                assert extras != null;
                 String chatCode = extras.getString("chatroomcode1");
                 fStore.collection("Appointment")
                         .whereEqualTo("ChatCode", chatCode)

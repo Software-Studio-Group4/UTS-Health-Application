@@ -41,11 +41,8 @@ public class Notes extends AppCompatActivity {
         sendBtn = findViewById(R.id.sendBtn1);
         prescriptionBtn = findViewById(R.id.prescriptionBtn);
         Bundle extras = getIntent().getExtras();
-        String tempChatCode = null;
-        if(extras != null){
-            tempChatCode = extras.getString("Chatroomcode");
-        }
-        final String chatCode = tempChatCode;
+        assert extras != null;
+        final String chatCode = extras.getString("Chatroomcode");
 
         prescriptionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
