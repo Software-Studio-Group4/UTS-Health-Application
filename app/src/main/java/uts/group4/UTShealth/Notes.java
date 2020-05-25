@@ -40,15 +40,7 @@ public class Notes extends AppCompatActivity {
         setContentView(R.layout.activity_notes);
         notesTf = findViewById(R.id.notesTf1);
         sendBtn = findViewById(R.id.sendBtn1);
-        prescriptionBtn = findViewById(R.id.prescriptionBtn);
 
-        prescriptionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Prescription.class));
-                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
-            }
-        });
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
