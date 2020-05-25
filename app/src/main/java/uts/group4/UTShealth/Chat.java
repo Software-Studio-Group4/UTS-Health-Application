@@ -225,7 +225,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //code to send chatid to Notes class
-                Intent i = new Intent(getApplicationContext(), Notes.class);
+                Intent i = new Intent(getApplicationContext(), Prescription.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("Chatroomcode", chatCode);
                 i.putExtras(bundle);
