@@ -19,8 +19,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import uts.group4.UTShealth.Util.DATParser;
-
 import static uts.group4.UTShealth.BookAppointment.populateSetDateText;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
@@ -95,7 +93,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
+                });
+}
 }

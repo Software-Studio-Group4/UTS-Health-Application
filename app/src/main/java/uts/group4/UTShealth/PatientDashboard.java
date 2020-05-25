@@ -186,6 +186,7 @@ public class PatientDashboard extends AppCompatActivity {
                         Intent i = new Intent(PatientDashboard.this, Chat.class);
                         i.putExtra("chatroomcode", chatCode);
                         startActivity(i);
+                        CustomIntent.customType(PatientDashboard.this, "right-to-left");
                     }
                     else{
                         Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
