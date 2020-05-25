@@ -118,7 +118,6 @@ public class Prescription extends AppCompatActivity {
                 i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(Prescription.this, "fadein-to-fadeout");
-                finish();
             }
         });
     }
