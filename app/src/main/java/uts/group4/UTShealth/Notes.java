@@ -32,6 +32,7 @@ public class Notes extends AppCompatActivity {
     Button sendBtn, prescriptionBtn;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    String userID = fAuth.getCurrentUser().getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +69,10 @@ public class Notes extends AppCompatActivity {
                                             return;
                                         }
                                         String id = document.getId();
-                                        DocumentReference documentReference = fStore.collection("Appointment").document(id);
+                                        DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Notes").document(userID);
                                         Map<String, Object> notesData = new HashMap<>(); //
                                         notesData.put("Notes", notes);
-                                        documentReference.update(notesData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        documentReference.set(notesData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(Notes.this, "Success", Toast.LENGTH_SHORT).show();
