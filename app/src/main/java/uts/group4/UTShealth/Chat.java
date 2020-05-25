@@ -124,6 +124,11 @@ public class Chat extends AppCompatActivity {
                 return Message;
             }
         };
+        //code to send appointmentID all the way to Prescription class
+        Bundle appid = getIntent().getExtras();
+        Intent intent = new Intent(this, Notes.class);
+        intent.putExtra("APPOINTMENT_ID", appid);
+        startActivity(intent);
 
         DatabaseReference messagesRef;
         Bundle extras = getIntent().getExtras();

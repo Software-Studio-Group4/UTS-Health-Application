@@ -25,10 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.AppointmentModel;
 
 public class Prescription extends AppCompatActivity {
-    EditText docNameTf, docSpecialisationTf, patNameTf, dateTf, recipeTf, medInsTf, dispInsTf;
+    EditText docNameTf, patNameTf, dateTf, recipeTf, medInsTf, dispInsTf;
     Button doneBtn;
     private static String docName;
     private static String patName;
@@ -39,8 +43,13 @@ public class Prescription extends AppCompatActivity {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
-    DocumentReference patNameRef = fStore.collection("Patients").document(userID);
-    CollectionReference doctorsRef = fStore.collection("Appointment");
+    CollectionReference appointmentRef = fStore.collection("Appointment");
+    Intent intent = getIntent();
+    //code to receive appointmentID all the way from BookAppointment class
+    String appid = intent.getStringExtra("APPOINTMENT_ID");
+    String id = appointmentRef.document().getId();
+
+
 
 
     @Override
@@ -55,30 +64,15 @@ public class Prescription extends AppCompatActivity {
         dispInsTf = findViewById(R.id.dispInsTf);
         doneBtn = findViewById(R.id.doneBtn);
 
-        patNameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    String patientFullName = documentSnapshot.getString("First Name") + " " + documentSnapshot.getString("Last Name");
-                    patNameTf.setText(patientFullName);
-                } else {
-                    Toast.makeText(Prescription.this, "Error: Patient name", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Prescription.this, "Error: Patient name", Toast.LENGTH_SHORT).show();
-            }
-        });
-        doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        appointmentRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task){
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document : task.getResult()){
                         String doctorName = document.getString("DoctorFullName");
                         docNameTf.setText(doctorName);
+                        String patientName = document.getString("PatientFullName");
+                        patNameTf.setText(patientName);
                         String date = document.getString("Date");
                         dateTf.setText(date);
                     }
@@ -120,6 +114,29 @@ public class Prescription extends AppCompatActivity {
                     dispInsTf.setError("Cannot have Empty Field");
                     return;
                 }
+
+                DocumentReference documentReference = fStore.collection("Appointment").document(appid).collection("Prescription").document(userID);
+                Map<String, Object> prescriptionData = new HashMap<>(); //
+                prescriptionData.put("DoctorFullName", docName);
+                prescriptionData.put("PatientFullName", patName);
+                prescriptionData.put("Date", date);
+                prescriptionData.put("Recipe", recipe);
+                prescriptionData.put("MedicalInstruction", medIns);
+                prescriptionData.put("DispensingInstruction", dispIns);
+                documentReference.set(prescriptionData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(Prescription.this, "Success", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(Prescription.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
                 startActivity(new Intent(getApplicationContext(), Notes.class));
                 CustomIntent.customType(Prescription.this, "fadein-to-fadeout");
             }
