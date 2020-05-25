@@ -45,9 +45,6 @@ public class Prescription extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference appointmentRef = fStore.collection("Appointment");
-    Bundle extras = getIntent().getExtras();
-    String chatCode = extras.getString("chatroomcode");
-    Query id = appointmentRef.whereEqualTo("ChatCode", chatCode);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +74,9 @@ public class Prescription extends AppCompatActivity {
             }
         });
 
+        Bundle extras = getIntent().getExtras();
+        String chatCode = extras.getString("chatroomcode");
+        final Query id = appointmentRef.whereEqualTo("ChatCode", chatCode);
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
