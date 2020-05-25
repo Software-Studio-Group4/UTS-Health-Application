@@ -38,6 +38,7 @@ public class Notes extends AppCompatActivity {
             }
         });
 
+
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("Chatroomcode");
         final Intent i = new Intent(getApplicationContext(), Prescription.class);

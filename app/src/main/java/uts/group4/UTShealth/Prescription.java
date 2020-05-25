@@ -112,6 +112,7 @@ public class Prescription extends AppCompatActivity {
                     return;
                 }
 
+
                 DocumentReference documentReference = fStore.collection("Appointment").document(String.valueOf(id)).collection("Prescription").document(userID);
                 Map<String, Object> prescriptionData = new HashMap<>(); //
                 prescriptionData.put("DoctorFullName", docName);
