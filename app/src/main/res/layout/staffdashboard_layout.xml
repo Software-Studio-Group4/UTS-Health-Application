@@ -82,39 +82,73 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appointmentsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="491dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginBottom="60dp"
+        android:layout_height="465dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="59dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upcomingApptText" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+    <Button
+        android:id="@+id/shiftsBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="169dp"
+        android:layout_marginLeft="169dp"
+        android:layout_marginTop="684dp"
+        android:layout_marginEnd="169dp"
+        android:layout_marginRight="169dp"
+        android:background="@drawable/clock"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="goToAvailabilityPage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95"
+        tools:ignore="MissingConstraints" />
 
-        <Button
-            android:id="@+id/shiftsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="goToAvailabilityPage"
-            android:text="shifts" />
+    <Button
+        android:id="@+id/patientsBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="325dp"
+        android:layout_marginLeft="325dp"
+        android:layout_marginTop="682dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@drawable/address_book"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.833"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.948"
+        tools:ignore="MissingConstraints" />
 
-        <Button
-            android:id="@+id/viewPatientsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Patients" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/upcomingapptBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="682dp"
+        android:layout_marginEnd="322dp"
+        android:layout_marginRight="322dp"
+        android:background="@drawable/calendar_alt"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.948"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
