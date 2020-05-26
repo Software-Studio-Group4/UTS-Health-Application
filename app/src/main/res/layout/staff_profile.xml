@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/doctor_bg">
+    android:background="@drawable/staff_profile_bg">
 
 
     <Button
@@ -18,7 +18,7 @@
         android:layout_marginEnd="342dp"
         android:layout_marginRight="342dp"
         android:layout_marginBottom="576dp"
-        android:background="@drawable/back_btn_left"
+        android:background="@drawable/back_btn_staff"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="backBtnPressed"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -59,9 +59,10 @@
         android:text="Logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.578"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -75,7 +76,7 @@
         android:layout_marginRight="86dp"
         android:layout_marginBottom="580dp"
         android:text="Profile"
-        android:textColor="#3F51B5"
+        android:textColor="#FFF"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

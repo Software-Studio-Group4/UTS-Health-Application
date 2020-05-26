@@ -45,6 +45,7 @@
         <activity android:name=".PatientRegistration$RegisterPassPge" />
         <activity android:name=".PatientRegistration$reg_billing_address" />
         <activity android:name=".PatientDashboard$PatientPastAppointments" />
+        <activity android:name=".StaffProfilePage" />
     </application>
 
 </manifest>

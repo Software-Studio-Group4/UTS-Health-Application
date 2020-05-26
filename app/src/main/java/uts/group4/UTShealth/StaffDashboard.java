@@ -63,16 +63,6 @@ public class StaffDashboard extends AppCompatActivity {
             }
         };
         appointmentsRecyclerView.setAdapter(appointmentAdapter);
-
-        //log out button set up
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
-            }
-        });
     }
 
     /**********************************************************************************************
@@ -107,11 +97,13 @@ public class StaffDashboard extends AppCompatActivity {
      ************************************************************************************************/
     public void goToAvailabilityPage(View view){
         startActivity(new Intent(getApplicationContext(), DoctorAvailability.class));
-
     }
-    public void goToProfilePage(){
 
+    public void userProfile(View view){
+        startActivity(new Intent(getApplicationContext(), StaffProfilePage.class));
+        CustomIntent.customType(StaffDashboard.this, "left-to-right");
     }
+
     public void goToPatientsPage(){
 
     }

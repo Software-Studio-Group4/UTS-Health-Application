@@ -13,9 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -27,7 +32,9 @@ import maes.tech.intentanim.CustomIntent;
 public class PatientLogin extends AppCompatActivity {
     private EditText emailTf, passwordTf;
     FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
     ProgressBar progressBar;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class PatientLogin extends AppCompatActivity {
         passwordTf = findViewById(R.id.passwordTf);
         final Button userLoginBtn = findViewById(R.id.userLoginBtn);
         fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -63,10 +71,31 @@ public class PatientLogin extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-                            CustomIntent.customType(PatientLogin.this, "left-to-right");
-                            progressBar.setVisibility(View.INVISIBLE);
-                            userLoginBtn.setVisibility(View.VISIBLE);
+                            userID = fAuth.getCurrentUser().getUid();
+                            DocumentReference patientRef = fStore.collection("Patients").document(userID);
+                            patientRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists()) {
+                                        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                                        CustomIntent.customType(PatientLogin.this, "left-to-right");
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        userLoginBtn.setVisibility(View.VISIBLE);
+                                    } else {
+                                        Toast.makeText(PatientLogin.this, "Invalid account", Toast.LENGTH_SHORT).show();
+                                        FirebaseAuth.getInstance().signOut();
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        userLoginBtn.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(PatientLogin.this, "Database Error", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    userLoginBtn.setVisibility(View.VISIBLE);
+                                }
+                            });
                         } else {
                             Toast.makeText(PatientLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.INVISIBLE);
