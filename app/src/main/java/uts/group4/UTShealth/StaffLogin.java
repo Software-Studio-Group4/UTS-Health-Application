@@ -102,7 +102,7 @@ public class StaffLogin extends AppCompatActivity {
                                         loginBtn.setVisibility(View.VISIBLE);
 
                                     } else {
-                                        Toast.makeText(StaffLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(StaffLogin.this, "Invalid account", Toast.LENGTH_SHORT).show();
                                         FirebaseAuth.getInstance().signOut();
                                         progressBar.setVisibility(View.INVISIBLE);
                                         loginBtn.setVisibility(View.VISIBLE);

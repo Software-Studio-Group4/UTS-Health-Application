@@ -126,8 +126,8 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             dateTextView.setText(day + "/0" + month + "/" + year);
         }
         else{
-            dateTextView.setText(day + "/" + month + "/" + year);
-        }
+        dateTextView.setText(day + "/" + month + "/" + year);
+    }
     }
 
     public void btn_PickerTime(View view) {

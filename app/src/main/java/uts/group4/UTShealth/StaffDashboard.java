@@ -139,9 +139,11 @@ public class StaffDashboard extends AppCompatActivity {
      ************************************************************************************************/
     public void goToAvailabilityPage(View view){
         startActivity(new Intent(getApplicationContext(), DoctorAvailability.class));
-
     }
-    public void goToProfilePage(){
+
+    public void userProfile(View view) {
+        startActivity(new Intent(getApplicationContext(), StaffProfilePage.class));
+        CustomIntent.customType(StaffDashboard.this, "left-to-right");
 
     }
     public void goToPatientsPage(){

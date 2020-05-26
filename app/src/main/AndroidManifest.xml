@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".PatientDoctorView"></activity>
+        <activity android:name=".DoctorAvailability"></activity>
         <activity android:name=".Notes"></activity>
         <activity android:name=".Prescription" />
         <activity android:name=".DoctorAvailability" />
@@ -45,6 +46,7 @@
         <activity android:name=".PatientRegistration$RegisterPassPge" />
         <activity android:name=".PatientRegistration$reg_billing_address" />
         <activity android:name=".PatientDashboard$PatientPastAppointments" />
+        <activity android:name=".StaffProfilePage" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCKXYbeT9cWV_7ucWc4LH8GSw4XOoXyGMI"/>

@@ -308,4 +308,11 @@ public class Chat extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        CustomIntent.customType(this, "left-to-right");
+    } // Fade transition
 }
+
+
