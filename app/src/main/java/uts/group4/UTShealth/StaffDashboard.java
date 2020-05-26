@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -179,7 +180,7 @@ public class StaffDashboard extends AppCompatActivity {
             });
         }
     }
-}
+
 
     /**********************************************************************************************
      * Location data and permissions
@@ -189,7 +190,7 @@ public class StaffDashboard extends AppCompatActivity {
         if(doctorLocation == null){
             doctorLocation = new DoctorLocation();
 
-            DocumentReference doctorRef = database.collection("Doctor").document(fAuth.getUid());
+            DocumentReference doctorRef = fStore.collection("Doctor").document(fAuth.getUid());
 
             doctorRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -206,7 +207,7 @@ public class StaffDashboard extends AppCompatActivity {
     }
     private void saveDoctorLocation(){
         if(doctorLocation != null){
-            DocumentReference locationReference = database.collection("Doctor Locations").document(fAuth.getUid());
+            DocumentReference locationReference = fStore.collection("Doctor Locations").document(fAuth.getUid());
             locationReference.set(doctorLocation).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -353,4 +354,5 @@ public class StaffDashboard extends AppCompatActivity {
             }
         }
     }
+
 }
