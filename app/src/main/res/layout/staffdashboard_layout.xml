@@ -31,13 +31,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="198dp"
         android:layout_marginRight="198dp"
         android:text="Upcoming Appointments"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeText"
         tools:ignore="MissingConstraints" />
@@ -61,7 +62,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.341" />
 
     <ImageView
         android:id="@+id/UTSLogo"
@@ -82,14 +83,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appointmentsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="465dp"
+        android:layout_height="440dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="59dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText" />
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText"
+        app:layout_constraintVertical_bias="0.166" />
 
     <Button
         android:id="@+id/shiftsBtn"
