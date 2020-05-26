@@ -152,6 +152,12 @@ public class DoctorAvailability extends AppCompatActivity {
         editShiftFragment.show(getSupportFragmentManager(), "Edit Shift");
     }
 
+    public void removeTimeOff(Bundle bundle){
+                    RemoveTimeOffFragment removeTimeOffFragment = new RemoveTimeOffFragment();
+                    removeTimeOffFragment.setArguments(bundle);
+                    removeTimeOffFragment.show(getSupportFragmentManager(), "Remove Time Off");
+    }
+
     public void addTimeOff(View view){
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         Bundle bundle = new Bundle();
@@ -355,12 +361,17 @@ public class DoctorAvailability extends AppCompatActivity {
            LinearLayout block = view.findViewById(R.id.timeOffBlockInstance);
 
            data.setText(DATParser.getMonthAsStr(date) + " " + DATParser.getDay(date) + "\n" + DATParser.getYear(date));
+           final Bundle bundle = new Bundle();
+           bundle.putString("documentId", documentId);
+           bundle.putString("day", DATParser.getDay(date) + "");
+           bundle.putString("month", DATParser.getMonthAsStr(date));
+           bundle.putString("year", DATParser.getYear(date) + "");
 
             block.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    Toast.makeText( DoctorAvailability.this, "Clicked a time off block", Toast.LENGTH_SHORT).show();
+                    removeTimeOff(bundle);
                 }
             });
         }
