@@ -81,7 +81,7 @@ public class Notes extends AppCompatActivity {
                                 }
                             }
                         });
-                startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
                 CustomIntent.customType(Notes.this, "fadein-to-fadeout");
             }
         });
