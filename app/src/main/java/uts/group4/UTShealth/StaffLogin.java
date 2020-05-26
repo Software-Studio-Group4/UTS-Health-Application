@@ -25,6 +25,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.Doctor;
+import uts.group4.UTShealth.Model.DoctorClient;
 
 // Staff Homepage
 
@@ -98,6 +100,7 @@ public class StaffLogin extends AppCompatActivity {
                                         CustomIntent.customType(StaffLogin.this, "fadein-to-fadeout");
                                         progressBar.setVisibility(View.INVISIBLE);
                                         loginBtn.setVisibility(View.VISIBLE);
+
                                     } else {
                                         Toast.makeText(StaffLogin.this, "Invalid Username or password", Toast.LENGTH_SHORT).show();
                                         FirebaseAuth.getInstance().signOut();
