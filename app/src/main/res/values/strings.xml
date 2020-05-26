@@ -9,5 +9,9 @@
     <string name="submit">submit</string>
     <string name="uts">UTS</string>
     <string name="example_email">someone@domain.com</string>
+
+    <string name="title_activity_prescription">Prescription</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>>
     <string name="hint">Please select a doctor</string>>
 </resources>

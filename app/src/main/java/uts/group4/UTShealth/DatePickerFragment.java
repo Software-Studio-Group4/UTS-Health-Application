@@ -47,7 +47,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
             sourceActivity = bundle.getString("source");
             userID = bundle.getString("userID");
         }
-
     }
 
     @Override
