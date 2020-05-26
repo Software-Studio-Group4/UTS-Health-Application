@@ -30,6 +30,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     String userID;
     FirebaseFirestore fStore;
 
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -41,8 +42,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.DatePickerTheme,this, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-
-
 
         return datePickerDialog;
     }

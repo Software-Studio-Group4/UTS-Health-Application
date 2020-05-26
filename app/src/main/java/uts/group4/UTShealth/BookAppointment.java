@@ -1,6 +1,7 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import uts.group4.UTShealth.Model.ChatMessage;
+import uts.group4.UTShealth.Util.DATParser;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
@@ -157,10 +160,13 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     }
 
     // confirm the appointment (data stored in firestore)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void confirmAppt(View view) {
         String userID = fAuth.getCurrentUser().getUid();
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
+        String weekDay = DATParser.weekDayAsString(DATParser.getWeekDay(date));
+        Log.i("LOGGER",  "week day found : " + weekDay + DATParser.getWeekDay(date));
         String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
 
         DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
@@ -184,6 +190,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("patientID", userID);
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
+            appointmentData.put("WeekDay", weekDay);
             appointmentData.put("ChatCode", "CHAT" + appointmentID);
 
             //grab the doctorID of the currently selected doctor in the spinner

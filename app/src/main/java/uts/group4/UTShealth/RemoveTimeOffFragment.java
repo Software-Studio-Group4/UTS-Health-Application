@@ -66,7 +66,7 @@ public class RemoveTimeOffFragment extends DialogFragment {
         removeButton = view.findViewById(R.id.removeBtn);
         dateDisplayTv = view.findViewById(R.id.dateDisplayTv);
 
-        dateDisplayTv.setText(day + " " + month + " " + year);
+
 
 
         //onclick for the remove button
@@ -102,6 +102,7 @@ public class RemoveTimeOffFragment extends DialogFragment {
             month = bundle.getString("month");
             year = bundle.getString("year");
 
+            dateDisplayTv.setText(day + " " + month + " " + year);
         }
 
     }
