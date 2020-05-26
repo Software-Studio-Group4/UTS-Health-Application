@@ -22,92 +22,42 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import maes.tech.intentanim.CustomIntent;
 
 public class Prescription extends AppCompatActivity {
-    EditText docNameTf, docSpecialisationTf, patNameTf, dateTf, recipeTf, medInsTf, dispInsTf;
+    EditText  recipeTf, medInsTf, dispInsTf;
     Button doneBtn;
-    private static String docName;
-    private static String patName;
-    private static String date;
     private static String recipe;
     private static String medIns;
     private static String dispIns;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
-    DocumentReference patNameRef = fStore.collection("Patients").document(userID);
-    CollectionReference doctorsRef = fStore.collection("Appointment");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prescription);
-        docNameTf = findViewById(R.id.docNameTf);
-        patNameTf = findViewById(R.id.patNameTf);
-        dateTf = findViewById(R.id.dateTf);
         recipeTf = findViewById(R.id.recipeTf);
         medInsTf = findViewById(R.id.medInsTf);
         dispInsTf = findViewById(R.id.dispInsTf);
         doneBtn = findViewById(R.id.doneBtn);
 
-        patNameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    String patientFullName = documentSnapshot.getString("First Name") + " " + documentSnapshot.getString("Last Name");
-                    patNameTf.setText(patientFullName);
-                } else {
-                    Toast.makeText(Prescription.this, "Error: Patient name", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Prescription.this, "Error: Patient name", Toast.LENGTH_SHORT).show();
-            }
-        });
-        doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task){
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document : task.getResult()){
-                        String doctorName = document.getString("DoctorFullName");
-                        docNameTf.setText(doctorName);
-                        String date = document.getString("Date");
-                        dateTf.setText(date);
-                    }
-                }
-            }
-        });
-
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                docName = docNameTf.getText().toString().trim();
-                patName = patNameTf.getText().toString().trim();
-                date = dateTf.getText().toString().trim();
                 recipe = recipeTf.getText().toString().trim();
                 medIns = medInsTf.getText().toString().trim();
                 dispIns = dispInsTf.getText().toString().trim();
 
-                if (TextUtils.isEmpty(docName)) {
-                    docNameTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(patName)) {
-                    patNameTf.setError("Cannot have Empty Field");
-                    return;
-                }
-                if (TextUtils.isEmpty(date)) {
-                    dateTf.setError("Cannot have Empty Field");
-                    return;
-                }
                 if (TextUtils.isEmpty(recipe)) {
                     recipeTf.setError("Cannot have Empty Field");
                     return;
@@ -120,7 +70,49 @@ public class Prescription extends AppCompatActivity {
                     dispInsTf.setError("Cannot have Empty Field");
                     return;
                 }
-                startActivity(new Intent(getApplicationContext(), Notes.class));
+                //code to get the chat code
+                Bundle extras = getIntent().getExtras();
+                assert extras != null;
+                String chatCode = extras.getString("Chatroomcode");
+                fStore.collection("Appointment")
+                        .whereEqualTo("ChatCode", chatCode)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String id = document.getId();
+                                        DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Prescription").document(userID);
+                                        Map<String, Object> prescriptionData = new HashMap<>();
+                                        prescriptionData.put("Recipe", recipe);
+                                        prescriptionData.put("MedicalInstruction", medIns);
+                                        prescriptionData.put("DispensingInstruction", dispIns);
+                                        documentReference.set(prescriptionData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(Prescription.this, "Success", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Prescription.this, "Error", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    Toast.makeText(Prescription.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+
+                Intent i = new Intent(getApplicationContext(), Notes.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("chatroomcode1", chatCode);
+                i.putExtras(bundle);
+                startActivity(i);
                 CustomIntent.customType(Prescription.this, "fadein-to-fadeout");
             }
         });

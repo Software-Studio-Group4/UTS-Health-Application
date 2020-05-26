@@ -130,11 +130,13 @@ public class Chat extends AppCompatActivity {
         chatCode = null;
         if(extras != null){
             chatCode = extras.getString("chatroomcode");
+
             messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
         }
         else{
             messagesRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
         }
+
 
         final String chatRoomPath = CHATS_PATH + chatCode;
 
@@ -217,15 +219,20 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+
         endBtn = findViewById(R.id.endBtn);
         endBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Notes.class));
+                //code to send chatid to Notes class
+                Intent i = new Intent(getApplicationContext(), Prescription.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Chatroomcode", chatCode);
+                i.putExtras(bundle);
+                startActivity(i);
                 CustomIntent.customType(Chat.this, "fadein-to-fadeout");
             }
         });
-
 
         mAddMessageImageView = findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
