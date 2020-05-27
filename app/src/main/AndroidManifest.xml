@@ -29,7 +29,7 @@
         <!-- FileProvider - a ContentProvider for making the image file securely available to the other end -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.fileprovider"
+            android:authorities="uts.group4.UTShealth.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true" >
             <meta-data

@@ -162,7 +162,7 @@ public class Notes extends AppCompatActivity implements Runnable {
                 System.out.println("was not successful.");
             }
             File file = new File(pdfDirPath, "pdfsend.pdf");
-            Uri contentUri = FileProvider.getUriForFile(this, "com.example.fileprovider", file);
+            Uri contentUri = FileProvider.getUriForFile(this, "uts.group4.UTShealth.fileprovider", file);
             os = new FileOutputStream(file);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 document.writeTo(os);
