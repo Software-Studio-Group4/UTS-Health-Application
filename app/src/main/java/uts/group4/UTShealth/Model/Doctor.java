@@ -1,8 +1,8 @@
 package uts.group4.UTShealth.Model;
 
 public class Doctor {
-    private String email;
-    private String firstName;
+    private static String firstName;
+    private String Email;
     private String lastName;
     private String phoneNumber;
     private String postCode;
@@ -10,8 +10,8 @@ public class Doctor {
     private String streetAddress;
     private String suburb;
 
-    public Doctor(String email, String firstName, String lastName, String phoneNumber, String postCode, String state, String streetAddress, String suburb) {
-        this.email = email;
+    public Doctor(String Email, String firstName, String lastName, String phoneNumber, String postCode, String state, String streetAddress, String suburb) {
+        this.Email = Email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -23,14 +23,14 @@ public class Doctor {
     public Doctor() {}
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String Email) {
+        this.Email = Email;
     }
 
-    public String getFirstName() {
+    public static String getFirstName() {
         return firstName;
     }
 

@@ -27,11 +27,19 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+
+import java.util.ArrayList;
 
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.Doctor;
@@ -47,6 +55,9 @@ public class StaffDashboard extends AppCompatActivity {
     boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient client;
     private DoctorLocation doctorLocation;
+    private ArrayList<DoctorLocation> doctorLocationList = new ArrayList<>();
+    private ArrayList<Doctor> doctorList = new ArrayList<>();
+    private ListenerRegistration doctorListEventListener;
 
 
     @Override
@@ -72,12 +83,13 @@ public class StaffDashboard extends AppCompatActivity {
         super.finish();
         CustomIntent.customType(this, "fadein-to-fadeout");
     } // Fade transition
+
     /**********************************************************************************************
      * Location data and permissions
      * When the doctor logs in to the application the location will be saved to the database
      ************************************************************************************************/
-    private void getDoctorDetails(){
-        if(doctorLocation == null){
+    private void getDoctorDetails() {
+        if (doctorLocation == null) {
             doctorLocation = new DoctorLocation();
 
             DocumentReference doctorRef = database.collection("Doctor").document(fAuth.getUid());
@@ -85,7 +97,7 @@ public class StaffDashboard extends AppCompatActivity {
             doctorRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Log.d(TAG, "Get Doctor Successful");
                         Doctor doctor = task.getResult().toObject(Doctor.class);
                         doctorLocation.setDoctor(doctor);
@@ -95,14 +107,15 @@ public class StaffDashboard extends AppCompatActivity {
             });
         }
     }
-    private void saveDoctorLocation(){
-        if(doctorLocation != null){
+
+    private void saveDoctorLocation() {
+        if (doctorLocation != null) {
             DocumentReference locationReference = database.collection("Doctor Locations").document(fAuth.getUid());
             locationReference.set(doctorLocation).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
-                        Log.d(TAG, "saveDoctorLocation /ninserted Doctor Location into Database" +
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "saveDoctorLocation /n inserted Doctor Location into Database" +
                                 "/n Latitude: " + doctorLocation.getGeoPoint().getLatitude() +
                                 "/n Longitude " + doctorLocation.getGeoPoint().getLongitude());
                     }
@@ -110,12 +123,13 @@ public class StaffDashboard extends AppCompatActivity {
             });
         }
     }
-    private void getLastKnowLocation(){
+
+    private void getLastKnowLocation() {
         Log.d(TAG, "getLastKnownLocation: called!");
         client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Location location = task.getResult();
                     GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                     Log.d(TAG, "onComplete: Latitude: " + geoPoint.getLatitude());
@@ -128,9 +142,9 @@ public class StaffDashboard extends AppCompatActivity {
         });
     }
 
-    private boolean checkMapServices(){
-        if(isServicesOK()){
-            if(isMapsEnabled()){
+    private boolean checkMapServices() {
+        if (isServicesOK()) {
+            if (isMapsEnabled()) {
                 return true;
             }
         }
@@ -151,10 +165,10 @@ public class StaffDashboard extends AppCompatActivity {
         alert.show();
     }
 
-    public boolean isMapsEnabled(){
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+    public boolean isMapsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
             return false;
         }
@@ -179,22 +193,21 @@ public class StaffDashboard extends AppCompatActivity {
         }
     }
 
-    public boolean isServicesOK(){
+    public boolean isServicesOK() {
         Log.d(TAG, "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(StaffDashboard.this);
 
-        if(available == ConnectionResult.SUCCESS){
+        if (available == ConnectionResult.SUCCESS) {
             //everything is fine and the user can make map requests
             Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
             //an error occured but we can resolve it
             Log.d(TAG, "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(StaffDashboard.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else{
+        } else {
             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
@@ -222,26 +235,61 @@ public class StaffDashboard extends AppCompatActivity {
         Log.d(TAG, "onActivityResult: called.");
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ENABLE_GPS: {
-                if(mLocationPermissionGranted){
+                if (mLocationPermissionGranted) {
                     getDoctorDetails();
-                }
-                else{
+                } else {
                     getLocationPermission();
                 }
             }
         }
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if(checkMapServices()){
-            if(mLocationPermissionGranted){
+        if (checkMapServices()) {
+            if (mLocationPermissionGranted) {
                 getDoctorDetails();
-            }
-            else{
+            } else {
                 getLocationPermission();
             }
         }
     }
+
+   /* private void getDoctor() {
+        CollectionReference drRef = database.collection("Doctor");
+        doctorListEventListener = drRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e(TAG, "onEvent: Listen failed.", e);
+                    return;
+                    if (queryDocumentSnapshots != null) {
+                        for(QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Doctor dr = doc.toObject(Doctor.class);
+                            doctorList.add(dr);
+                            getDoctorLocation(dr);
+                        }
+                        Log.d(TAG, "onEvent: user list size: " + doctorList.size());
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void getDoctorLocation(Doctor dr) {
+        DocumentReference locationRef = database.collection("Doctor Locations").document(dr.getFirstName());
+        locationRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult().toObject(DoctorLocation.class) != null ){
+                        doctorLocationList.add(task.getResult().toObject(DoctorLocation.class));
+                    }
+                }
+            }
+        });
+    }*/
 }
