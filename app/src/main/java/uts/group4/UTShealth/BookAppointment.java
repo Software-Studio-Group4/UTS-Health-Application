@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ChatMessage;
 import uts.group4.UTShealth.Model.Doctor;
+import uts.group4.UTShealth.Model.ShiftModel;
 import uts.group4.UTShealth.Model.TimeOffModel;
 import uts.group4.UTShealth.Util.DATParser;
 
@@ -167,13 +169,18 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     }
 
     //Changes the heading of the calendar view
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public static void populateSetTimeText(int hour, int minute) {
         String amPm;
+        int reformattedHour = hour;
+        if(hour > 12){
+            reformattedHour = (hour - 12);
+        }
         if (hour >= 12) {
             amPm = " PM";
         } else
             amPm = " AM";
-        timeTextView.setText(String.format("%02d:%02d", hour, minute) + amPm);
+        timeTextView.setText(String.format("%02d:%02d", reformattedHour, minute) + amPm);
     }
 
     @Override
@@ -272,6 +279,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
         void setDoctorData(final String doctorfName, final String doctorlName, final String doctorID){
             final ArrayList<TimeOffModel> timeOff = new ArrayList<>();
+            final ArrayList<ShiftModel> shifts = new ArrayList<>();
             ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
             TextView text = view.findViewById(R.id.doctorTextView);
 
@@ -293,8 +301,25 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                 }
             });
 
+            //get the doctor's shifts
+            CollectionReference shiftsRef = fStore.collection("Doctor").document(doctorID).collection("Shifts");
+            shiftsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            shifts.add(new ShiftModel(document.get("StartTime").toString(), document.get("EndTime").toString(),document.get("Day").toString()));
+                            Log.i("LOG", document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d("LOG", "Error getting subcollection.", task.getException());
+                    }
+                }
+            });
+
             //On Click
             doctorItem.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onClick(View view) {
                     if(dateTextView.getText().toString().equals("") && dateTextView.getText().length() <= 0){
@@ -311,9 +336,29 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                             return;
                         }
                     }
-                    chosenDoctorTextView.setText(doctorfName + " " + doctorlName);
-                    chosenDoctorId =  doctorID;
-                    Toast.makeText(getApplicationContext(), "Chose a doctor!:" + doctorfName, Toast.LENGTH_SHORT).show();
+
+                    for(ShiftModel shift : shifts){
+                        //if larger than start and smaller than end
+                        //and if day is equal then make the shift
+                       if(DATParser.timeStrToInt(timeTextView.getText().toString()) > Integer.parseInt(shift.getStartTime()) &&
+                          DATParser.timeStrToInt(timeTextView.getText().toString()) < Integer.parseInt(shift.getEndTime()) &&
+                          DATParser.getWeekDay(dateTextView.getText().toString()) == DATParser.weekDayAsInt(shift.getDay())){
+                           Log.i("TAG", "This is within Dr." + doctorfName + " " + doctorlName + "'s shift times!");
+                           chosenDoctorTextView.setText(doctorfName + " " + doctorlName);
+                           chosenDoctorId =  doctorID;
+                           Toast.makeText(getApplicationContext(), "Chose a doctor!:" + doctorfName, Toast.LENGTH_SHORT).show();
+                       }
+                       else{
+                           Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not working on " +
+                                                                        DATParser.weekDayAsString(DATParser.getWeekDay(dateTextView.getText().toString())) +
+                                                                        "s at " + timeTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+                           return;
+                       }
+
+
+                    }
+
+
                 }
             });
         }
