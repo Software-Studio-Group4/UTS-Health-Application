@@ -1,6 +1,7 @@
 package uts.group4.UTShealth.Model;
 
-import com.google.firebase.database.PropertyName;
+
+import com.google.firebase.firestore.PropertyName;
 
 public class Doctor {
     @PropertyName("Email") private String email;
