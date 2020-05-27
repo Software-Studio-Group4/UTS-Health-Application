@@ -27,6 +27,11 @@ public class AppointmentModel {
         WeekDay = weekDay;
     }
 
+    public AppointmentModel(String date, String time){
+        this.Date = date;
+        this.Time = time;
+    }
+
     public String getWeekDay() {
         return WeekDay;
     }

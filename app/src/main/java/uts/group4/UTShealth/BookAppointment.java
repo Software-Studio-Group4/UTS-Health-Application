@@ -59,7 +59,7 @@ import uts.group4.UTShealth.Util.DATParser;
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
     public static TextView timeTextView;
-    public TextView chosenDoctorTextView;
+    private static TextView chosenDoctorTextView;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     DatabaseReference dbRef;
@@ -73,6 +73,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     String dateAndTime = formatter.format(date);
     private RecyclerView doctorRecycler;
     private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
+    ArrayList<AppointmentModel> userAppointments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,18 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         chosenDoctorTextView = findViewById(R.id.chosenDoctor);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+    // the following block of code finds all of the user's existing appointment dates and times and fills an array list with it ;
+
+        fStore.collection("Appointment").whereEqualTo("patientID", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot document : documentSnapshots){
+                    userAppointments.add(new AppointmentModel(document.get("Date").toString(), document.get("Time").toString()));
+                    Log.i("LOG", document.getId() + " => " + document.getData());
+                }
+            }});
+
 
     // the following block of code populates the patientName string with their full name to be used to be stored in the appointments object;
                 DocumentReference nameRef = fStore.collection("Patients").document(fAuth.getUid());
@@ -103,6 +116,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             }
         });
 
+    // the following block of code handles the doctor recycler view
         final CollectionReference doctorRef = fStore.collection("Doctor");
         doctorRecycler = findViewById(R.id.doctorRecycler);
         doctorRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -161,6 +175,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         else{
         dateTextView.setText(day + "/" + month + "/" + year);
     }
+        chosenDoctorTextView.setText("");
     }
 
     public void btn_PickerTime(View view) {
@@ -180,6 +195,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             amPm = " PM";
         } else
             amPm = " AM";
+        chosenDoctorTextView.setText("");
         timeTextView.setText(String.format("%02d:%02d", reformattedHour, minute) + amPm);
     }
 
@@ -212,6 +228,12 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         }
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
+
+        if(checkUserAppointmentOverlap(date, time)){
+            Toast.makeText(BookAppointment.this, "You already have an appointment during this time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String doctorFullName = chosenDoctorTextView.getText().toString();
         String weekDay = DATParser.weekDayAsString(DATParser.getWeekDay(date));
         Log.i("LOGGER",  "week day found : " + weekDay + DATParser.getWeekDay(date));
@@ -264,6 +286,37 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     public void backBtnPressed(View view) {
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
 
+    }
+
+boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime){
+        int proposedTimeInt = DATParser.timeStrToInt(proposedTime);
+        for(AppointmentModel userAppointment : userAppointments){
+
+            int existingStartTime = DATParser.timeStrToInt(userAppointment.getTime());
+            int existingEndTime = DATParser.addMinutesHoursInt(0, 30, existingStartTime);
+            int proposedStartTime = DATParser.timeStrToInt(proposedTime);
+            int proposedEndTime = DATParser.addMinutesHoursInt(0, 30, proposedStartTime);
+            Log.i("LOGGER", "existing start : " + existingStartTime +
+                                       "\n existing end : " + existingEndTime +
+                                       "\n proposed start : " + proposedStartTime +
+                                        "\n prposed end :" + proposedEndTime);
+
+            //time overlaps with appointment when
+            //the date matches AND
+            //existing start time is <= proposedEndTime while proposedEndTime is <= existing end time
+            //OR
+            //existing end time is >= proposed start time while proposed start time is >= existing start time
+            if(proposedDate.equals(userAppointment.getDate())){
+                if(proposedStartTime <= proposedEndTime && proposedEndTime <= existingEndTime){
+                    return true;
+                }
+                else if(existingEndTime >= proposedStartTime && proposedStartTime >= existingStartTime){
+                    return true;
+                }
+            }
+
+        }
+        return false;
     }
 
     /**********************************************************************************************
@@ -338,26 +391,23 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                     }
 
                     for(ShiftModel shift : shifts){
-                        //if larger than start and smaller than end
+                        //if the desired time is (larger than start shift start  and smaller than shift end)
                         //and if day is equal then make the shift
-                       if(DATParser.timeStrToInt(timeTextView.getText().toString()) > Integer.parseInt(shift.getStartTime()) &&
-                          DATParser.timeStrToInt(timeTextView.getText().toString()) < Integer.parseInt(shift.getEndTime()) &&
+                       if((DATParser.timeStrToInt(timeTextView.getText().toString()) >= Integer.parseInt(shift.getStartTime()) &&
+                          DATParser.timeStrToInt(timeTextView.getText().toString()) <= Integer.parseInt(shift.getEndTime())) &&
                           DATParser.getWeekDay(dateTextView.getText().toString()) == DATParser.weekDayAsInt(shift.getDay())){
                            Log.i("TAG", "This is within Dr." + doctorfName + " " + doctorlName + "'s shift times!");
                            chosenDoctorTextView.setText(doctorfName + " " + doctorlName);
                            chosenDoctorId =  doctorID;
                            Toast.makeText(getApplicationContext(), "Chose a doctor!:" + doctorfName, Toast.LENGTH_SHORT).show();
+                            return;
                        }
-                       else{
-                           Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not working on " +
-                                                                        DATParser.weekDayAsString(DATParser.getWeekDay(dateTextView.getText().toString())) +
-                                                                        "s at " + timeTextView.getText().toString(), Toast.LENGTH_SHORT).show();
-                           return;
-                       }
-
 
                     }
-
+                    Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not working on " +
+                            DATParser.weekDayAsString(DATParser.getWeekDay(dateTextView.getText().toString())) +
+                            "s at " + timeTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+                    return;
 
                 }
             });
