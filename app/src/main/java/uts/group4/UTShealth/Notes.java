@@ -157,7 +157,10 @@ public class Notes extends AppCompatActivity implements Runnable {
         // Write the PDF document to a file
         try {
             File pdfDirPath = new File(getFilesDir(), "pdfs");
-            pdfDirPath.mkdirs();
+            boolean wasSuccessful = pdfDirPath.mkdirs();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
             File file = new File(pdfDirPath, "pdfsend.pdf");
             Uri contentUri = FileProvider.getUriForFile(this, "com.example.fileprovider", file);
             os = new FileOutputStream(file);

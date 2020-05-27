@@ -11,15 +11,32 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".PatientDoctorView"></activity>
         <activity android:name=".DoctorAvailability"></activity>
-        <activity android:name=".Notes"></activity>
         <activity android:name=".Prescription" />
-        <activity android:name=".DoctorAvailability" />
         <activity android:name=".DatabaseTester">
             <intent-filter>
                 <action android:name="com.company.package.FOO" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".Notes">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- FileProvider - a ContentProvider for making the image file securely available to the other end -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,5 +75,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+
 
 </manifest>
