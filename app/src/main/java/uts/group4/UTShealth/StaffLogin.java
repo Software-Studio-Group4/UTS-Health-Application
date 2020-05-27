@@ -25,8 +25,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import maes.tech.intentanim.CustomIntent;
-import uts.group4.UTShealth.Model.Doctor;
-import uts.group4.UTShealth.Model.DoctorClient;
 
 // Staff Homepage
 

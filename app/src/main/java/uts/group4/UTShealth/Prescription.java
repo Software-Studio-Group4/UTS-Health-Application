@@ -1,10 +1,8 @@
 package uts.group4.UTShealth;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,23 +16,19 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import maes.tech.intentanim.CustomIntent;
 
 public class Prescription extends AppCompatActivity {
     EditText  recipeTf, medInsTf, dispInsTf;
-    Button doneBtn;
+    Button doneBtn, backBtn;
     private static String recipe;
     private static String medIns;
     private static String dispIns;
@@ -50,6 +44,7 @@ public class Prescription extends AppCompatActivity {
         medInsTf = findViewById(R.id.medInsTf);
         dispInsTf = findViewById(R.id.dispInsTf);
         doneBtn = findViewById(R.id.doneBtn);
+        backBtn = findViewById(R.id.backBtn);
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +109,12 @@ public class Prescription extends AppCompatActivity {
                 i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(Prescription.this, "fadein-to-fadeout");
+            }
+        });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Chat.class));
             }
         });
     }
