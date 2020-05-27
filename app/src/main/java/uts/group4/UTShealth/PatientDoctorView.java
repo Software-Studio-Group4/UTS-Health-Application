@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -50,9 +52,12 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
     private RecyclerView doctorProfileRecyclerView;
     DoctorLocation doctorLocation;
     CollectionReference doctorRef = database.collection("Doctor");
+    DocumentReference dr = doctorRef.document("First Name");
     private FirestoreRecyclerAdapter<Doctor, PatientDoctorView.DoctorProfileViewHolder> doctorAdapter;
     LatLng latLng;
     private LinearLayoutManager linearLayoutManager;
+    private static final String FIELD_NAME = "First Name";
+    String drName = dr.toString();
 
 
     @Override
@@ -63,12 +68,25 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         initGoogleMap(savedInstanceState);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,true);
         doctorProfileRecyclerView = findViewById(R.id.doctorProfileRecyclerView);
+       /* dr.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot != null){
+                    drName = documentSnapshot.getString(FIELD_NAME);
+                }
+            }
+        });
+        */
+        setRecyclerView();
+
+    }
+    private void setRecyclerView(){
         Query query = doctorRef.orderBy("First Name", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<Doctor> options = new FirestoreRecyclerOptions.Builder<Doctor>().setQuery(query, Doctor.class).build();
         doctorAdapter = new FirestoreRecyclerAdapter<Doctor, DoctorProfileViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull DoctorProfileViewHolder holder, int position, @NonNull Doctor model) {
-                holder.setDrName(Doctor.getFirstName());
+                holder.setDrName(drName);
             }
 
             @NonNull
@@ -148,6 +166,14 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
     public void onStart() {
         super.onStart();
         mMapView.onStart();
+        dr.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot != null){
+                    drName = documentSnapshot.getString(FIELD_NAME);
+                }
+            }
+        });
         doctorAdapter.startListening();
 
     }
@@ -168,11 +194,13 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
             view = itemView;
         }
 
+        @SuppressLint("SetTextI18n")
         void setDrName(String name) {
             TextView textView = view.findViewById(R.id.drNameTextView);
             textView.setText("Dr: " + name);
-        }
+
     }
 
+}
 }
 
