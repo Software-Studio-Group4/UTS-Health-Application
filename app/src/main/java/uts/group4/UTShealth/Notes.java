@@ -97,9 +97,6 @@ public class Notes extends AppCompatActivity implements Runnable {
                                 }
                             }
                         });
-
-                startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
-                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
             }
         });
     }
@@ -188,7 +185,8 @@ public class Notes extends AppCompatActivity implements Runnable {
         // Attach the PDf as a Uri.
         mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(mShareIntent, "Send email..."));
-        return;
+        startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+        CustomIntent.customType(Notes.this, "fadein-to-fadeout");
     }
 }
 
