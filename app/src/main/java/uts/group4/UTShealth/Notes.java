@@ -42,7 +42,7 @@ import maes.tech.intentanim.CustomIntent;
 public class Notes extends AppCompatActivity implements Runnable {
 
     EditText notesTf;
-    Button saveBtn, sendBtn;
+    Button saveBtn, sendBtn, doneBtn, backBtn;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
@@ -56,6 +56,8 @@ public class Notes extends AppCompatActivity implements Runnable {
         notesTf = findViewById(R.id.notesTf1);
         saveBtn = findViewById(R.id.saveBtn);
         sendBtn = findViewById(R.id.sendBtn);
+        doneBtn = findViewById(R.id.doneBtn);
+        backBtn = findViewById(R.id.backBtn);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +99,20 @@ public class Notes extends AppCompatActivity implements Runnable {
                                 }
                             }
                         });
+            }
+        });
+        doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Prescription.class));
             }
         });
     }
@@ -185,8 +201,7 @@ public class Notes extends AppCompatActivity implements Runnable {
         // Attach the PDf as a Uri.
         mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(mShareIntent, "Send email..."));
-        startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
-        CustomIntent.customType(Notes.this, "fadein-to-fadeout");
     }
+
 }
 
