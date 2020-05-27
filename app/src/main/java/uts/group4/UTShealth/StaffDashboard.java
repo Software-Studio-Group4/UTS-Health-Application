@@ -8,12 +8,11 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,24 +24,21 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.storage.FirebaseStorage;
-
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import maes.tech.intentanim.CustomIntent;
@@ -55,8 +51,10 @@ public class StaffDashboard extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference appointmentRef = fStore.collection("Appointment");
+    TextView welcomeText;
     private RecyclerView appointmentsRecyclerView;
     private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;
+    private static final String FIELD_NAME = "Last Name";
 
     private static final String TAG = "Staff Dash";
     private static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9002;
@@ -73,7 +71,7 @@ public class StaffDashboard extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staffdashboard_layout);
-        Button logoutBtn = findViewById(R.id.logoutBtn);
+        welcomeText = findViewById(R.id.welcomeText);
         client = LocationServices.getFusedLocationProviderClient(this);
 
         //Setup the recycler
@@ -111,13 +109,25 @@ public class StaffDashboard extends AppCompatActivity {
      * onStart, onStop
      ************************************************************************************************/
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         appointmentAdapter.startListening();
+        DocumentReference nameRef = fStore.collection("Doctor").document(userID);
+        nameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String name = documentSnapshot.getString(FIELD_NAME);
+                    welcomeText.setText("Welcome, Dr " + name); // Displays welcome text
+                } else {
+                    Toast.makeText(StaffDashboard.this, "Error: Welcome message", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
 
         if (appointmentAdapter != null) {
@@ -128,7 +138,7 @@ public class StaffDashboard extends AppCompatActivity {
     /**********************************************************************************************
      * Methods for AVAILABILITY, PROFILE and PATIENT buttons
      ************************************************************************************************/
-    public void goToAvailabilityPage(View view){
+    public void goToAvailabilityPage(View view) {
         startActivity(new Intent(getApplicationContext(), DoctorAvailability.class));
     }
 
@@ -137,10 +147,10 @@ public class StaffDashboard extends AppCompatActivity {
         CustomIntent.customType(StaffDashboard.this, "left-to-right");
 
     }
-    public void goToPatientsPage(){
+
+    public void goToPatientsPage() {
 
     }
-
 
     /**********************************************************************************************
      * Private Class for the recycler
@@ -154,19 +164,18 @@ public class StaffDashboard extends AppCompatActivity {
         }
 
         void setAppointmentName(String date, String time, String patient, final String chatCode) {
-            TextView textView = view.findViewById(R.id.appointmentTextView);
-            textView.setText("Date: " + date + "\nTime: " + time  + "\nPatient: " + patient + "\n");
+            TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
+            appointmentTextView.setText("Date: " + date + "\nTime: " + time + "\nPatient: " + patient + "\n");
 
-            textView.setOnClickListener(new View.OnClickListener() {
+            appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(chatCode != null){
+                    if (chatCode != null) {
 
                         Intent i = new Intent(StaffDashboard.this, Chat.class);
                         i.putExtra("chatroomcode", chatCode);
                         startActivity(i);
-                    }
-                    else{
+                    } else {
                         Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -179,8 +188,8 @@ public class StaffDashboard extends AppCompatActivity {
      * Location data and permissions
      * When the doctor logs in to the application the location will be saved to the database
      ************************************************************************************************/
-    private void getDoctorDetails(){
-        if(doctorLocation == null){
+    private void getDoctorDetails() {
+        if (doctorLocation == null) {
             doctorLocation = new DoctorLocation();
 
             DocumentReference doctorRef = fStore.collection("Doctor").document(fAuth.getUid());
@@ -188,7 +197,7 @@ public class StaffDashboard extends AppCompatActivity {
             doctorRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Log.d(TAG, "Get Doctor Successful");
                         Doctor doctor = task.getResult().toObject(Doctor.class);
                         doctorLocation.setDoctor(doctor);
@@ -198,13 +207,14 @@ public class StaffDashboard extends AppCompatActivity {
             });
         }
     }
-    private void saveDoctorLocation(){
-        if(doctorLocation != null){
+
+    private void saveDoctorLocation() {
+        if (doctorLocation != null) {
             DocumentReference locationReference = fStore.collection("Doctor Locations").document(fAuth.getUid());
             locationReference.set(doctorLocation).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Log.d(TAG, "saveDoctorLocation /ninserted Doctor Location into Database" +
                                 "/n Latitude: " + doctorLocation.getGeoPoint().getLatitude() +
                                 "/n Longitude " + doctorLocation.getGeoPoint().getLongitude());
@@ -213,12 +223,13 @@ public class StaffDashboard extends AppCompatActivity {
             });
         }
     }
-    private void getLastKnowLocation(){
+
+    private void getLastKnowLocation() {
         Log.d(TAG, "getLastKnownLocation: called!");
         client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Location location = task.getResult();
                     GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                     Log.d(TAG, "onComplete: Latitude: " + geoPoint.getLatitude());
@@ -231,11 +242,9 @@ public class StaffDashboard extends AppCompatActivity {
         });
     }
 
-    private boolean checkMapServices(){
-        if(isServicesOK()){
-            if(isMapsEnabled()){
-                return true;
-            }
+    private boolean checkMapServices() {
+        if (isServicesOK()) {
+            return isMapsEnabled();
         }
         return false;
     }
@@ -254,10 +263,10 @@ public class StaffDashboard extends AppCompatActivity {
         alert.show();
     }
 
-    public boolean isMapsEnabled(){
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+    public boolean isMapsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
             return false;
         }
@@ -282,22 +291,21 @@ public class StaffDashboard extends AppCompatActivity {
         }
     }
 
-    public boolean isServicesOK(){
+    public boolean isServicesOK() {
         Log.d(TAG, "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(StaffDashboard.this);
 
-        if(available == ConnectionResult.SUCCESS){
+        if (available == ConnectionResult.SUCCESS) {
             //everything is fine and the user can make map requests
             Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
             //an error occured but we can resolve it
             Log.d(TAG, "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(StaffDashboard.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else{
+        } else {
             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
@@ -305,7 +313,7 @@ public class StaffDashboard extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+                                           @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         mLocationPermissionGranted = false;
         switch (requestCode) {
@@ -325,24 +333,23 @@ public class StaffDashboard extends AppCompatActivity {
         Log.d(TAG, "onActivityResult: called.");
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ENABLE_GPS: {
-                if(mLocationPermissionGranted){
+                if (mLocationPermissionGranted) {
                     getDoctorDetails();
-                }
-                else{
+                } else {
                     getLocationPermission();
                 }
             }
         }
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if(checkMapServices()){
-            if(mLocationPermissionGranted){
+        if (checkMapServices()) {
+            if (mLocationPermissionGranted) {
                 getDoctorDetails();
-            }
-            else{
+            } else {
                 getLocationPermission();
             }
         }

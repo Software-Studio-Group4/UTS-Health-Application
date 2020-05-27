@@ -13,10 +13,9 @@
         <activity android:name=".DoctorAvailability"></activity>
         <activity android:name=".Notes"></activity>
         <activity android:name=".Prescription" />
-        <activity android:name=".DoctorAvailability" />
         <activity android:name=".DatabaseTester">
             <intent-filter>
-                <action android:name="com.company.package.FOO" />
+                <action android:name="com.company.package.FOO"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

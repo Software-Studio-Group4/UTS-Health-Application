@@ -1,16 +1,11 @@
 package uts.group4.UTShealth;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,29 +13,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 
 import maes.tech.intentanim.CustomIntent;
@@ -60,9 +45,9 @@ public class PatientDashboard extends AppCompatActivity {
     DocumentReference nameRef = fStore.collection("Patients").document(userID);
     TextView textViewData;
     TextView welcomeText;
+    String appointmentID;
     private RecyclerView appointmentsRecyclerView;
     private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;
-
 
 
     @Override
@@ -88,7 +73,7 @@ public class PatientDashboard extends AppCompatActivity {
                 return new AppointmentViewHolder(view);
             }
         };
-      appointmentsRecyclerView.setAdapter(appointmentAdapter);
+        appointmentsRecyclerView.setAdapter(appointmentAdapter);
     }
 
     @Override
@@ -128,6 +113,37 @@ public class PatientDashboard extends AppCompatActivity {
         if (appointmentAdapter != null) {
             appointmentAdapter.stopListening();
         }
+    }
+
+    /**********************************************************************************************
+     * Methods for deleting appointments
+     ************************************************************************************************/
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.delete_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_1:
+                // Appointment deleted here -->
+                fStore.collection("Appointment").document(appointmentID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(PatientDashboard.this, "Appointment deleted", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(PatientDashboard.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     /**********************************************************************************************
@@ -182,9 +198,10 @@ public class PatientDashboard extends AppCompatActivity {
         CustomIntent.customType(PatientDashboard.this, "left-to-right");
     }
 
-    public void doctorProfile(View view){
+    public void doctorProfile(View view) {
         startActivity(new Intent(getApplicationContext(), PatientDoctorView.class));
     }
+
     /**********************************************************************************************
      * Private Class for the recycler
      ************************************************************************************************/
@@ -197,20 +214,20 @@ public class PatientDashboard extends AppCompatActivity {
         }
 
         void setAppointmentName(String date, String time, String doctor, final String chatCode) {
-            TextView textView = view.findViewById(R.id.appointmentTextView);
-            textView.setText("Date: " + date + "\nTime: " + time  + "\nPhysician: Dr. " + doctor + "\n");
-
-            textView.setOnClickListener(new View.OnClickListener() {
+            TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
+            registerForContextMenu(appointmentTextView);
+            appointmentID = chatCode.substring(4);
+            appointmentTextView.setText("Date: " + date + "\nTime: " + time + "\nPhysician: Dr. " + doctor + "\n");
+            appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(chatCode != null){
+                    if (chatCode != null) {
 
                         Intent i = new Intent(PatientDashboard.this, Chat.class);
                         i.putExtra("chatroomcode", chatCode);
                         startActivity(i);
                         CustomIntent.customType(PatientDashboard.this, "right-to-left");
-                    }
-                    else{
+                    } else {
                         Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
                     }
                 }

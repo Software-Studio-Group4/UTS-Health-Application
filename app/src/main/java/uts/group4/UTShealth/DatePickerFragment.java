@@ -15,13 +15,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import uts.group4.UTShealth.Util.DATParser;
 
 import static uts.group4.UTShealth.BookAppointment.populateSetDateText;
 
