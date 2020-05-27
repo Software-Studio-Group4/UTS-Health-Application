@@ -51,6 +51,7 @@ import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ChatMessage;
 import uts.group4.UTShealth.Model.Doctor;
+import uts.group4.UTShealth.Model.TimeOffModel;
 import uts.group4.UTShealth.Util.DATParser;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -100,7 +101,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        CollectionReference doctorRef = fStore.collection("Doctor");
+        final CollectionReference doctorRef = fStore.collection("Doctor");
         doctorRecycler = findViewById(R.id.doctorRecycler);
         doctorRecycler.setLayoutManager(new LinearLayoutManager(this));
         Query doctorQuery = doctorRef.orderBy("First Name", Query.Direction.ASCENDING);
@@ -110,7 +111,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             protected void onBindViewHolder(@NonNull DoctorViewHolder doctorViewHolder, int position, @NonNull Doctor doctorModel) {
                 String doctorId = getSnapshots().getSnapshot(position).getId();
                 doctorViewHolder.setDoctorData(doctorModel.getFirstName(), doctorModel.getLastName(), doctorId);
-                Log.i("LOGGER", "doctor found: " + doctorModel.getFirstName());
             }
             @NonNull
             @Override
@@ -271,12 +271,46 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         }
 
         void setDoctorData(final String doctorfName, final String doctorlName, final String doctorID){
+            final ArrayList<TimeOffModel> timeOff = new ArrayList<>();
             ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
             TextView text = view.findViewById(R.id.doctorTextView);
-            text.setText("Dr." + doctorfName + " " + doctorlName + "\nSpecialty: COMING SOON");
+
+            text.setText("Dr." + doctorfName + " " + doctorlName + "\nSpecialty: ");
+
+            //get the doctor's time off
+            CollectionReference timeOffRef = fStore.collection("Doctor").document(doctorID).collection("Time Off");
+            timeOffRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            timeOff.add(new TimeOffModel(document.get("Date").toString(), document.get("Day").toString(), document.get("Month").toString(), document.get("Year").toString()));
+                            Log.i("LOG", document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d("LOG", "Error getting subcollection.", task.getException());
+                    }
+                }
+            });
+
+            //On Click
             doctorItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(dateTextView.getText().toString().equals("") && dateTextView.getText().length() <= 0){
+                        Toast.makeText(getApplicationContext(), "Please choose a date first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if(timeTextView.getText().toString().equals("") && timeTextView.getText().length() <= 0){
+                        Toast.makeText(getApplicationContext(), "Please choose a time first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    for(TimeOffModel date : timeOff){
+                        if(date.getDate().equals(dateTextView.getText().toString())){
+                            Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                     chosenDoctorTextView.setText(doctorfName + " " + doctorlName);
                     chosenDoctorId =  doctorID;
                     Toast.makeText(getApplicationContext(), "Chose a doctor!:" + doctorfName, Toast.LENGTH_SHORT).show();
