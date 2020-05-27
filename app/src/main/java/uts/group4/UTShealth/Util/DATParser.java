@@ -1,14 +1,29 @@
 package uts.group4.UTShealth.Util;
 
+import android.icu.util.Calendar;
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 /*************************************************************************************************
  * This class parses date and time from strings.
  * Strings supplied must be in the form of   00:00AM  and  DD/MM/YYYY
  ************************************************************************************************/
 
 public class DATParser {
+    final static private String logger = "DATPARSER";
     //empty constructor
     public void DATParser(){
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static int getWeekDay(String date){
+        Calendar c = Calendar.getInstance();
+        c.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date), 1, 0 , 0);
+
+        return c.get(Calendar.DAY_OF_WEEK);
     }
 
     public static int timeStrToInt(String time){
@@ -95,6 +110,19 @@ public class DATParser {
             case"friday": return 6;
             case"saturday": return 7;
             default: return 0;
+        }
+    }
+
+    public static String weekDayAsString(int day){
+        switch(day){
+            case 1: return "Sunday";
+            case 2: return "Monday";
+            case 3: return "Tuesday";
+            case 4: return "Wednesday";
+            case 5: return "Thursday";
+            case 6: return "Friday";
+            case 7: return "Saturday";
+            default: return "INVALID DAY";
         }
     }
 }

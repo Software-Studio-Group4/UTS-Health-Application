@@ -15,7 +15,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     String sourceActivity;
     String userID;
     FirebaseFirestore fStore;
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,7 +40,10 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        return new DatePickerDialog(getActivity(), R.style.DatePickerTheme,this, year, month, day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.DatePickerTheme,this, year, month, day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
+        return datePickerDialog;
     }
 
     @Override
@@ -51,6 +58,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
+
         switch(sourceActivity){
             case("BookAppointment") : populateSetDateText(year,month + 1, day); break;
             case("DoctorAvailability") : newTimeOff(year, month, day); break;

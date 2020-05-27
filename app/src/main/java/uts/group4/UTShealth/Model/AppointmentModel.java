@@ -9,12 +9,13 @@ public class AppointmentModel {
     private String ChatCode;
     private String DoctorFullName;
     private String PatientFullName;
+    private String WeekDay;
 
     public AppointmentModel(){
 
     }
 
-    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName, String patientFullName) {
+    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName, String patientFullName, String weekDay) {
         this.id = id;
         Date = date;
         Time = time;
@@ -23,6 +24,15 @@ public class AppointmentModel {
         ChatCode = chatCode;
         DoctorFullName = doctorFullName;
         PatientFullName = patientFullName;
+        WeekDay = weekDay;
+    }
+
+    public String getWeekDay() {
+        return WeekDay;
+    }
+
+    public void setWeekDay(String weekDay) {
+        WeekDay = weekDay;
     }
 
     public String getId() {
