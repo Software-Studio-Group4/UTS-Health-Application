@@ -184,7 +184,7 @@ public class Notes extends AppCompatActivity implements Runnable {
         mShareIntent.putExtra(Intent.EXTRA_SUBJECT, "Here is a PDF from UTS Health Application");
         // Attach the PDf as a Uri.
         mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(mShareIntent);
+        startActivity(Intent.createChooser(mShareIntent, "Send email..."));
         return;
     }
 }
