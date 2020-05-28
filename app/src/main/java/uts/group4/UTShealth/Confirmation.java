@@ -1,19 +1,21 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-<<<<<<<< HEAD:app/src/main/java/uts/group4/UTShealth/Confirmation.java
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
-========
-import android.text.TextUtils;
->>>>>>>> origin/Angela:app/src/main/java/uts/group4/UTShealth/Notes.java
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
-<<<<<<<< HEAD:app/src/main/java/uts/group4/UTShealth/Confirmation.java
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,91 +32,14 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
-========
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import maes.tech.intentanim.CustomIntent;
-
-public class Notes extends AppCompatActivity{
-
-    EditText notesTf;
-    Button saveBtn, backBtn;
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    String userID = fAuth.getCurrentUser().getUid();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notes);
-        notesTf = findViewById(R.id.notesTf1);
-        saveBtn = findViewById(R.id.saveBtn);
->>>>>>>> origin/Angela:app/src/main/java/uts/group4/UTShealth/Notes.java
         backBtn = findViewById(R.id.backBtn);
         closeBtn = findViewById(R.id.closeBtn);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<<< HEAD:app/src/main/java/uts/group4/UTShealth/Confirmation.java
                 startActivity(new Intent(getApplicationContext(), PrescriptionNotes.class));
                 CustomIntent.customType(Confirmation.this, "right-to-left");
-========
-                Bundle extras = getIntent().getExtras();
-                String chatCode = extras.getString("chatroomcode1");
-                fStore.collection("Appointment")
-                        .whereEqualTo("ChatCode", chatCode)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        String notes = notesTf.getText().toString().trim();
-                                        if (TextUtils.isEmpty(notes)) {
-                                            notesTf.setError("Cannot have Empty Field");
-                                            return;
-                                        }
-                                        String id = document.getId();
-                                        DocumentReference documentReference = fStore.collection("Appointment").document(id).collection("Notes").document(userID);
-                                        Map<String, Object> notesData = new HashMap<>(); //
-                                        notesData.put("Notes", notes);
-                                        documentReference.set(notesData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(Notes.this, "Success", Toast.LENGTH_SHORT).show();
-                                            }
-                                        })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(Notes.this, "Error", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                    }
-                                } else {
-                                    Toast.makeText(Notes.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                Intent i = new Intent(getApplicationContext(), Confirmation.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Chatroomcode1", chatCode);
-                i.putExtras(bundle);
-                startActivity(i);
-                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
->>>>>>>> origin/Angela:app/src/main/java/uts/group4/UTShealth/Notes.java
             }
         });
 
@@ -126,7 +51,6 @@ public class Notes extends AppCompatActivity{
             }
         });
     }
-<<<<<<<< HEAD:app/src/main/java/uts/group4/UTShealth/Confirmation.java
 
     public void makeAndSharePDF(View buttonSource) {
         new Thread(this).start();
@@ -161,6 +85,8 @@ public class Notes extends AppCompatActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             page = document.startPage(pageInfo);
         }
+        Bundle extras = getIntent().getExtras();
+        String chatCode = extras.getString("chatroomcode1");
 
         // test to create something in the page
         Canvas canvas = null;
@@ -170,9 +96,48 @@ public class Notes extends AppCompatActivity{
 
         Paint paint = new Paint();
         paint.setColor(Color.RED);
-========
->>>>>>>> origin/Angela:app/src/main/java/uts/group4/UTShealth/Notes.java
 
+        canvas.drawCircle(50, 50, 30, paint);
+
+        // do final processing of the page
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            document.finishPage(page);
+        }
+
+
+        // Write the PDF document to a file
+        try {
+            File pdfDirPath = new File(getFilesDir(), "pdfs");
+            boolean wasSuccessful = pdfDirPath.mkdirs();
+            if (!wasSuccessful) {
+                System.out.println("was not successful.");
+            }
+            File file = new File(pdfDirPath, "pdfsend.pdf");
+            Uri contentUri = FileProvider.getUriForFile(this, "uts.group4.UTShealth.fileprovider", file);
+            os = new FileOutputStream(file);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                document.writeTo(os);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                document.close();
+            }
+            os.close();
+
+            shareDocument(contentUri);
+        } catch (IOException e) {
+            throw new RuntimeException("Error generating file", e);
+        }
+    }
+
+    private void shareDocument(Uri uri) {
+        mShareIntent = new Intent();
+        mShareIntent.setAction(Intent.ACTION_SEND);
+        mShareIntent.setType("application/pdf");
+        mShareIntent.putExtra(Intent.EXTRA_SUBJECT, "Here is a PDF from UTS Health Application");
+        // Attach the PDf as a Uri.
+        mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(mShareIntent, "Send email..."));
+    }
 
 
 }
