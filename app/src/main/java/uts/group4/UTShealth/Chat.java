@@ -15,7 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +35,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -43,7 +48,6 @@ import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.ChatMessage;
 public class Chat extends AppCompatActivity {
     private static final java.util.UUID UUID = null;
-
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         ImageView messageImageView;
@@ -91,11 +95,19 @@ public class Chat extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser mFirebaseUser;
+    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>
             mFirebaseAdapter;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     DocumentReference docRef;
     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+    String userID = mFirebaseAuth.getCurrentUser().getUid();
+    DocumentReference staffRef = fStore.collection("Doctor").document(userID);
+
+    /**********************************************************************************************
+     * onCreate
+     ************************************************************************************************/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,16 +233,19 @@ public class Chat extends AppCompatActivity {
         });
 
         endBtn = findViewById(R.id.endBtn);
-        endBtn.setOnClickListener(new View.OnClickListener() {
+        staffRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View v) {
-                //code to send chatid to Notes class
-                Intent i = new Intent(getApplicationContext(), Prescription.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Chatroomcode", chatCode);
-                i.putExtras(bundle);
-                startActivity(i);
-                CustomIntent.customType(Chat.this, "fadein-to-fadeout");
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    return;
+                } else {
+                    endBtn.setVisibility(View.INVISIBLE); // Sets end button to invisible if user is a patient
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Chat.this, "Database Error", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -246,6 +261,7 @@ public class Chat extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -284,7 +300,35 @@ public class Chat extends AppCompatActivity {
                 });
     }
 
+    public void endChat(View view) {
+        //code to send chatid to Notes class
+        Intent i = new Intent(getApplicationContext(), Prescription.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Chatroomcode", chatCode);
+        i.putExtras(bundle);
+        startActivity(i);
+        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
+    }
 
+    public void backBtnPressed(View view) {
+        staffRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+                    CustomIntent.customType(Chat.this, "left-to-right");
+                } else {
+                    startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                    CustomIntent.customType(Chat.this, "left-to-right");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Chat.this, "Database Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public void onStart() {

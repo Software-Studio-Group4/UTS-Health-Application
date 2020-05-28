@@ -177,6 +177,7 @@ public class StaffDashboard extends AppCompatActivity {
                         startActivity(i);
                     } else {
                         Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
+                        CustomIntent.customType(StaffDashboard.this, "right-to-left");
                     }
                 }
             });
