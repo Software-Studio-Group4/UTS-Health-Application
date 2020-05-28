@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.util.Calendar;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -33,6 +36,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -45,6 +49,7 @@ import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.Doctor;
 import uts.group4.UTShealth.Model.DoctorLocation;
+import uts.group4.UTShealth.Util.DATParser;
 
 public class StaffDashboard extends AppCompatActivity {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
@@ -77,12 +82,14 @@ public class StaffDashboard extends AppCompatActivity {
         //Setup the recycler
         appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        Query appointmentQuery = appointmentRef.whereEqualTo("doctorID", userID).orderBy("Date", Query.Direction.DESCENDING).orderBy("Time", Query.Direction.DESCENDING);
+        Query appointmentQuery = appointmentRef.whereEqualTo("doctorID", userID).whereEqualTo("CompletionStatus", false).orderBy("Date", Query.Direction.DESCENDING).orderBy("Time", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<AppointmentModel> options = new FirestoreRecyclerOptions.Builder<AppointmentModel>().setQuery(appointmentQuery, AppointmentModel.class).build();
         appointmentAdapter = new FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder>(options) {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             protected void onBindViewHolder(@NonNull AppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
-                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getPatientFullName(), appointmentModel.getChatCode());
+                String appointmentID = getSnapshots().getSnapshot(position).getId();
+                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getPatientFullName(), appointmentModel.getChatCode(), appointmentID, appointmentModel.getTimeStamp());
             }
 
             @NonNull
@@ -163,10 +170,35 @@ public class StaffDashboard extends AppCompatActivity {
             view = itemView;
         }
 
-        void setAppointmentName(String date, String time, String patient, final String chatCode) {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        void setAppointmentName(String date, String time, String patient, final String chatCode, String documentID, final Timestamp apptTime) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
-            appointmentTextView.setText("Date: " + date + "\nTime: " + time + "\nPatient: " + patient + "\n");
+            appointmentTextView.setText("Date: " + DATParser.weekDayAsString(DATParser.getWeekDay(date)) + " " + date + "\nTime: " + time + "\nPatient: " + patient + "\n");
+            if(apptTime != null){
+                Log.i("DASHBOARD", "Timestamp found for " + documentID);
+                final Calendar apptTimeCalendar = Calendar.getInstance();
+                apptTimeCalendar.setTime(apptTime.toDate());
 
+                Calendar apptCloseTime = Calendar.getInstance();
+                apptCloseTime.setTime(apptTime.toDate());
+                apptCloseTime.setTimeInMillis(apptCloseTime.getTimeInMillis() + ( 30 * DATParser.ONE_MINUTE_IN_MILLIS)); //add 30 minutes
+                Timestamp apptCloseTS = new Timestamp(apptCloseTime.getTime());
+
+                Log.i("DASHBOARD", documentID + " : appointment close time comparison result: " + apptCloseTS.compareTo(Timestamp.now()));
+
+                if(apptCloseTS.compareTo(Timestamp.now()) < 0){
+                    Log.i("DASHBOARD", "found an appointment past its close time. Updating completion status");
+                    DocumentReference appointmentRef = fStore.collection("Appointment").document(documentID);
+                    appointmentRef.update("CompletionStatus", true); //update the completion status
+                    Toast.makeText(getApplicationContext(), "Appointment on " + apptTimeCalendar.getTime().toString() + " has passed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if(time != null && date != null){
+                //set timestamp in the document
+                DocumentReference appointmentRef = fStore.collection("Appointment").document(documentID);
+                appointmentRef.update("TimeStamp", DATParser.dateToTimeStamp(date, time)); //update the completion status
+                Log.i("DASHBOARD", "updating TimeStamp for null TimeStamps");
+            }
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
