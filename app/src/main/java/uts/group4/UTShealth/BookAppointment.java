@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,6 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +71,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     private RecyclerView doctorRecycler;
     private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
     ArrayList<AppointmentModel> userAppointments = new ArrayList<>();
+    Calendar dateObj = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,6 +227,10 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
 
+        //set the dateObj to the date and time
+        dateObj.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date),
+                    DATParser.getHour(DATParser.timeStrToInt(time)), DATParser.getMinute(DATParser.timeStrToInt(time)), 0);
+
         if(checkUserAppointmentOverlap(date, time, userAppointments)){
             Toast.makeText(BookAppointment.this, "You already have an appointment during this time", Toast.LENGTH_SHORT).show();
             return;
@@ -243,6 +250,8 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             dbRef.push().setValue(initMessage);
 
             // sets the target document reference to the Appointment collection in the firestore.
+
+            //makes a Map of data to initialise into the appointment object
             Map<String, Object> appointmentData = new HashMap<>(); //
             appointmentData.put("patientID", userID);
             appointmentData.put("doctorID", chosenDoctorId);
@@ -252,6 +261,10 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("ChatCode", "CHAT" + appointmentID);
             appointmentData.put("DoctorFullName", doctorFullName);
             appointmentData.put("PatientFullName", patientFullName);
+            appointmentData.put("CompletionStatus", false);
+            appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
+
+
 
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -303,10 +316,10 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, Ar
             //OR
             //existing end time is >= proposed start time while proposed start time is >= existing start time
             if(proposedDate.equals(userAppointment.getDate())){
-                if(proposedStartTime <= proposedEndTime && proposedEndTime <= existingEndTime){
+                if(proposedStartTime >= existingStartTime && proposedStartTime <= existingEndTime){
                     return true;
                 }
-                else if(existingEndTime >= proposedStartTime && proposedStartTime >= existingStartTime){
+                else if(proposedEndTime >= existingStartTime && proposedEndTime <= existingEndTime){
                     return true;
                 }
             }

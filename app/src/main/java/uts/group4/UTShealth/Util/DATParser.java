@@ -6,16 +6,57 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.firebase.Timestamp;
+
 /*************************************************************************************************
  * This class parses date and time from strings.
  * Strings supplied must be in the form of   00:00AM  and  DD/MM/YYYY
  ************************************************************************************************/
 
 public class DATParser {
+    public static final long ONE_MINUTE_IN_MILLIS=60000;
     final static private String logger = "DATPARSER";
     //empty constructor
     public void DATParser(){
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static Timestamp dateToTimeStamp(String date, String time){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date),
+                     DATParser.getHour(DATParser.timeStrToInt(time)), DATParser.getMinute(DATParser.timeStrToInt(time)), 0);
+        return new Timestamp(calendar.getTime());
+    }
+
+    public static int getHour(int time){
+        char[] timeCharrArr = (time + "").toCharArray();
+        switch(timeCharrArr.length){
+            case 1:
+                return 0;
+            case 2:
+                return 0;
+            case 3:
+                return Integer.parseInt(timeCharrArr[0] + "");
+            case 4:
+                return Integer.parseInt(timeCharrArr[0] + "" + timeCharrArr[1]);
+            default : return -1;
+        }
+    }
+
+    public static int getMinute(int time){
+        char[] timeCharrArr = (time + "").toCharArray();
+        switch(timeCharrArr.length){
+            case 1:
+                return Integer.parseInt(timeCharrArr[0] + "");
+            case 2:
+                return Integer.parseInt(timeCharrArr[0] + "" + timeCharrArr[1]);
+            case 3:
+                return Integer.parseInt(timeCharrArr[1] + "" + timeCharrArr[2]);
+            case 4:
+                return Integer.parseInt(timeCharrArr[2] + "" + timeCharrArr[3]);
+            default : return -1;
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
