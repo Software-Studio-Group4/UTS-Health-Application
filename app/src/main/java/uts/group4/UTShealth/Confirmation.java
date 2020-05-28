@@ -81,6 +81,8 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             page = document.startPage(pageInfo);
         }
+        Bundle extras = getIntent().getExtras();
+        String chatCode = extras.getString("chatroomcode1");
 
         // test to create something in the page
         Canvas canvas = null;

@@ -85,6 +85,7 @@ public class Notes extends AppCompatActivity{
                 Intent i = new Intent(getApplicationContext(), Confirmation.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("Chatroomcode1", chatCode);
+                bundle.putString("Notes", notesTf.getText().toString().trim());
                 i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(Notes.this, "fadein-to-fadeout");
