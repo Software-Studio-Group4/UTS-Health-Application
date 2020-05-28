@@ -69,6 +69,7 @@ public class Prescription extends AppCompatActivity {
                 Bundle extras = getIntent().getExtras();
                 assert extras != null;
                 String chatCode = extras.getString("Chatroomcode");
+                String stbmp = extras.getString("Bitmap");
                 fStore.collection("Appointment")
                         .whereEqualTo("ChatCode", chatCode)
                         .get()
@@ -106,6 +107,7 @@ public class Prescription extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), Notes.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("chatroomcode1", chatCode);
+                bundle.putString("bitmap", stbmp);
                 i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(Prescription.this, "fadein-to-fadeout");
@@ -118,4 +120,5 @@ public class Prescription extends AppCompatActivity {
             }
         });
     }
+
 }
