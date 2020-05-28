@@ -216,7 +216,9 @@ public class PatientDashboard extends AppCompatActivity {
         void setAppointmentName(String date, String time, String doctor, final String chatCode) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
             registerForContextMenu(appointmentTextView);
-            appointmentID = chatCode.substring(4);
+            if(chatCode != null){
+                appointmentID = chatCode.substring(4);
+            }
             appointmentTextView.setText("Date: " + date + "\nTime: " + time + "\nPhysician: Dr. " + doctor + "\n");
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override

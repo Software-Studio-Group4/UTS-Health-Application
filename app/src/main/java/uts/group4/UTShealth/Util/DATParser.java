@@ -26,6 +26,22 @@ public class DATParser {
         return c.get(Calendar.DAY_OF_WEEK);
     }
 
+    public static int addMinutesHoursInt(int hoursToAdd, int minutesToAdd, int sourceTime){
+        //turn the time into a string
+        String stringTime = DATParser.timeIntToStr(sourceTime);
+        String[] stringArr = stringTime.split(":");
+        stringArr[1] = stringArr[1].replaceAll("[^\\d]", "");
+        int hour = Integer.parseInt(stringArr[0]) + hoursToAdd;
+        int minutes = Integer.parseInt(stringArr[1]) + minutesToAdd;
+        hour = hour + minutes/60;
+        minutes = minutes%60;
+        stringTime = hour + "" + minutes + "";
+        return Integer.parseInt(stringTime);
+    }
+
+
+
+
     public static int timeStrToInt(String time){
         if(time.contains("AM") || time.contains("12")){
             return Integer.parseInt(time.replaceAll( "[^\\d]", "" ));

@@ -1,11 +1,14 @@
 package uts.group4.UTShealth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -15,8 +18,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +37,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -39,33 +48,55 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ChatMessage;
+import uts.group4.UTShealth.Model.Doctor;
+import uts.group4.UTShealth.Model.ShiftModel;
+import uts.group4.UTShealth.Model.TimeOffModel;
 import uts.group4.UTShealth.Util.DATParser;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
     public static TextView timeTextView;
+    private static TextView chosenDoctorTextView;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     DatabaseReference dbRef;
-    Spinner docSpinner;
+    //Spinner docSpinner;
     final List<String> doctors = new ArrayList<>();
     final List<String> doctorIds = new ArrayList<>();
     String patientFullName = null;
+    String chosenDoctorId = null;
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
     String dateAndTime = formatter.format(date);
+    private RecyclerView doctorRecycler;
+    private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
+    ArrayList<AppointmentModel> userAppointments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
-
-        docSpinner = findViewById(R.id.doctorSpinner);
+        //docSpinner = findViewById(R.id.doctorSpinner);
         timeTextView = findViewById(R.id.timeTextView);
         dateTextView = findViewById(R.id.dateTextView);
+        chosenDoctorTextView = findViewById(R.id.chosenDoctor);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+    // the following block of code finds all of the user's existing appointment dates and times and fills an array list with it ;
+
+        fStore.collection("Appointment").whereEqualTo("patientID", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot document : documentSnapshots){
+                    userAppointments.add(new AppointmentModel(document.get("Date").toString(), document.get("Time").toString()));
+                    Log.i("LOG", document.getId() + " => " + document.getData());
+                }
+            }});
+
 
     // the following block of code populates the patientName string with their full name to be used to be stored in the appointments object;
                 DocumentReference nameRef = fStore.collection("Patients").document(fAuth.getUid());
@@ -85,31 +116,44 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             }
         });
 
-
-
-
-        /******************This code block sets the options in the spinner to doctor names from the database****************************/
-        CollectionReference doctorsRef = fStore.collection("Doctor");
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, doctors);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        docSpinner.setAdapter(adapter);
-        doctorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    // the following block of code handles the doctor recycler view
+        final CollectionReference doctorRef = fStore.collection("Doctor");
+        doctorRecycler = findViewById(R.id.doctorRecycler);
+        doctorRecycler.setLayoutManager(new LinearLayoutManager(this));
+        Query doctorQuery = doctorRef.orderBy("First Name", Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<Doctor> options = new FirestoreRecyclerOptions.Builder<Doctor>().setQuery(doctorQuery, Doctor.class).build();
+        doctorAdapter = new FirestoreRecyclerAdapter<Doctor, DoctorViewHolder>(options) {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String doctorName = document.getString("First Name") + " " + document.getString("Last Name");
-                        doctors.add(doctorName);
-                        doctorIds.add(document.getId());
-                        Log.i("INFO", "DOCTOR FOUND: " + document.getString("First Name"));
-                    }
-                }
-                adapter.notifyDataSetChanged();
+            protected void onBindViewHolder(@NonNull DoctorViewHolder doctorViewHolder, int position, @NonNull Doctor doctorModel) {
+                String doctorId = getSnapshots().getSnapshot(position).getId();
+                doctorViewHolder.setDoctorData(doctorModel.getFirstName(), doctorModel.getLastName(), doctorId);
             }
-        });
+            @NonNull
+            @Override
+            public DoctorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_doctorselect, parent, false);
+                return new DoctorViewHolder(view);
+            }
+        };
+        doctorRecycler.setAdapter(doctorAdapter);
+
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        doctorAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (doctorAdapter != null) {
+            doctorAdapter.stopListening();
+        }
+    }
 
     @Override
     public <T extends View> T findViewById(int id) {
@@ -131,6 +175,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         else{
         dateTextView.setText(day + "/" + month + "/" + year);
     }
+        chosenDoctorTextView.setText("");
     }
 
     public void btn_PickerTime(View view) {
@@ -139,13 +184,19 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     }
 
     //Changes the heading of the calendar view
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public static void populateSetTimeText(int hour, int minute) {
         String amPm;
+        int reformattedHour = hour;
+        if(hour > 12){
+            reformattedHour = (hour - 12);
+        }
         if (hour >= 12) {
             amPm = " PM";
         } else
             amPm = " AM";
-        timeTextView.setText(String.format("%02d:%02d", hour, minute) + amPm);
+        chosenDoctorTextView.setText("");
+        timeTextView.setText(String.format("%02d:%02d", reformattedHour, minute) + amPm);
     }
 
     @Override
@@ -163,23 +214,34 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void confirmAppt(View view) {
         String userID = fAuth.getCurrentUser().getUid();
+        if(dateTextView.getText().toString().equals("") && dateTextView.getText().length() <= 0){
+            Toast.makeText(BookAppointment.this, "please select a date", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(timeTextView.getText().toString().equals("") && timeTextView.getText().length() <= 0){
+            Toast.makeText(BookAppointment.this, "please select a time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(chosenDoctorTextView.getText().toString().equals("") && chosenDoctorTextView.getText().length() <= 0){
+            Toast.makeText(BookAppointment.this, "please select a doctor", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
+
+        if(checkUserAppointmentOverlap(date, time)){
+            Toast.makeText(BookAppointment.this, "You already have an appointment during this time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String doctorFullName = chosenDoctorTextView.getText().toString();
         String weekDay = DATParser.weekDayAsString(DATParser.getWeekDay(date));
         Log.i("LOGGER",  "week day found : " + weekDay + DATParser.getWeekDay(date));
         String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
 
         DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
 
-        if (TextUtils.isEmpty(date)) {
-            Toast.makeText(BookAppointment.this, "Must select date", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(time)) {
-            Toast.makeText(BookAppointment.this, "Must select time", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        else {
+
             //initialise A Chat Object in the RealTimeDatabase
             dbRef = FirebaseDatabase.getInstance().getReference().child("Chats/" + "CHAT" + appointmentID);
             ChatMessage initMessage = new ChatMessage("Welcome to your appointment!", "SYSTEM", null, dateAndTime);
@@ -192,11 +254,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("Time", time);
             appointmentData.put("WeekDay", weekDay);
             appointmentData.put("ChatCode", "CHAT" + appointmentID);
-
-            //grab the doctorID of the currently selected doctor in the spinner
-            String selectedDoc = docSpinner.getSelectedItem().toString();
-            appointmentData.put("doctorID", (doctorIds.get(doctors.indexOf(selectedDoc))));
-            appointmentData.put("DoctorFullName", selectedDoc);
+            appointmentData.put("DoctorFullName", doctorFullName);
             appointmentData.put("PatientFullName", patientFullName);
 
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
@@ -221,7 +279,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             DocumentReference doctorDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
             doctorDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
 
-        }
+
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
     }
 
@@ -229,4 +287,133 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
 
     }
+
+boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime){
+        int proposedTimeInt = DATParser.timeStrToInt(proposedTime);
+        for(AppointmentModel userAppointment : userAppointments){
+
+            int existingStartTime = DATParser.timeStrToInt(userAppointment.getTime());
+            int existingEndTime = DATParser.addMinutesHoursInt(0, 30, existingStartTime);
+            int proposedStartTime = DATParser.timeStrToInt(proposedTime);
+            int proposedEndTime = DATParser.addMinutesHoursInt(0, 30, proposedStartTime);
+            Log.i("LOGGER", "existing start : " + existingStartTime +
+                                       "\n existing end : " + existingEndTime +
+                                       "\n proposed start : " + proposedStartTime +
+                                        "\n prposed end :" + proposedEndTime);
+
+            //time overlaps with appointment when
+            //the date matches AND
+            //existing start time is <= proposedEndTime while proposedEndTime is <= existing end time
+            //OR
+            //existing end time is >= proposed start time while proposed start time is >= existing start time
+            if(proposedDate.equals(userAppointment.getDate())){
+                if(proposedStartTime <= proposedEndTime && proposedEndTime <= existingEndTime){
+                    return true;
+                }
+                else if(existingEndTime >= proposedStartTime && proposedStartTime >= existingStartTime){
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    /**********************************************************************************************
+     * Private Class for the doctor recycler
+     ************************************************************************************************/
+    private class DoctorViewHolder extends RecyclerView.ViewHolder {
+        private View view;
+
+        DoctorViewHolder(View itemView) {
+            super(itemView);
+            view = itemView;
+        }
+
+        void setDoctorData(final String doctorfName, final String doctorlName, final String doctorID){
+            final ArrayList<TimeOffModel> timeOff = new ArrayList<>();
+            final ArrayList<ShiftModel> shifts = new ArrayList<>();
+            ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
+            TextView text = view.findViewById(R.id.doctorTextView);
+
+            text.setText("Dr." + doctorfName + " " + doctorlName + "\nSpecialty: ");
+
+            //get the doctor's time off
+            CollectionReference timeOffRef = fStore.collection("Doctor").document(doctorID).collection("Time Off");
+            timeOffRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            timeOff.add(new TimeOffModel(document.get("Date").toString(), document.get("Day").toString(), document.get("Month").toString(), document.get("Year").toString()));
+                            Log.i("LOG", document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d("LOG", "Error getting subcollection.", task.getException());
+                    }
+                }
+            });
+
+            //get the doctor's shifts
+            CollectionReference shiftsRef = fStore.collection("Doctor").document(doctorID).collection("Shifts");
+            shiftsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            shifts.add(new ShiftModel(document.get("StartTime").toString(), document.get("EndTime").toString(),document.get("Day").toString()));
+                            Log.i("LOG", document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d("LOG", "Error getting subcollection.", task.getException());
+                    }
+                }
+            });
+
+            //On Click
+            doctorItem.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onClick(View view) {
+                    if(dateTextView.getText().toString().equals("") && dateTextView.getText().length() <= 0){
+                        Toast.makeText(getApplicationContext(), "Please choose a date first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if(timeTextView.getText().toString().equals("") && timeTextView.getText().length() <= 0){
+                        Toast.makeText(getApplicationContext(), "Please choose a time first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    for(TimeOffModel date : timeOff){
+                        if(date.getDate().equals(dateTextView.getText().toString())){
+                            Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+
+                    for(ShiftModel shift : shifts){
+                        //if the desired time is (larger than start shift start  and smaller than shift end)
+                        //and if day is equal then make the shift
+                       if((DATParser.timeStrToInt(timeTextView.getText().toString()) >= Integer.parseInt(shift.getStartTime()) &&
+                          DATParser.timeStrToInt(timeTextView.getText().toString()) <= Integer.parseInt(shift.getEndTime())) &&
+                          DATParser.getWeekDay(dateTextView.getText().toString()) == DATParser.weekDayAsInt(shift.getDay())){
+                           Log.i("TAG", "This is within Dr." + doctorfName + " " + doctorlName + "'s shift times!");
+                           chosenDoctorTextView.setText(doctorfName + " " + doctorlName);
+                           chosenDoctorId =  doctorID;
+                           Toast.makeText(getApplicationContext(), "Chose a doctor!:" + doctorfName, Toast.LENGTH_SHORT).show();
+                            return;
+                       }
+
+                    }
+                    Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not working on " +
+                            DATParser.weekDayAsString(DATParser.getWeekDay(dateTextView.getText().toString())) +
+                            "s at " + timeTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+                    return;
+
+                }
+            });
+        }
+
+        //void setAppointmentName(String date, String time, String doctor, final String chatCode) { }
+    }
+
 }

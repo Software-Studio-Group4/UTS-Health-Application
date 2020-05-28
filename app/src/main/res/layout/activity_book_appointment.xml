@@ -45,27 +45,6 @@
         app:srcCompat="@drawable/uts_logo"
         tools:ignore="ContentDescription" />
 
-    <Spinner
-        android:id="@+id/doctorSpinner"
-        style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
-        android:layout_width="234dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="39dp"
-        android:layout_marginLeft="39dp"
-        android:layout_marginTop="408dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_marginBottom="359dp"
-        android:background="@drawable/doctor_dropdown"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
@@ -149,6 +128,34 @@
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/confirmBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateButton"
+        app:layout_constraintVertical_bias="1.0">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Choose a Doctor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#185586"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/doctorRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/confirmBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
@@ -156,48 +163,23 @@
         android:layout_height="50dp"
         android:layout_marginStart="147dp"
         android:layout_marginLeft="147dp"
-        android:layout_marginTop="519dp"
         android:layout_marginEnd="73dp"
         android:layout_marginRight="73dp"
-        android:layout_marginBottom="238dp"
         android:background="@drawable/confirm_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="confirmAppt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         tools:ignore="MissingConstraints" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="18dp"
-        android:layout_height="8dp"
-        android:layout_marginStart="279dp"
-        android:layout_marginLeft="279dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/doctorSpinner"
-        app:layout_constraintEnd_toEndOf="@+id/doctorSpinner"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/doctorSpinner"
-        app:layout_constraintTop_toTopOf="@+id/doctorSpinner"
-        app:layout_constraintVertical_bias="0.8"
-        app:srcCompat="@drawable/dropdon_icon" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
         android:layout_marginTop="164dp"
-        android:layout_marginEnd="104dp"
-        android:layout_marginRight="104dp"
         android:layout_marginBottom="616dp"
         android:fontFamily="sans-serif-light"
         android:text="Book an appointment"
@@ -206,7 +188,23 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintStart_toEndOf="@+id/backBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.37" />
+
+    <TextView
+        android:id="@+id/chosenDoctor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
