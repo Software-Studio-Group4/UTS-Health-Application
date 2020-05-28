@@ -2,11 +2,13 @@ package uts.group4.UTShealth;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -225,9 +228,18 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //code to send chatid to Notes class
+                Bitmap bitmap1 = getScreenBitmap();
+
+                mMessageRecyclerView.setDrawingCacheEnabled(true);
+                Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
+                Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
+                mMessageRecyclerView.setDrawingCacheEnabled(false);
+                String stbmp = BitMapToString(newBmp);
+
                 Intent i = new Intent(getApplicationContext(), Prescription.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("Chatroomcode", chatCode);
+                bundle.putString("Bitmap", stbmp);
                 i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(Chat.this, "fadein-to-fadeout");
@@ -313,6 +325,25 @@ public class Chat extends AppCompatActivity {
         super.finish();
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
+
+    public Bitmap getScreenBitmap() {
+        View bit= mMessageRecyclerView.getRootView();
+        bit.setDrawingCacheEnabled(true);
+        bit.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        bit.layout(0, 0, bit.getMeasuredWidth(), bit.getMeasuredHeight());
+        bit.buildDrawingCache(true);
+        Bitmap b = Bitmap.createBitmap(bit.getDrawingCache());
+        bit.setDrawingCacheEnabled(false); // clear drawing cache
+        return b;
+    }
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 }
 
 
