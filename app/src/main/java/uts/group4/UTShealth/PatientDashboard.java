@@ -217,7 +217,7 @@ public class PatientDashboard extends AppCompatActivity {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
             registerForContextMenu(appointmentTextView);
             if(chatCode != null){
-                appointmentID = chatCode.substring(4);
+            appointmentID = chatCode.substring(4);
             }
             appointmentTextView.setText("Date: " + date + "\nTime: " + time + "\nPhysician: Dr. " + doctor + "\n");
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
