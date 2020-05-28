@@ -80,10 +80,14 @@ public class Notes extends AppCompatActivity{
                                 } else {
                                     Toast.makeText(Notes.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
                                 }
-                                startActivity(new Intent(getApplicationContext(), Confirmation.class));
-                                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
                             }
                         });
+                Intent i = new Intent(getApplicationContext(), Confirmation.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Chatroomcode1", chatCode);
+                i.putExtras(bundle);
+                startActivity(i);
+                CustomIntent.customType(Notes.this, "fadein-to-fadeout");
             }
         });
 
