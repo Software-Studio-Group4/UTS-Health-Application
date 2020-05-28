@@ -11,14 +11,12 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".PatientDoctorView"></activity>
         <activity android:name=".DoctorAvailability"></activity>
-        <activity android:name=".Prescription" />
         <activity android:name=".DatabaseTester">
             <intent-filter>
                 <action android:name="com.company.package.FOO"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Notes"/>
         <!-- FileProvider - a ContentProvider for making the image file securely available to the other end -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -57,6 +55,8 @@
         <activity android:name=".PatientDashboard$PatientPastAppointments" />
         <activity android:name=".StaffProfilePage" />
         <activity android:name=".BookAppointment" />
+        <activity android:name=".Confirmation" />
+        <activity android:name=".PrescriptionNotes" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

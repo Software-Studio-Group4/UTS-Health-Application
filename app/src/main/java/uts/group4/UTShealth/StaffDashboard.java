@@ -175,9 +175,9 @@ public class StaffDashboard extends AppCompatActivity {
                         Intent i = new Intent(StaffDashboard.this, Chat.class);
                         i.putExtra("chatroomcode", chatCode);
                         startActivity(i);
+                        CustomIntent.customType(StaffDashboard.this, "right-to-left");
                     } else {
                         Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
-                        CustomIntent.customType(StaffDashboard.this, "right-to-left");
                     }
                 }
             });
@@ -230,7 +230,7 @@ public class StaffDashboard extends AppCompatActivity {
         client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
+                if (task.isSuccessful() && task.getResult() != null) { // Fixed bug where null Latitude would crash app
                     Location location = task.getResult();
                     GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                     Log.d(TAG, "onComplete: Latitude: " + geoPoint.getLatitude());
