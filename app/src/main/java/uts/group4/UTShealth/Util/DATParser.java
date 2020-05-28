@@ -6,16 +6,57 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.firebase.Timestamp;
+
 /*************************************************************************************************
  * This class parses date and time from strings.
  * Strings supplied must be in the form of   00:00AM  and  DD/MM/YYYY
  ************************************************************************************************/
 
 public class DATParser {
+    public static final long ONE_MINUTE_IN_MILLIS=60000;
     final static private String logger = "DATPARSER";
     //empty constructor
     public void DATParser(){
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static Timestamp dateToTimeStamp(String date, String time){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date),
+                     DATParser.getHour(DATParser.timeStrToInt(time)), DATParser.getMinute(DATParser.timeStrToInt(time)), 0);
+        return new Timestamp(calendar.getTime());
+    }
+
+    public static int getHour(int time){
+        char[] timeCharrArr = (time + "").toCharArray();
+        switch(timeCharrArr.length){
+            case 1:
+                return 0;
+            case 2:
+                return 0;
+            case 3:
+                return Integer.parseInt(timeCharrArr[0] + "");
+            case 4:
+                return Integer.parseInt(timeCharrArr[0] + "" + timeCharrArr[1]);
+            default : return -1;
+        }
+    }
+
+    public static int getMinute(int time){
+        char[] timeCharrArr = (time + "").toCharArray();
+        switch(timeCharrArr.length){
+            case 1:
+                return Integer.parseInt(timeCharrArr[0] + "");
+            case 2:
+                return Integer.parseInt(timeCharrArr[0] + "" + timeCharrArr[1]);
+            case 3:
+                return Integer.parseInt(timeCharrArr[1] + "" + timeCharrArr[2]);
+            case 4:
+                return Integer.parseInt(timeCharrArr[2] + "" + timeCharrArr[3]);
+            default : return -1;
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -26,8 +67,54 @@ public class DATParser {
         return c.get(Calendar.DAY_OF_WEEK);
     }
 
+    public static int addMinutesHoursInt(int hoursToAdd, int minutesToAdd, int sourceTime){
+
+        String stringTime = sourceTime + "";
+        char[] timeCharArr = stringTime.toCharArray();
+        int newHour;
+        int newMinutes;
+
+
+        switch(timeCharArr.length){
+            case 1 :
+                Log.i(logger, "case: " + timeCharArr.length);
+                newHour = hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[0] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            case 2 :
+                Log.i(logger, "case: " + timeCharArr.length);
+                newHour = hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[0] + "" + timeCharArr[1] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            case 3 :
+                Log.i(logger, "case: " + timeCharArr.length);
+                newHour = Integer.parseInt(timeCharArr[0]+"") + hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[1] + "" + timeCharArr[2] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            case 4 :
+                newHour = Integer.parseInt(timeCharArr[0] + "" + timeCharArr[1] + "") + hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[2] + "" + timeCharArr[3] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            default : Log.i(logger, "add minutes to hours invalid source time input "); return 0;
+        }
+
+        Log.i(logger, "source time: " + sourceTime +" new hour :" + newHour + " new minutes: " + newMinutes);
+        return Integer.parseInt((newHour+""+newMinutes));
+    }
+
+
+
+
     public static int timeStrToInt(String time){
-        if(time.contains("AM") || time.contains("12")){
+        if(time.contains("AM") || time.contains("12:")){
             return Integer.parseInt(time.replaceAll( "[^\\d]", "" ));
         }
         else if(time.contains("PM")){

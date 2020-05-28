@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -42,6 +44,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,12 +54,14 @@ import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ChatMessage;
 import uts.group4.UTShealth.Model.Doctor;
+import uts.group4.UTShealth.Model.ShiftModel;
+import uts.group4.UTShealth.Model.TimeOffModel;
 import uts.group4.UTShealth.Util.DATParser;
 
 public class BookAppointment extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static TextView dateTextView;
     public static TextView timeTextView;
-    public TextView chosenDoctorTextView;
+    private static TextView chosenDoctorTextView;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     DatabaseReference dbRef;
@@ -70,6 +75,8 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     String dateAndTime = formatter.format(date);
     private RecyclerView doctorRecycler;
     private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
+    ArrayList<AppointmentModel> userAppointments = new ArrayList<>();
+    Calendar dateObj = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,18 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         chosenDoctorTextView = findViewById(R.id.chosenDoctor);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+
+    // the following block of code finds all of the user's existing appointment dates and times and fills an array list with it ;
+
+        fStore.collection("Appointment").whereEqualTo("patientID", fAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for(DocumentSnapshot document : documentSnapshots){
+                    userAppointments.add(new AppointmentModel(document.get("Date").toString(), document.get("Time").toString()));
+                    Log.i("LOG", document.getId() + " => " + document.getData());
+                }
+            }});
+
 
     // the following block of code populates the patientName string with their full name to be used to be stored in the appointments object;
                 DocumentReference nameRef = fStore.collection("Patients").document(fAuth.getUid());
@@ -100,7 +119,8 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        CollectionReference doctorRef = fStore.collection("Doctor");
+    // the following block of code handles the doctor recycler view
+        final CollectionReference doctorRef = fStore.collection("Doctor");
         doctorRecycler = findViewById(R.id.doctorRecycler);
         doctorRecycler.setLayoutManager(new LinearLayoutManager(this));
         Query doctorQuery = doctorRef.orderBy("First Name", Query.Direction.ASCENDING);
@@ -110,7 +130,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             protected void onBindViewHolder(@NonNull DoctorViewHolder doctorViewHolder, int position, @NonNull Doctor doctorModel) {
                 String doctorId = getSnapshots().getSnapshot(position).getId();
                 doctorViewHolder.setDoctorData(doctorModel.getFirstName(), doctorModel.getLastName(), doctorId);
-                Log.i("LOGGER", "doctor found: " + doctorModel.getFirstName());
             }
             @NonNull
             @Override
@@ -159,6 +178,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         else{
         dateTextView.setText(day + "/" + month + "/" + year);
     }
+        chosenDoctorTextView.setText("");
     }
 
     public void btn_PickerTime(View view) {
@@ -167,13 +187,19 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     }
 
     //Changes the heading of the calendar view
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public static void populateSetTimeText(int hour, int minute) {
         String amPm;
+        int reformattedHour = hour;
+        if(hour > 12){
+            reformattedHour = (hour - 12);
+        }
         if (hour >= 12) {
             amPm = " PM";
         } else
             amPm = " AM";
-        timeTextView.setText(String.format("%02d:%02d", hour, minute) + amPm);
+        chosenDoctorTextView.setText("");
+        timeTextView.setText(String.format("%02d:%02d", reformattedHour, minute) + amPm);
     }
 
     @Override
@@ -205,6 +231,16 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         }
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
+
+        //set the dateObj to the date and time
+        dateObj.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date),
+                    DATParser.getHour(DATParser.timeStrToInt(time)), DATParser.getMinute(DATParser.timeStrToInt(time)), 0);
+
+        if(checkUserAppointmentOverlap(date, time, userAppointments)){
+            Toast.makeText(BookAppointment.this, "You already have an appointment during this time", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String doctorFullName = chosenDoctorTextView.getText().toString();
         String weekDay = DATParser.weekDayAsString(DATParser.getWeekDay(date));
         Log.i("LOGGER",  "week day found : " + weekDay + DATParser.getWeekDay(date));
@@ -219,14 +255,21 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             dbRef.push().setValue(initMessage);
 
             // sets the target document reference to the Appointment collection in the firestore.
+
+            //makes a Map of data to initialise into the appointment object
             Map<String, Object> appointmentData = new HashMap<>(); //
             appointmentData.put("patientID", userID);
+            appointmentData.put("doctorID", chosenDoctorId);
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
             appointmentData.put("WeekDay", weekDay);
             appointmentData.put("ChatCode", "CHAT" + appointmentID);
             appointmentData.put("DoctorFullName", doctorFullName);
             appointmentData.put("PatientFullName", patientFullName);
+            appointmentData.put("CompletionStatus", false);
+            appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
+
+
 
             //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
             appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -259,6 +302,37 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
     }
 
+boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, ArrayList<AppointmentModel> existingAppointments){
+        int proposedTimeInt = DATParser.timeStrToInt(proposedTime);
+        for(AppointmentModel userAppointment : existingAppointments){
+
+            int existingStartTime = DATParser.timeStrToInt(userAppointment.getTime());
+            int existingEndTime = DATParser.addMinutesHoursInt(0, 30, existingStartTime);
+            int proposedStartTime = DATParser.timeStrToInt(proposedTime);
+            int proposedEndTime = DATParser.addMinutesHoursInt(0, 30, proposedStartTime);
+            Log.i("LOGGER", "existing start : " + existingStartTime +
+                                       "\n existing end : " + existingEndTime +
+                                       "\n proposed start : " + proposedStartTime +
+                                        "\n prposed end :" + proposedEndTime);
+
+            //time overlaps with appointment when
+            //the date matches AND
+            //existing start time is <= proposedEndTime while proposedEndTime is <= existing end time
+            //OR
+            //existing end time is >= proposed start time while proposed start time is >= existing start time
+            if(proposedDate.equals(userAppointment.getDate())){
+                if(proposedStartTime >= existingStartTime && proposedStartTime <= existingEndTime){
+                    return true;
+                }
+                else if(proposedEndTime >= existingStartTime && proposedEndTime <= existingEndTime){
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
     /**********************************************************************************************
      * Private Class for the doctor recycler
      ************************************************************************************************/
@@ -270,21 +344,107 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             view = itemView;
         }
 
+        @SuppressLint("SetTextI18n")
         void setDoctorData(final String doctorfName, final String doctorlName, final String doctorID){
+            final ArrayList<TimeOffModel> timeOff = new ArrayList<>();
+            final ArrayList<ShiftModel> shifts = new ArrayList<>();
+            final ArrayList<AppointmentModel> existingDocAppts = new ArrayList<>();
             ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
             TextView text = view.findViewById(R.id.doctorTextView);
-            text.setText("Dr." + doctorfName + " " + doctorlName + "\nSpecialty: COMING SOON");
+
+            text.setText("Dr." + doctorfName + " " + doctorlName + "\nSpecialty: ");
+
+            //get the doctor's time off
+            CollectionReference timeOffRef = fStore.collection("Doctor").document(doctorID).collection("Time Off");
+            timeOffRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            timeOff.add(new TimeOffModel(document.get("Date").toString(), document.get("Day").toString(), document.get("Month").toString(), document.get("Year").toString()));
+                            Log.i("LOG", document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d("LOG", "Error getting subcollection.", task.getException());
+                    }
+                }
+            });
+
+            //get the doctor's shifts
+            CollectionReference shiftsRef = fStore.collection("Doctor").document(doctorID).collection("Shifts");
+            shiftsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            shifts.add(new ShiftModel(document.get("StartTime").toString(), document.get("EndTime").toString(),document.get("Day").toString()));
+                            Log.i("LOG", document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.d("LOG", "Error getting subcollection.", task.getException());
+                    }
+                }
+            });
+
+            //get the doctor's appointments
+            fStore.collection("Appointment").whereEqualTo("doctorID", doctorID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot documentSnapshots) {
+                    for(DocumentSnapshot document : documentSnapshots){
+                        existingDocAppts.add(new AppointmentModel(document.get("Date").toString(), document.get("Time").toString()));
+                        Log.i("LOG", document.getId() + " => " + document.getData());
+                    }
+                }});
+
+            //On Click
             doctorItem.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onClick(View view) {
-                    chosenDoctorTextView.setText(doctorfName + " " + doctorlName);
-                    chosenDoctorId =  doctorID;
-                    Toast.makeText(getApplicationContext(), "Chose a doctor!:" + doctorfName, Toast.LENGTH_SHORT).show();
+                    if(dateTextView.getText().toString().equals("") && dateTextView.getText().length() <= 0){
+                        Toast.makeText(getApplicationContext(), "Please choose a date first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if(timeTextView.getText().toString().equals("") && timeTextView.getText().length() <= 0){
+                        Toast.makeText(getApplicationContext(), "Please choose a time first", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    for(TimeOffModel date : timeOff){
+                        if(date.getDate().equals(dateTextView.getText().toString())){
+                            Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                    //checking to see if the doctor has overlap appointments
+                    if(checkUserAppointmentOverlap(dateTextView.getText().toString(), timeTextView.getText().toString(), existingDocAppts)){
+                        Toast.makeText(getApplicationContext(), "Dr." + doctorfName + " " + doctorlName + " has an appointment on "
+                                                                    + dateTextView.getText().toString() + " at " + timeTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    for(ShiftModel shift : shifts){
+                        //if the desired time is (larger than start shift start  and smaller than shift end)
+                        //and if day is equal then make the shift
+                       if((DATParser.timeStrToInt(timeTextView.getText().toString()) >= Integer.parseInt(shift.getStartTime()) &&
+                          DATParser.timeStrToInt(timeTextView.getText().toString()) <= Integer.parseInt(shift.getEndTime())) &&
+                          DATParser.getWeekDay(dateTextView.getText().toString()) == DATParser.weekDayAsInt(shift.getDay())){
+                           Log.i("TAG", "This is within Dr." + doctorfName + " " + doctorlName + "'s shift times!");
+                           chosenDoctorTextView.setText(doctorfName + " " + doctorlName);
+                           chosenDoctorId =  doctorID;
+                           Toast.makeText(getApplicationContext(), "Chose a doctor!:" + doctorfName, Toast.LENGTH_SHORT).show();
+                            return;
+                       }
+
+                    }
+                    Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not working on " +
+                            DATParser.weekDayAsString(DATParser.getWeekDay(dateTextView.getText().toString())) +
+                            "s at " + timeTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+                    return;
+
                 }
             });
         }
 
-        //void setAppointmentName(String date, String time, String doctor, final String chatCode) { }
     }
 
 }

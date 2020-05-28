@@ -1,43 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/staff_profile_bg"
     android:paddingLeft="14dp"
-    android:paddingRight="14dp"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="14dp"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".Chat">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messageRecyclerView"
-        android:layout_width="383dp"
-        android:layout_height="634dp"
-        android:layout_above="@+id/linearLayout" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        ads:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintHorizontal_bias="0.571"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toBottomOf="@+id/endBtn"
+        ads:layout_constraintVertical_bias="0.966" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:orientation="horizontal">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="1dp"
+        android:orientation="horizontal"
+        ads:layout_constraintBottom_toBottomOf="parent"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/addMessageImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            ads:srcCompat="@android:drawable/ic_input_add"/>
+            ads:srcCompat="@android:drawable/ic_input_add" />
 
         <EditText
             android:id="@+id/messageEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textColorHighlight="#FFFFFF"
+            android:textColorLink="#FFFFFF" />
 
         <Button
             android:id="@+id/sendButton"
@@ -45,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:enabled="false"
-            android:text="SEND"/>
+            android:text="SEND" />
 
     </LinearLayout>
 
@@ -55,19 +75,56 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        ads:layout_constraintBottom_toBottomOf="parent"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/endBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="91dp"
+        android:layout_height="45dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginStart="300dp"
-        android:layout_marginLeft="300dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginRight="9dp"
-        android:text="End" />
-</RelativeLayout>
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="258dp"
+        android:layout_marginRight="258dp"
+        android:layout_marginBottom="674dp"
+        android:background="@drawable/end_chat_btn"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="endChat"
+        ads:layout_constraintBottom_toBottomOf="parent"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintHorizontal_bias="0.0"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toTopOf="parent"
+        ads:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/backBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="47dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="332dp"
+        android:layout_marginLeft="332dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="682dp"
+        android:background="@drawable/back_btn_staff_right"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="backBtnPressed"
+        ads:layout_constraintBottom_toBottomOf="parent"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintHorizontal_bias="0.64"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toTopOf="parent"
+        ads:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

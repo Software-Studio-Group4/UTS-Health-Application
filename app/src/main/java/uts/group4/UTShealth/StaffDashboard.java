@@ -9,8 +9,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,35 +21,41 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-
-import java.util.ArrayList;
+import com.google.firebase.firestore.Query;
 
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.Doctor;
 import uts.group4.UTShealth.Model.DoctorLocation;
 
 public class StaffDashboard extends AppCompatActivity {
-    FirebaseAuth fAuth;
-    private FirebaseFirestore database = FirebaseFirestore.getInstance();
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    String userID = fAuth.getCurrentUser().getUid();
+    CollectionReference appointmentRef = fStore.collection("Appointment");
+    TextView welcomeText;
+    private RecyclerView appointmentsRecyclerView;
+    private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;
+    private static final String FIELD_NAME = "Last Name";
+
     private static final String TAG = "Staff Dash";
     private static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9002;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003;
@@ -55,34 +63,127 @@ public class StaffDashboard extends AppCompatActivity {
     boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient client;
     private DoctorLocation doctorLocation;
-    private ArrayList<DoctorLocation> doctorLocationList = new ArrayList<>();
-    private ArrayList<Doctor> doctorList = new ArrayList<>();
-    private ListenerRegistration doctorListEventListener;
 
-
+    /**********************************************************************************************
+     * onCreate
+     ************************************************************************************************/
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.staffdashboard_layout);
-        Button logoutBtn = findViewById(R.id.logoutBtn);
+        welcomeText = findViewById(R.id.welcomeText);
         client = LocationServices.getFusedLocationProviderClient(this);
 
-        fAuth = FirebaseAuth.getInstance();
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
+        //Setup the recycler
+        appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
+        appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Query appointmentQuery = appointmentRef.whereEqualTo("doctorID", userID).orderBy("Date", Query.Direction.DESCENDING).orderBy("Time", Query.Direction.DESCENDING);
+        FirestoreRecyclerOptions<AppointmentModel> options = new FirestoreRecyclerOptions.Builder<AppointmentModel>().setQuery(appointmentQuery, AppointmentModel.class).build();
+        appointmentAdapter = new FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder>(options) {
             @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
+            protected void onBindViewHolder(@NonNull AppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
+                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getPatientFullName(), appointmentModel.getChatCode());
             }
-        });
+
+            @NonNull
+            @Override
+            public AppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_appointment, parent, false);
+                return new AppointmentViewHolder(view);
+            }
+        };
+        appointmentsRecyclerView.setAdapter(appointmentAdapter);
+
     }
 
+    /**********************************************************************************************
+     * Finish
+     ************************************************************************************************/
     @Override
     public void finish() {
         super.finish();
         CustomIntent.customType(this, "fadein-to-fadeout");
     } // Fade transition
+
+    /**********************************************************************************************
+     * onStart, onStop
+     ************************************************************************************************/
+    @Override
+    protected void onStart() {
+        super.onStart();
+        appointmentAdapter.startListening();
+        DocumentReference nameRef = fStore.collection("Doctor").document(userID);
+        nameRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String name = documentSnapshot.getString(FIELD_NAME);
+                    welcomeText.setText("Welcome, Dr " + name); // Displays welcome text
+                } else {
+                    Toast.makeText(StaffDashboard.this, "Error: Welcome message", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (appointmentAdapter != null) {
+            appointmentAdapter.stopListening();
+        }
+    }
+
+    /**********************************************************************************************
+     * Methods for AVAILABILITY, PROFILE and PATIENT buttons
+     ************************************************************************************************/
+    public void goToAvailabilityPage(View view) {
+        startActivity(new Intent(getApplicationContext(), DoctorAvailability.class));
+    }
+
+    public void userProfile(View view) {
+        startActivity(new Intent(getApplicationContext(), StaffProfilePage.class));
+        CustomIntent.customType(StaffDashboard.this, "left-to-right");
+
+    }
+
+    public void goToPatientsPage() {
+
+    }
+
+    /**********************************************************************************************
+     * Private Class for the recycler
+     ************************************************************************************************/
+    private class AppointmentViewHolder extends RecyclerView.ViewHolder {
+        private View view;
+
+        AppointmentViewHolder(View itemView) {
+            super(itemView);
+            view = itemView;
+        }
+
+        void setAppointmentName(String date, String time, String patient, final String chatCode) {
+            TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
+            appointmentTextView.setText("Date: " + date + "\nTime: " + time + "\nPatient: " + patient + "\n");
+
+            appointmentTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (chatCode != null) {
+
+                        Intent i = new Intent(StaffDashboard.this, Chat.class);
+                        i.putExtra("chatroomcode", chatCode);
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
+                        CustomIntent.customType(StaffDashboard.this, "right-to-left");
+                    }
+                }
+            });
+        }
+    }
+
 
     /**********************************************************************************************
      * Location data and permissions
@@ -92,7 +193,7 @@ public class StaffDashboard extends AppCompatActivity {
         if (doctorLocation == null) {
             doctorLocation = new DoctorLocation();
 
-            DocumentReference doctorRef = database.collection("Doctor").document(fAuth.getUid());
+            DocumentReference doctorRef = fStore.collection("Doctor").document(fAuth.getUid());
 
             doctorRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -110,12 +211,12 @@ public class StaffDashboard extends AppCompatActivity {
 
     private void saveDoctorLocation() {
         if (doctorLocation != null) {
-            DocumentReference locationReference = database.collection("Doctor Locations").document(fAuth.getUid());
+            DocumentReference locationReference = fStore.collection("Doctor Locations").document(fAuth.getUid());
             locationReference.set(doctorLocation).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "saveDoctorLocation /n inserted Doctor Location into Database" +
+                        Log.d(TAG, "saveDoctorLocation /ninserted Doctor Location into Database" +
                                 "/n Latitude: " + doctorLocation.getGeoPoint().getLatitude() +
                                 "/n Longitude " + doctorLocation.getGeoPoint().getLongitude());
                     }
@@ -144,9 +245,7 @@ public class StaffDashboard extends AppCompatActivity {
 
     private boolean checkMapServices() {
         if (isServicesOK()) {
-            if (isMapsEnabled()) {
-                return true;
-            }
+            return isMapsEnabled();
         }
         return false;
     }
@@ -215,7 +314,7 @@ public class StaffDashboard extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+                                           @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         mLocationPermissionGranted = false;
         switch (requestCode) {
@@ -257,39 +356,4 @@ public class StaffDashboard extends AppCompatActivity {
         }
     }
 
-   /* private void getDoctor() {
-        CollectionReference drRef = database.collection("Doctor");
-        doctorListEventListener = drRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e(TAG, "onEvent: Listen failed.", e);
-                    return;
-                    if (queryDocumentSnapshots != null) {
-                        for(QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            Doctor dr = doc.toObject(Doctor.class);
-                            doctorList.add(dr);
-                            getDoctorLocation(dr);
-                        }
-                        Log.d(TAG, "onEvent: user list size: " + doctorList.size());
-                    }
-                }
-            }
-        });
-    }
-
-
-    private void getDoctorLocation(Doctor dr) {
-        DocumentReference locationRef = database.collection("Doctor Locations").document(dr.getFirstName());
-        locationRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    if(task.getResult().toObject(DoctorLocation.class) != null ){
-                        doctorLocationList.add(task.getResult().toObject(DoctorLocation.class));
-                    }
-                }
-            }
-        });
-    }*/
 }

@@ -249,35 +249,51 @@ public class PatientRegistration extends AppCompatActivity {
 
                     if (TextUtils.isEmpty(firstName)) {
                         firstNameTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
                     if (TextUtils.isEmpty(lastName)) {
                         lastNameTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
                     if (TextUtils.isEmpty(phoneNumber)) {
                         phoneNumberTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
 
                     if (TextUtils.isEmpty(medicareNumber)) {
                         medicareNumberTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
                     if (TextUtils.isEmpty(streetAddress)) {
                         streetAddressTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
                     if (TextUtils.isEmpty(city)) {
                         cityTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
                     if (TextUtils.isEmpty(state)) {
                         stateTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
                     if (TextUtils.isEmpty(postCode)) {
                         postCodeTf.setError("Cannot have Empty Field");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
 
@@ -302,13 +318,11 @@ public class PatientRegistration extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         if (billingSwitch.isChecked()) {
-                                            Toast.makeText(RegisterDetailsPge.this, "Registration successful", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(getApplicationContext(), RegisterFinishPge.class));
                                             CustomIntent.customType(RegisterDetailsPge.this, "fadein-to-fadeout");
                                             progressBar.setVisibility(View.INVISIBLE);
                                             nextBtn2.setVisibility(View.VISIBLE);
                                         } else {
-                                            Toast.makeText(RegisterDetailsPge.this, "Registration successful", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(getApplicationContext(), reg_billing_address.class));
                                             CustomIntent.customType(RegisterDetailsPge.this, "left-to-right");
                                             progressBar.setVisibility(View.INVISIBLE);

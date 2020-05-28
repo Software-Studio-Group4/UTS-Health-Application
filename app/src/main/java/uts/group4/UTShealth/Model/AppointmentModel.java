@@ -1,5 +1,7 @@
 package uts.group4.UTShealth.Model;
 
+import com.google.firebase.Timestamp;
+
 public class AppointmentModel {
     private String id;
     private String Date;
@@ -10,12 +12,20 @@ public class AppointmentModel {
     private String DoctorFullName;
     private String PatientFullName;
     private String WeekDay;
+    private boolean CompletionStatus;
+    private Timestamp TimeStamp;
 
     public AppointmentModel(){
 
     }
 
-    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName, String patientFullName, String weekDay) {
+
+    public AppointmentModel(String date, String time){
+        this.Date = date;
+        this.Time = time;
+    }
+
+    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName, String patientFullName, String weekDay, boolean completionStatus, Timestamp TimeStamp) {
         this.id = id;
         Date = date;
         Time = time;
@@ -25,14 +35,8 @@ public class AppointmentModel {
         DoctorFullName = doctorFullName;
         PatientFullName = patientFullName;
         WeekDay = weekDay;
-    }
-
-    public String getWeekDay() {
-        return WeekDay;
-    }
-
-    public void setWeekDay(String weekDay) {
-        WeekDay = weekDay;
+        CompletionStatus = completionStatus;
+        this.TimeStamp = TimeStamp;
     }
 
     public String getId() {
@@ -97,5 +101,29 @@ public class AppointmentModel {
 
     public void setPatientFullName(String patientFullName) {
         PatientFullName = patientFullName;
+    }
+
+    public String getWeekDay() {
+        return WeekDay;
+    }
+
+    public void setWeekDay(String weekDay) {
+        WeekDay = weekDay;
+    }
+
+    public boolean isCompletionStatus() {
+        return CompletionStatus;
+    }
+
+    public void setCompletionStatus(boolean completionStatus) {
+        CompletionStatus = completionStatus;
+    }
+
+    public Timestamp getTimeStamp() {
+        return TimeStamp;
+    }
+
+    public void setTimeStamp(Timestamp TimeStamp) {
+        this.TimeStamp = TimeStamp;
     }
 }
