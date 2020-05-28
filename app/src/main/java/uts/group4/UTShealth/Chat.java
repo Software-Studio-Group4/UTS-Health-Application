@@ -230,11 +230,14 @@ public class Chat extends AppCompatActivity {
                 //code to send chatid to Notes class
                 Bitmap bitmap1 = getScreenBitmap();
 
+                Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
+                        mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
                 mMessageRecyclerView.setDrawingCacheEnabled(true);
                 Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
                 Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
                 mMessageRecyclerView.setDrawingCacheEnabled(false);
-                String stbmp = BitMapToString(newBmp);
+                String stbmp = BitMapToString(bitmap1);
 
                 Intent i = new Intent(getApplicationContext(), Prescription.class);
                 Bundle bundle = new Bundle();
