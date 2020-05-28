@@ -27,23 +27,53 @@ public class DATParser {
     }
 
     public static int addMinutesHoursInt(int hoursToAdd, int minutesToAdd, int sourceTime){
-        //turn the time into a string
-        String stringTime = DATParser.timeIntToStr(sourceTime);
-        String[] stringArr = stringTime.split(":");
-        stringArr[1] = stringArr[1].replaceAll("[^\\d]", "");
-        int hour = Integer.parseInt(stringArr[0]) + hoursToAdd;
-        int minutes = Integer.parseInt(stringArr[1]) + minutesToAdd;
-        hour = hour + minutes/60;
-        minutes = minutes%60;
-        stringTime = hour + "" + minutes + "";
-        return Integer.parseInt(stringTime);
+
+        String stringTime = sourceTime + "";
+        char[] timeCharArr = stringTime.toCharArray();
+        int newHour;
+        int newMinutes;
+
+
+        switch(timeCharArr.length){
+            case 1 :
+                Log.i(logger, "case: " + timeCharArr.length);
+                newHour = hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[0] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            case 2 :
+                Log.i(logger, "case: " + timeCharArr.length);
+                newHour = hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[0] + "" + timeCharArr[1] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            case 3 :
+                Log.i(logger, "case: " + timeCharArr.length);
+                newHour = Integer.parseInt(timeCharArr[0]+"") + hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[1] + "" + timeCharArr[2] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            case 4 :
+                newHour = Integer.parseInt(timeCharArr[0] + "" + timeCharArr[1] + "") + hoursToAdd;
+                newMinutes = Integer.parseInt(timeCharArr[2] + "" + timeCharArr[3] + "") + minutesToAdd;
+                newHour += newMinutes/60;
+                newMinutes = newMinutes%60;
+                break;
+            default : Log.i(logger, "add minutes to hours invalid source time input "); return 0;
+        }
+
+        Log.i(logger, "source time: " + sourceTime +" new hour :" + newHour + " new minutes: " + newMinutes);
+        return Integer.parseInt((newHour+""+newMinutes));
     }
 
 
 
 
     public static int timeStrToInt(String time){
-        if(time.contains("AM") || time.contains("12")){
+        if(time.contains("AM") || time.contains("12:")){
             return Integer.parseInt(time.replaceAll( "[^\\d]", "" ));
         }
         else if(time.contains("PM")){

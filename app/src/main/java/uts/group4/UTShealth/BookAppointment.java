@@ -229,7 +229,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
 
-        if(checkUserAppointmentOverlap(date, time)){
+        if(checkUserAppointmentOverlap(date, time, userAppointments)){
             Toast.makeText(BookAppointment.this, "You already have an appointment during this time", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -250,6 +250,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             // sets the target document reference to the Appointment collection in the firestore.
             Map<String, Object> appointmentData = new HashMap<>(); //
             appointmentData.put("patientID", userID);
+            appointmentData.put("doctorID", chosenDoctorId);
             appointmentData.put("Date", date);
             appointmentData.put("Time", time);
             appointmentData.put("WeekDay", weekDay);
@@ -288,9 +289,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
     }
 
-boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime){
+boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, ArrayList<AppointmentModel> existingAppointments){
         int proposedTimeInt = DATParser.timeStrToInt(proposedTime);
-        for(AppointmentModel userAppointment : userAppointments){
+        for(AppointmentModel userAppointment : existingAppointments){
 
             int existingStartTime = DATParser.timeStrToInt(userAppointment.getTime());
             int existingEndTime = DATParser.addMinutesHoursInt(0, 30, existingStartTime);
@@ -330,9 +331,11 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime){
             view = itemView;
         }
 
+        @SuppressLint("SetTextI18n")
         void setDoctorData(final String doctorfName, final String doctorlName, final String doctorID){
             final ArrayList<TimeOffModel> timeOff = new ArrayList<>();
             final ArrayList<ShiftModel> shifts = new ArrayList<>();
+            final ArrayList<AppointmentModel> existingDocAppts = new ArrayList<>();
             ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
             TextView text = view.findViewById(R.id.doctorTextView);
 
@@ -370,6 +373,16 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime){
                 }
             });
 
+            //get the doctor's appointments
+            fStore.collection("Appointment").whereEqualTo("doctorID", doctorID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot documentSnapshots) {
+                    for(DocumentSnapshot document : documentSnapshots){
+                        existingDocAppts.add(new AppointmentModel(document.get("Date").toString(), document.get("Time").toString()));
+                        Log.i("LOG", document.getId() + " => " + document.getData());
+                    }
+                }});
+
             //On Click
             doctorItem.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -388,6 +401,12 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime){
                             Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
                             return;
                         }
+                    }
+                    //checking to see if the doctor has overlap appointments
+                    if(checkUserAppointmentOverlap(dateTextView.getText().toString(), timeTextView.getText().toString(), existingDocAppts)){
+                        Toast.makeText(getApplicationContext(), "Dr." + doctorfName + " " + doctorlName + " has an appointment on "
+                                                                    + dateTextView.getText().toString() + " at " + timeTextView.getText().toString(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                     for(ShiftModel shift : shifts){
@@ -413,7 +432,6 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime){
             });
         }
 
-        //void setAppointmentName(String date, String time, String doctor, final String chatCode) { }
     }
 
 }
