@@ -21,6 +21,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import maes.tech.intentanim.CustomIntent;
+
 public class Confirmation extends AppCompatActivity implements Runnable  {
 
     Button backBtn, closeBtn;
@@ -36,7 +38,8 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Notes.class));
+                startActivity(new Intent(getApplicationContext(), PrescriptionNotes.class));
+                CustomIntent.customType(Confirmation.this, "right-to-left");
             }
         });
 
@@ -44,6 +47,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+                CustomIntent.customType(Confirmation.this, "left-to-right");
             }
         });
     }
@@ -81,6 +85,8 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             page = document.startPage(pageInfo);
         }
+        Bundle extras = getIntent().getExtras();
+        String chatCode = extras.getString("chatroomcode1");
 
         // test to create something in the page
         Canvas canvas = null;

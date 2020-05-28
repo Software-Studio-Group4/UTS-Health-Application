@@ -303,12 +303,12 @@ public class Chat extends AppCompatActivity {
 
     public void endChat(View view) {
         //code to send chatid to Notes class
-        Intent i = new Intent(getApplicationContext(), Prescription.class);
+        Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();
         bundle.putString("Chatroomcode", chatCode);
         i.putExtras(bundle);
         startActivity(i);
-        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
+        CustomIntent.customType(Chat.this, "left-to-right");
     }
 
     public void backBtnPressed(View view) {
