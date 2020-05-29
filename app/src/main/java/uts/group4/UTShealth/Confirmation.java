@@ -1,6 +1,8 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
@@ -9,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 
@@ -86,9 +89,12 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
+        String med =extras.getString("Medication");
+        String ins =extras.getString("Instructions");
+        String note =extras.getString("Notes");
 //        String stbmps = extras.getString("Bitmap");
 //        Bitmap bits = StringToBitMap(stbmps);
-        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+       // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
         //scaledBitmap.prepareToDraw();
 
@@ -102,6 +108,12 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         Paint paint = new Paint();
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
         canvas.drawText("Prescription", 200,50, paint);
+        canvas.drawText("Medication: ",40,100, paint);
+        canvas.drawText("Instructions: ", 40, 130, paint);
+        canvas.drawText("Notes: ", 40, 160, paint);
+        canvas.drawText(med, 120,100, paint);
+        canvas.drawText(ins, 120,130, paint);
+        canvas.drawText(note, 120, 160, paint);
 
 
         // do final processing of the page
