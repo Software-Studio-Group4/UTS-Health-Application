@@ -108,11 +108,12 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         };
 
         final Paint paint = new Paint();
+        canvas.drawText("Prescription", 200, 50, paint);
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
-        canvas.drawText("Prescription", 200,50, paint);
-        canvas.drawText("Medication: ", 40, 100, paint);
-        canvas.drawText("Instructions: ", 40, 130, paint);
-        canvas.drawText("Notes: ", 40, 160, paint);
+//        canvas.drawText("Prescription", 200,50, paint);
+//        canvas.drawText("Medication: ", 40, 100, paint);
+//        canvas.drawText("Instructions: ", 40, 130, paint);
+//        canvas.drawText("Notes: ", 40, 160, paint);
 //        canvas.drawText(med, 80, 100, paint);
 //        canvas.drawText(ins, 80, 130, paint);
 //        canvas.drawText(note, 80, 160, paint);
