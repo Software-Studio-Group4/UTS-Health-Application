@@ -113,10 +113,6 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
 
         final Paint paint = new Paint();
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
-        canvas.drawText("Prescription", 200,50, paint);
-        canvas.drawText("Medication", 40, 100, paint);
-        canvas.drawText("Instructions", 40, 130, paint);
-        canvas.drawText("Notes", 40, 160, paint);
         final Canvas finalCanvas = canvas;
         fStore.collection("Appointment")
                 .whereEqualTo("ChatCode", chatCode)
@@ -134,6 +130,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot document1 = task.getResult();
+                                                    finalCanvas.drawText("Prescription", 200,50, paint);
+                                                    finalCanvas.drawText("Medication: ", 40, 100, paint);
+                                                    finalCanvas.drawText("Instructions: ", 40, 130, paint);
                                                     String medication = document1.get("Medication").toString();
                                                     finalCanvas.drawText(medication, 80, 100, paint);
                                                     String instructions = document1.get("Instructions").toString();
@@ -151,6 +150,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot document2 = task.getResult();
+                                                    finalCanvas.drawText("Notes: ", 40, 160, paint);
                                                     String notes = document2.get("Notes").toString();
                                                     finalCanvas.drawText(notes,80,160,paint);
                                                 }
