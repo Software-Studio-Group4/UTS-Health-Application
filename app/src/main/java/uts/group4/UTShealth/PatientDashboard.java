@@ -49,13 +49,9 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
-import uts.group4.UTShealth.Model.Doctor;
-import uts.group4.UTShealth.Model.DoctorLocation;
 import uts.group4.UTShealth.Model.Patient;
 import uts.group4.UTShealth.Model.PatientLocation;
 import uts.group4.UTShealth.Util.DATParser;
