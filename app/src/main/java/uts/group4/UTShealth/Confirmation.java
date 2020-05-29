@@ -89,6 +89,8 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         Bitmap bits = StringToBitMap(stbmps);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
+        scaledBitmap.prepareToDraw();
+
         // test to create something in the page
         Canvas canvas = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
