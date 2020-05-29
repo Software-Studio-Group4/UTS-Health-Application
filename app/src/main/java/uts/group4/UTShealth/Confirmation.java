@@ -15,9 +15,6 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,8 +25,6 @@ import maes.tech.intentanim.CustomIntent;
 public class Confirmation extends AppCompatActivity implements Runnable  {
 
     Button backBtn, closeBtn;
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private Intent mShareIntent;
     private OutputStream os;
     @Override
@@ -91,81 +86,23 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
-        String med = extras.getString("Medication");
-        String ins = extras.getString("Instructions");
-        String note = extras.getString("Notes");
 //        String stbmps = extras.getString("Bitmap");
 //        Bitmap bits = StringToBitMap(stbmps);
-//        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
-//        scaledBitmap.prepareToDraw();
+        //scaledBitmap.prepareToDraw();
 
         // test to create something in the page
         Canvas canvas = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             canvas = page.getCanvas();
 
-        };
+        }
 
-        final Paint paint = new Paint();
-        canvas.drawText("Prescription", 200, 50, paint);
+        Paint paint = new Paint();
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
-//        canvas.drawText("Prescription", 200,50, paint);
-//        canvas.drawText("Medication: ", 40, 100, paint);
-//        canvas.drawText("Instructions: ", 40, 130, paint);
-//        canvas.drawText("Notes: ", 40, 160, paint);
-//        canvas.drawText(med, 80, 100, paint);
-//        canvas.drawText(ins, 80, 130, paint);
-//        canvas.drawText(note, 80, 160, paint);
-//        final Canvas finalCanvas = canvas;
-/*        fStore.collection("Appointment")
-                .whereEqualTo("ChatCode", chatCode)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String id = document.getId();
-                                fStore.collection("Appointment").document(id).collection("PostAppointment").document("Prescription")
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    DocumentSnapshot document1 = task.getResult();
-                                                    String medication = document1.get("Medication").toString();
-                                                    finalCanvas.drawText(medication, 80, 100, paint);
-                                                    String instructions = document1.get("Instructions").toString();
-                                                    finalCanvas.drawText(instructions, 80, 130, paint);
-                                                }
-                                                else {
-                                                    Toast.makeText(Confirmation.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                                fStore.collection("Appointment").document(id).collection("PostAppointment").document("Notes")
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    DocumentSnapshot document2 = task.getResult();
-                                                    String notes = document2.get("Notes").toString();
-                                                    finalCanvas.drawText(notes,80,160,paint);
-                                                }
-                                                else {
-                                                    Toast.makeText(Confirmation.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                            }
-                        } else {
-                            Toast.makeText(Confirmation.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-*/
+        canvas.drawText("Prescription", 200,50, paint);
+
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -206,8 +143,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             return null;
         }
     }
-    */
-
+*/
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
