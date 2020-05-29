@@ -1,8 +1,6 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
@@ -11,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -101,11 +98,11 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
-        String stbmps = extras.getString("Bitmap");
-        Bitmap bits = StringToBitMap(stbmps);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+//        String stbmps = extras.getString("Bitmap");
+//        Bitmap bits = StringToBitMap(stbmps);
+//        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
-        scaledBitmap.prepareToDraw();
+//        scaledBitmap.prepareToDraw();
 
         // test to create something in the page
         Canvas canvas = null;
@@ -199,7 +196,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             throw new RuntimeException("Error generating file", e);
         }
     }
-    public Bitmap StringToBitMap(String encodedString){
+/*    public Bitmap StringToBitMap(String encodedString){
         try {
             byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
@@ -209,6 +206,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             return null;
         }
     }
+    */
 
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
