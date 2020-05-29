@@ -89,6 +89,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
+        String med =extras.getString("Medication");
+        String ins =extras.getString("Instructions");
+        String note =extras.getString("Notes");
 //        String stbmps = extras.getString("Bitmap");
 //        Bitmap bits = StringToBitMap(stbmps);
        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
@@ -108,6 +111,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         canvas.drawText("Medication: ",40,100, paint);
         canvas.drawText("Instructions: ", 40, 130, paint);
         canvas.drawText("Notes: ", 40, 160, paint);
+        canvas.drawText(med, 120,100, paint);
+        canvas.drawText(ins, 120,130, paint);
+        canvas.drawText(note, 120, 160, paint);
 
 
         // do final processing of the page
