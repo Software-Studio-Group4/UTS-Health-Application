@@ -4,14 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +36,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ChatMessage;
 import uts.group4.UTShealth.Model.Doctor;
@@ -352,7 +347,7 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, Ar
             ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
             TextView text = view.findViewById(R.id.doctorTextView);
 
-            text.setText("Dr." + doctorfName + " " + doctorlName + "\nSpecialty: ");
+            text.setText("Dr. " + doctorfName + " " + doctorlName + "\nSpecialty: ");
 
             //get the doctor's time off
             CollectionReference timeOffRef = fStore.collection("Doctor").document(doctorID).collection("Time Off");
@@ -411,7 +406,7 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, Ar
                     }
                     for(TimeOffModel date : timeOff){
                         if(date.getDate().equals(dateTextView.getText().toString())){
-                            Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Dr. " +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }

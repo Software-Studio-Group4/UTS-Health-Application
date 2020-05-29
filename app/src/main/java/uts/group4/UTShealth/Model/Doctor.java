@@ -105,3 +105,4 @@ public class Doctor {
         this.suburb = suburb;
     }
 }
+

@@ -340,13 +340,13 @@ public class Chat extends AppCompatActivity {
         mMessageRecyclerView.setDrawingCacheEnabled(false);
         String stbmp = BitMapToString(recycler_view_bm);
 
-        Intent i = new Intent(getApplicationContext(), Prescription.class);
+        Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();
         bundle.putString("Chatroomcode", chatCode);
         bundle.putString("Bitmap", stbmp);
         i.putExtras(bundle);
         startActivity(i);
-        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
+        CustomIntent.customType(Chat.this, "left-to-right");
     }
 
     public void backBtnPressed(View view) {
