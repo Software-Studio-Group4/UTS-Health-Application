@@ -99,10 +99,13 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         Canvas canvas = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             canvas = page.getCanvas();
+
         }
 
         Paint paint = new Paint();
-        canvas.drawBitmap(scaledBitmap,0,0, paint);
+//        canvas.drawBitmap(scaledBitmap,0,0, paint);
+        canvas.drawText("Prescription", 200,50, paint);
+
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
