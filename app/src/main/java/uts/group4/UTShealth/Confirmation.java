@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -131,10 +132,20 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String id = document.getId();
                                 DocumentReference prescriptionRef = fStore.collection("Appointment").document(id).collection("PostAppointment").document("Prescription");
-                                String medication = document.get("Medication").toString();
-                                finalCanvas.drawText(medication,80,100,paint);
-                                String instructions = document.get("Instructions").toString();
-                                finalCanvas.drawText(instructions,80,130,paint);
+                                fStore.collection("Appointment").document(id).collection("PostAppointment").document("Prescription")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document1 = task.getResult();
+                                                    String medication = document1.get("Medication").toString();
+                                                    finalCanvas.drawText(medication, 80, 100, paint);
+                                                    String instructions = document1.get("Instructions").toString();
+                                                    finalCanvas.drawText(instructions, 80, 130, paint);
+                                                }
+                                            }
+                                        });
                                 DocumentReference notesRef = fStore.collection("Appointment").document(id).collection("PostAppointment").document("Notes");
                                 String notes = document.get("Notes").toString();
                                 finalCanvas.drawText(notes,80,160,paint);
