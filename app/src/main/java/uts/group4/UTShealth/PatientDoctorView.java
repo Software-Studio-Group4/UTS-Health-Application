@@ -104,7 +104,7 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
             @NonNull
             @Override
             public DoctorProfileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dr_item, parent, false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_doctorselect, parent, false);
                 return new DoctorProfileViewHolder(view);
             }
         };
@@ -219,8 +219,8 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
 
         @SuppressLint("SetTextI18n")
         void setDrName(String name) {
-            TextView textView = view.findViewById(R.id.drNameTextView);
-            textView.setText("Dr: " + name);
+            TextView textView = view.findViewById(R.id.doctorTextView);
+            textView.setText("Dr: " + name + "\nSpecialisation: ");
 
     }
 
