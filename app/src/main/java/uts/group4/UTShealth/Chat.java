@@ -311,7 +311,7 @@ public class Chat extends AppCompatActivity {
     public void endChat(View view) {
 
 
- //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
+//        Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
 //        String stbmp = BitMapToString(recycler_view_bm);
 
 
@@ -319,7 +319,7 @@ public class Chat extends AppCompatActivity {
         Bundle bundle = new Bundle();
         //code to send chatid to Notes class
         bundle.putString("Chatroomcode", chatCode);
-//        bundle.putString("Bitmap", recycler_view_bm);
+//        bundle.putString("Bitmap", stbmp);
         i.putExtras(bundle);
         startActivity(i);
         CustomIntent.customType(Chat.this, "left-to-right");
@@ -426,7 +426,8 @@ public class Chat extends AppCompatActivity {
         String temp= Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }
-*/
+ */
+
 }
 
 
