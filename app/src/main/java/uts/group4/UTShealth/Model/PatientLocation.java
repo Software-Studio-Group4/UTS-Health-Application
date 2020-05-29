@@ -5,17 +5,17 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
-public class DoctorLocation{
+public class PatientLocation{
     GeoPoint geoPoint;
     private @ServerTimestamp Date timestamp;
-    private Doctor doctor;
+    private Patient patient;
 
-    public DoctorLocation(GeoPoint geoPoint, Date timestamp, Doctor doctor) {
+    public PatientLocation(GeoPoint geoPoint, Date timestamp, Doctor doctor) {
         this.geoPoint = geoPoint;
         this.timestamp = timestamp;
-        this.doctor = doctor;
+        this.patient = patient;
     }
-    public DoctorLocation() {}
+    public PatientLocation() {}
 
     public GeoPoint getGeoPoint() {
         return geoPoint;
@@ -33,11 +33,11 @@ public class DoctorLocation{
         this.timestamp = timestamp;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 }
