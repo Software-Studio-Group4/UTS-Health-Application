@@ -99,7 +99,7 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         doctorAdapter = new FirestoreRecyclerAdapter<Doctor, DoctorProfileViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull DoctorProfileViewHolder holder, int position, @NonNull Doctor model) {
-                holder.setDrName(drName);
+                holder.setDrName((model.getFirstName() + " " + model.getLastName()));
             }
             @NonNull
             @Override
