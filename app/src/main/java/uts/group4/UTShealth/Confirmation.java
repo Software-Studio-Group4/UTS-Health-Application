@@ -23,7 +23,6 @@ import androidx.core.content.FileProvider;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -131,7 +130,6 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String id = document.getId();
-                                DocumentReference prescriptionRef = fStore.collection("Appointment").document(id).collection("PostAppointment").document("Prescription");
                                 fStore.collection("Appointment").document(id).collection("PostAppointment").document("Prescription")
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -146,9 +144,18 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                                                 }
                                             }
                                         });
-                                DocumentReference notesRef = fStore.collection("Appointment").document(id).collection("PostAppointment").document("Notes");
-                                String notes = document.get("Notes").toString();
-                                finalCanvas.drawText(notes,80,160,paint);
+                                fStore.collection("Appointment").document(id).collection("PostAppointment").document("Notes")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document2 = task.getResult();
+                                                    String notes = document2.get("Notes").toString();
+                                                    finalCanvas.drawText(notes,80,160,paint);
+                                                }
+                                            }
+                                        });
                             }
                         } else {
                             Toast.makeText(Confirmation.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
