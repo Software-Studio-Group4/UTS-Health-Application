@@ -120,6 +120,9 @@ public class PrescriptionNotes extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), Confirmation.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("chatroomcode1", chatCode);
+                bundle.putString("Medication", medicationTf.getText().toString());
+                bundle.putString("Instructions", directionsTf.getText().toString());
+                bundle.putString("Notes", notesTf.getText().toString());
                 i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(PrescriptionNotes.this, "left-to-right");
