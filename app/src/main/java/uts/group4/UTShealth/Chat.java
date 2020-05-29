@@ -2,17 +2,11 @@ package uts.group4.UTShealth;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +41,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -332,18 +325,18 @@ public class Chat extends AppCompatActivity {
 //        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
 //                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
 
-        Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
+ //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
 
-        mMessageRecyclerView.setDrawingCacheEnabled(true);
+//        mMessageRecyclerView.setDrawingCacheEnabled(true);
 //        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
 //        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
-        mMessageRecyclerView.setDrawingCacheEnabled(false);
-        String stbmp = BitMapToString(recycler_view_bm);
+//        mMessageRecyclerView.setDrawingCacheEnabled(false);
+//        String stbmp = BitMapToString(recycler_view_bm);
 
         Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();
         bundle.putString("Chatroomcode", chatCode);
-        bundle.putString("Bitmap", stbmp);
+//        bundle.putString("Bitmap", stbmp);
         i.putExtras(bundle);
         startActivity(i);
         CustomIntent.customType(Chat.this, "left-to-right");
@@ -397,7 +390,7 @@ public class Chat extends AppCompatActivity {
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
 
-    public Bitmap getScreenBitmap() {
+/*    public Bitmap getScreenBitmap() {
         View bit= mMessageRecyclerView.getRootView();
         bit.setDrawingCacheEnabled(true);
         bit.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -459,6 +452,7 @@ public class Chat extends AppCompatActivity {
         String temp= Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }
+*/
 }
 
 
