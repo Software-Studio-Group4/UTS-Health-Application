@@ -142,6 +142,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                                                     String instructions = document1.get("Instructions").toString();
                                                     finalCanvas.drawText(instructions, 80, 130, paint);
                                                 }
+                                                else {
+                                                    Toast.makeText(Confirmation.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
                                         });
                                 fStore.collection("Appointment").document(id).collection("PostAppointment").document("Notes")
@@ -153,6 +156,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                                                     DocumentSnapshot document2 = task.getResult();
                                                     String notes = document2.get("Notes").toString();
                                                     finalCanvas.drawText(notes,80,160,paint);
+                                                }
+                                                else {
+                                                    Toast.makeText(Confirmation.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
