@@ -1,7 +1,13 @@
 package uts.group4.UTShealth;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,20 +22,30 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 
 import java.util.Calendar;
@@ -38,6 +54,10 @@ import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
+import uts.group4.UTShealth.Model.Doctor;
+import uts.group4.UTShealth.Model.DoctorLocation;
+import uts.group4.UTShealth.Model.Patient;
+import uts.group4.UTShealth.Model.PatientLocation;
 import uts.group4.UTShealth.Util.DATParser;
 
 /**********************************************************************************************
@@ -58,6 +78,14 @@ public class PatientDashboard extends AppCompatActivity {
     private RecyclerView appointmentsRecyclerView;
     private FirestoreRecyclerAdapter<AppointmentModel, AppointmentViewHolder> appointmentAdapter;
 
+    private static final String TAG = "Pat Dash";
+    private static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9002;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003;
+    private static final int ERROR_DIALOG_REQUEST = 9001;
+    boolean mLocationPermissionGranted = false;
+    private FusedLocationProviderClient client;
+    private PatientLocation patientLocation;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +93,7 @@ public class PatientDashboard extends AppCompatActivity {
         setContentView(R.layout.patient_dashboard);
         appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
         appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        client = LocationServices.getFusedLocationProviderClient(this);
         welcomeText = findViewById(R.id.welcomeText);
         Query appointmentQuery = appointmentRef.whereEqualTo("patientID", userID).whereEqualTo("CompletionStatus", false).orderBy("Date", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<AppointmentModel> options = new FirestoreRecyclerOptions.Builder<AppointmentModel>().setQuery(appointmentQuery, AppointmentModel.class).build();
@@ -329,6 +358,175 @@ public class PatientDashboard extends AppCompatActivity {
                     }
                 }
             });
+        }
+    }
+    /**********************************************************************************************
+     * Location data and permissions
+     * When the doctor logs in to the application the location will be saved to the database
+     ************************************************************************************************/
+    private void getPatientDetails() {
+        if (patientLocation == null) {
+            patientLocation = new PatientLocation();
+
+            DocumentReference doctorRef = fStore.collection("Patients").document(fAuth.getUid());
+            doctorRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Get Patient Successful");
+                        Patient patient = task.getResult().toObject(Patient.class);
+                                patientLocation.setPatient(patient);
+                        getLastKnowLocation();
+                    }
+                }
+            });
+        }
+    }
+
+    private void savePatientLocation() {
+        if (patientLocation != null) {
+            DocumentReference locationReference = fStore.collection("Patient Locations").document(fAuth.getUid());
+            locationReference.set(patientLocation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "saveDoctorLocation /ninserted Doctor Location into Database" +
+                                "/n Latitude: " + patientLocation.getGeoPoint().getLatitude() +
+                                "/n Longitude " + patientLocation.getGeoPoint().getLongitude());
+                    }
+                }
+            });
+        }
+    }
+
+    private void getLastKnowLocation() {
+        Log.d(TAG, "getLastKnownLocation: called!");
+        client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if (task.isSuccessful() && task.getResult() != null) { // Fixed bug where null Latitude would crash app
+                    Location location = task.getResult();
+                    GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                    Log.d(TAG, "onComplete: Latitude: " + geoPoint.getLatitude());
+                    Log.d(TAG, "onComplete: Longitude: " + geoPoint.getLongitude());
+                    patientLocation.setGeoPoint(geoPoint);
+                    patientLocation.setTimestamp(null);
+                    savePatientLocation();
+                }
+            }
+        });
+    }
+
+    private boolean checkMapServices() {
+        if (isServicesOK()) {
+            return isMapsEnabled();
+        }
+        return false;
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public boolean isMapsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+            return false;
+        }
+        return true;
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+            getPatientDetails();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    public boolean isServicesOK() {
+        Log.d(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(PatientDashboard.this);
+
+        if (available == ConnectionResult.SUCCESS) {
+            //everything is fine and the user can make map requests
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            //an error occured but we can resolve it
+            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(PatientDashboard.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        } else {
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: called.");
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ENABLE_GPS: {
+                if (mLocationPermissionGranted) {
+                    getPatientDetails();
+                } else {
+                    getLocationPermission();
+                }
+            }
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (checkMapServices()) {
+            if (mLocationPermissionGranted) {
+                getPatientDetails();
+            } else {
+                getLocationPermission();
+            }
         }
     }
 
