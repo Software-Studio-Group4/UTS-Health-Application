@@ -113,9 +113,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         canvas.drawText("Medication: ", 40, 100, paint);
         canvas.drawText("Instructions: ", 40, 130, paint);
         canvas.drawText("Notes: ", 40, 160, paint);
-        canvas.drawText(med, 80, 100, paint);
-        canvas.drawText(ins, 80, 130, paint);
-        canvas.drawText(note, 80, 160, paint);
+//        canvas.drawText(med, 80, 100, paint);
+//        canvas.drawText(ins, 80, 130, paint);
+//        canvas.drawText(note, 80, 160, paint);
 //        final Canvas finalCanvas = canvas;
 /*        fStore.collection("Appointment")
                 .whereEqualTo("ChatCode", chatCode)
