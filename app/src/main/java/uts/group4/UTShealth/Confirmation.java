@@ -14,9 +14,19 @@ import android.print.pdf.PrintedPdfDocument;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,6 +38,8 @@ import maes.tech.intentanim.CustomIntent;
 public class Confirmation extends AppCompatActivity implements Runnable  {
 
     Button backBtn, closeBtn;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private Intent mShareIntent;
     private OutputStream os;
     @Override
@@ -102,9 +114,36 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
 
         }
 
-        Paint paint = new Paint();
+        final Paint paint = new Paint();
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
         canvas.drawText("Prescription", 200,50, paint);
+        canvas.drawText("Medication", 40, 100, paint);
+        canvas.drawText("Instructions", 40, 130, paint);
+        canvas.drawText("Notes", 40, 160, paint);
+        final Canvas finalCanvas = canvas;
+        fStore.collection("Appointment")
+                .whereEqualTo("ChatCode", chatCode)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                DocumentReference prescriptionRef = fStore.collection("Appointment").document(id).collection("PostAppointment").document("Prescription");
+                                String medication = document.get("Medication").toString();
+                                finalCanvas.drawText(medication,80,100,paint);
+                                String instructions = document.get("Instructions").toString();
+                                finalCanvas.drawText(instructions,80,130,paint);
+                                DocumentReference notesRef = fStore.collection("Appointment").document(id).collection("PostAppointment").document("Notes");
+                                String notes = document.get("Notes").toString();
+                                finalCanvas.drawText(notes,80,160,paint);
+                            }
+                        } else {
+                            Toast.makeText(Confirmation.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
         // do final processing of the page
