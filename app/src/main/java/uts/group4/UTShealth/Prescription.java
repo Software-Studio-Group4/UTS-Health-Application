@@ -122,5 +122,3 @@ public class Prescription extends AppCompatActivity {
     }
 
 }
-
-}

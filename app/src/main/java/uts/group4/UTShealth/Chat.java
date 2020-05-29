@@ -327,16 +327,16 @@ public class Chat extends AppCompatActivity {
 //        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
 
         //code to send chatid to Notes class
-        Bitmap bitmap1 = getScreenBitmap();
+//        Bitmap bitmap1 = getScreenBitmap();
 
-        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
-                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+//        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
+//                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
 
         Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
 
         mMessageRecyclerView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
-        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
+//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
+//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
         mMessageRecyclerView.setDrawingCacheEnabled(false);
         String stbmp = BitMapToString(recycler_view_bm);
 

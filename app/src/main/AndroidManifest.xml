@@ -65,7 +65,7 @@
         <activity android:name=".PatientRegistration$reg_billing_address" />
         <activity android:name=".PatientDashboard$PatientPastAppointments" />
         <activity android:name=".StaffProfilePage" />
-        <activity android:name=".BookAppointment" />
+        <activity android:name=".PrescriptionNotes" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
