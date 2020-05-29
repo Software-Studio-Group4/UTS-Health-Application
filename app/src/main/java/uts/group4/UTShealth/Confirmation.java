@@ -89,8 +89,8 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
-        String stbmps = extras.getString("Bitmap");
-        Bitmap bits = StringToBitMap(stbmps);
+//        String stbmps = extras.getString("Bitmap");
+//        Bitmap bits = StringToBitMap(stbmps);
        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
         //scaledBitmap.prepareToDraw();
@@ -136,7 +136,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             throw new RuntimeException("Error generating file", e);
         }
     }
-    public Bitmap StringToBitMap(String encodedString){
+/*    public Bitmap StringToBitMap(String encodedString){
         try {
             byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
@@ -146,7 +146,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             return null;
         }
     }
-
+*/
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
