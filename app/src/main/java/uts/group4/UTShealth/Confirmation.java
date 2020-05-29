@@ -91,9 +91,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         String chatCode = extras.getString("chatroomcode1");
         String stbmps = extras.getString("Bitmap");
         Bitmap bits = StringToBitMap(stbmps);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+       // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
-        scaledBitmap.prepareToDraw();
+        //scaledBitmap.prepareToDraw();
 
         // test to create something in the page
         Canvas canvas = null;
