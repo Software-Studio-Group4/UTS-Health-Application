@@ -1,6 +1,8 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
@@ -9,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 
@@ -88,7 +91,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         String chatCode = extras.getString("chatroomcode1");
 //        String stbmps = extras.getString("Bitmap");
 //        Bitmap bits = StringToBitMap(stbmps);
-        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+       // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
         //scaledBitmap.prepareToDraw();
 
