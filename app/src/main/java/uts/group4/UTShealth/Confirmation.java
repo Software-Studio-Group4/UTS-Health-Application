@@ -11,19 +11,12 @@ import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -98,6 +91,9 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
+        String med = extras.getString("Medication");
+        String ins = extras.getString("Instructions");
+        String note = extras.getString("Notes");
 //        String stbmps = extras.getString("Bitmap");
 //        Bitmap bits = StringToBitMap(stbmps);
 //        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
@@ -109,12 +105,19 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             canvas = page.getCanvas();
 
-        }
+        };
 
         final Paint paint = new Paint();
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
+        canvas.drawText("Prescription", 200,50, paint);
+        canvas.drawText("Medication: ", 40, 100, paint);
+        canvas.drawText("Instructions: ", 40, 130, paint);
+        canvas.drawText("Notes: ", 40, 160, paint);
+        canvas.drawText(med, 80, 100, paint);
+        canvas.drawText(ins, 80, 130, paint);
+        canvas.drawText(note, 80, 160, paint);
         final Canvas finalCanvas = canvas;
-        fStore.collection("Appointment")
+/*        fStore.collection("Appointment")
                 .whereEqualTo("ChatCode", chatCode)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -130,9 +133,6 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot document1 = task.getResult();
-                                                    finalCanvas.drawText("Prescription", 200,50, paint);
-                                                    finalCanvas.drawText("Medication: ", 40, 100, paint);
-                                                    finalCanvas.drawText("Instructions: ", 40, 130, paint);
                                                     String medication = document1.get("Medication").toString();
                                                     finalCanvas.drawText(medication, 80, 100, paint);
                                                     String instructions = document1.get("Instructions").toString();
@@ -150,7 +150,6 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot document2 = task.getResult();
-                                                    finalCanvas.drawText("Notes: ", 40, 160, paint);
                                                     String notes = document2.get("Notes").toString();
                                                     finalCanvas.drawText(notes,80,160,paint);
                                                 }
@@ -165,7 +164,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
                         }
                     }
                 });
-
+*/
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
