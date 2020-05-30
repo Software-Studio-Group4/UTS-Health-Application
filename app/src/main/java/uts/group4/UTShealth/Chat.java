@@ -3,16 +3,11 @@ package uts.group4.UTShealth;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +42,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -309,15 +303,39 @@ public class Chat extends AppCompatActivity {
     }
 
     public void endChat(View view) {
+        //code to send chatid to Notes class
+//        Bitmap bitmap1 = getScreenBitmap();
+//
+//        mMessageRecyclerView.setDrawingCacheEnabled(true);
+//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
+//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
+//        mMessageRecyclerView.setDrawingCacheEnabled(false);
+//        String stbmp = BitMapToString(newBmp);
+//
+//        Intent i = new Intent(getApplicationContext(), Prescription.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("Chatroomcode", chatCode);
+//        bundle.putString("Bitmap", stbmp);
+//        i.putExtras(bundle);
+//        startActivity(i);
+//        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
 
+        //code to send chatid to Notes class
+//        Bitmap bitmap1 = getScreenBitmap();
 
-//        Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
+//        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
+//                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+ //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
+
+//        mMessageRecyclerView.setDrawingCacheEnabled(true);
+//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
+//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
+//        mMessageRecyclerView.setDrawingCacheEnabled(false);
 //        String stbmp = BitMapToString(recycler_view_bm);
-
 
         Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();
-        //code to send chatid to Notes class
         bundle.putString("Chatroomcode", chatCode);
 //        bundle.putString("Bitmap", stbmp);
         i.putExtras(bundle);
@@ -343,6 +361,21 @@ public class Chat extends AppCompatActivity {
                 Toast.makeText(Chat.this, "Database Error", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public Bitmap getScreenBitmap() {
+        View v= mMessageRecyclerView;
+        v.setDrawingCacheEnabled(true);
+        v.buildDrawingCache(true);
+        Bitmap b = Bitmap.createBitmap(v.getDrawingCache());
+        v.setDrawingCacheEnabled(false); // clear drawing cache
+        return b;
+    }
+
+    public void BtnPressed(View v) {
+        ImageView mImg;
+        mImg = (ImageView) findViewById(R.id.imageView2);
+        mImg.setImageBitmap(getScreenBitmap());
     }
 
     @Override
@@ -373,13 +406,23 @@ public class Chat extends AppCompatActivity {
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
 
-/*     public Bitmap getScreenshotFromRecyclerView(RecyclerView view) {
+/*    public Bitmap getScreenBitmap() {
+        View bit= mMessageRecyclerView.getRootView();
+        bit.setDrawingCacheEnabled(true);
+        bit.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        bit.layout(0, 0, bit.getMeasuredWidth(), bit.getMeasuredHeight());
+        bit.buildDrawingCache(true);
+        Bitmap b = Bitmap.createBitmap(bit.getDrawingCache());
+        bit.setDrawingCacheEnabled(false); // clear drawing cache
+        return b;
+    }
+    public Bitmap getScreenshotFromRecyclerView(RecyclerView view) {
         RecyclerView.Adapter adapter = view.getAdapter();
         Bitmap bigBitmap = null;
         if (adapter != null) {
             int size = adapter.getItemCount();
             int height = 0;
-            int width = 0;
             Paint paint = new Paint();
             int iHeight = 0;
             final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -402,10 +445,9 @@ public class Chat extends AppCompatActivity {
                 }
 
                 height += holder.itemView.getMeasuredHeight();
-                width += holder.itemView.getMeasuredWidth();
             }
 
-            bigBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
             Canvas bigCanvas = new Canvas(bigBitmap);
             bigCanvas.drawColor(Color.WHITE);
 
@@ -426,8 +468,7 @@ public class Chat extends AppCompatActivity {
         String temp= Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }
- */
-
+*/
 }
 
 
