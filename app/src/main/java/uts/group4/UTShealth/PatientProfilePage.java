@@ -54,9 +54,9 @@ public class PatientProfilePage extends AppCompatActivity {
                     phoneNumber.setText("Phone Number: " + phoneText); // Displays phone number
                     if (documentSnapshot.getString("Medicare Number") != null){
                         String medicareText = documentSnapshot.getString("Phone Number");
-                        phoneNumber.setText("Medicare Number: " + medicareText); // Displays medicare number
+                        medicare.setText("Medicare Number: " + medicareText); // Displays medicare number
                     } else {
-                        phoneNumber.setText("No Medicare Number has been entered.");
+                        medicare.setText("No Medicare Number provided.");
                     }
                 } else {
                     Toast.makeText(PatientProfilePage.this, "Cannot retrieve details", Toast.LENGTH_SHORT).show();
