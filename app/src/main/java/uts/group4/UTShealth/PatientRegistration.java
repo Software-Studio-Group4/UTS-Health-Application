@@ -265,7 +265,6 @@ public class PatientRegistration extends AppCompatActivity {
                         nextBtn2.setVisibility(View.VISIBLE);
                         return;
                     }
-
                     if (TextUtils.isEmpty(streetAddress)) {
                         streetAddressTf.setError("Cannot have Empty Field");
                         progressBar.setVisibility(View.INVISIBLE);
