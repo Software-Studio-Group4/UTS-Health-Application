@@ -266,11 +266,6 @@ public class PatientRegistration extends AppCompatActivity {
                         return;
                     }
 
-                    if (TextUtils.isEmpty(medicareNumber)) {
-                        medicareNumberTf.setText(null);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        nextBtn2.setVisibility(View.VISIBLE);
-                    }
                     if (TextUtils.isEmpty(streetAddress)) {
                         streetAddressTf.setError("Cannot have Empty Field");
                         progressBar.setVisibility(View.INVISIBLE);
