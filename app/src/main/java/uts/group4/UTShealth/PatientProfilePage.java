@@ -59,7 +59,7 @@ public class PatientProfilePage extends AppCompatActivity {
                     } else {
                         medicare.setText("No Medicare Number provided.");
                     }
-                    String emailText = documentSnapshot.getString("Phone Number");
+                    String emailText = documentSnapshot.getString("Email");
                     email.setText("Phone Number: " + emailText); // Displays email
                 } else {
                     Toast.makeText(PatientProfilePage.this, "Cannot retrieve details", Toast.LENGTH_SHORT).show();
