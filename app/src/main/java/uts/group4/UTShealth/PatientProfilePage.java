@@ -33,7 +33,7 @@ public class PatientProfilePage extends AppCompatActivity {
         state = findViewById(R.id.stateTf);
         postCode = findViewById(R.id.postCodeTf);
         phoneNumber = findViewById(R.id.numberTf);
-        medicare = findViewById(R.id.medicareNumberTf);
+        medicare = findViewById(R.id.medicareTf);
         email = findViewById(R.id.emailTf);
         DocumentReference docRef = fStore.collection("Patients").document(userID);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -45,7 +45,7 @@ public class PatientProfilePage extends AppCompatActivity {
                     patientName.setText("Name: " + firstName + " " + lastName); // Displays doctor's name
                     String streetText = documentSnapshot.getString("Street Address");
                     street.setText("Street: " + streetText); // Displays street
-                    String cityText = documentSnapshot.getString("Suburb");
+                    String cityText = documentSnapshot.getString("City");
                     city.setText("City: " + cityText); // Displays city
                     String stateText = documentSnapshot.getString("State");
                     state.setText("State: " + stateText); // Displays state

@@ -309,6 +309,7 @@ public class PatientDashboard extends AppCompatActivity {
         void setAppointmentName(String date, String time, String doctor, final String chatCode, String documentID, final Timestamp apptTime) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
             registerForContextMenu(appointmentTextView);
+            appointmentID = documentID;
             if(apptTime != null){
                 Log.i("DASHBOARD", "Timestamp found for " + documentID);
                 final Calendar apptTimeCalendar = Calendar.getInstance();
@@ -333,10 +334,6 @@ public class PatientDashboard extends AppCompatActivity {
                 DocumentReference appointmentRef = fStore.collection("Appointment").document(documentID);
                 appointmentRef.update("TimeStamp", DATParser.dateToTimeStamp(date, time)); //update the completion status
                 Log.i("DASHBOARD", "updating TimeStamp for null TimeStamps");
-            }
-
-            if(chatCode != null){
-            appointmentID = chatCode.substring(4);
             }
 
             appointmentTextView.setText("Date: " + DATParser.weekDayAsString(DATParser.getWeekDay(date)) + " " + date + "\nTime: " + time + "\nPhysician: Dr. " + doctor + "\n");
