@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import maes.tech.intentanim.CustomIntent;
 
 public class PatientProfilePage extends AppCompatActivity {
-    TextView patientName, street, city, state, postCode, phoneNumber, medicare;
+    TextView patientName, street, city, state, postCode, phoneNumber, medicare, email;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
@@ -34,6 +34,7 @@ public class PatientProfilePage extends AppCompatActivity {
         postCode = findViewById(R.id.postCodeTf);
         phoneNumber = findViewById(R.id.numberTf);
         medicare = findViewById(R.id.medicareNumberTf);
+        email = findViewById(R.id.emailTf);
         DocumentReference docRef = fStore.collection("Patients").document(userID);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -58,6 +59,8 @@ public class PatientProfilePage extends AppCompatActivity {
                     } else {
                         medicare.setText("No Medicare Number provided.");
                     }
+                    String emailText = documentSnapshot.getString("Email");
+                    email.setText("Email: " + emailText); // Displays email
                 } else {
                     Toast.makeText(PatientProfilePage.this, "Cannot retrieve details", Toast.LENGTH_SHORT).show();
                 }
