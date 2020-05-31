@@ -54,14 +54,14 @@
         android:layout_marginTop="586dp"
         android:layout_marginEnd="153dp"
         android:layout_marginRight="153dp"
-        android:layout_marginBottom="101dp"
         android:onClick="logout"
         android:text="Logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.578"
+        app:layout_constraintVertical_bias="0.68"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -84,4 +84,109 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/nameTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="Name: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/streetTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.234"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/streetTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:hint="Street: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/cityTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.234"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameTf" />
+
+    <TextView
+        android:id="@+id/cityTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:hint="City: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/stateTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.226"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/streetTf" />
+
+    <TextView
+        android:id="@+id/stateTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:hint="State: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/postCodeTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.231"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cityTf" />
+
+    <TextView
+        android:id="@+id/postCodeTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:hint="Post Code: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/numberTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.253"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stateTf" />
+
+    <TextView
+        android:id="@+id/numberTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:hint="Phone Number: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/medicareTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.277"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postCodeTf" />
+
+    <TextView
+        android:id="@+id/medicareTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:hint="Medicare number: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/emailTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.293"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/numberTf" />
+
+    <TextView
+        android:id="@+id/emailTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="26dp"
+        android:hint="Email: "
+        android:textColor="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/logoutBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.233"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/medicareTf" />
 </androidx.constraintlayout.widget.ConstraintLayout>

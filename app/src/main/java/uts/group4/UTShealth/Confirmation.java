@@ -89,8 +89,11 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
-        String stbmps = extras.getString("Bitmap");
-        Bitmap bits = StringToBitMap(stbmps);
+        String med =extras.getString("Medication");
+        String ins =extras.getString("Instructions");
+        String note =extras.getString("Notes");
+//        String stbmps = extras.getString("Bitmap");
+//        Bitmap bits = StringToBitMap(stbmps);
        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
         //scaledBitmap.prepareToDraw();
@@ -105,6 +108,12 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         Paint paint = new Paint();
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
         canvas.drawText("Prescription", 200,50, paint);
+        canvas.drawText("Medication: ",40,100, paint);
+        canvas.drawText("Instructions: ", 40, 130, paint);
+        canvas.drawText("Notes: ", 40, 160, paint);
+        canvas.drawText(med, 120,100, paint);
+        canvas.drawText(ins, 120,130, paint);
+        canvas.drawText(note, 120, 160, paint);
 
 
         // do final processing of the page
@@ -136,7 +145,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             throw new RuntimeException("Error generating file", e);
         }
     }
-    public Bitmap StringToBitMap(String encodedString){
+/*    public Bitmap StringToBitMap(String encodedString){
         try {
             byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
@@ -146,7 +155,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             return null;
         }
     }
-
+*/
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
