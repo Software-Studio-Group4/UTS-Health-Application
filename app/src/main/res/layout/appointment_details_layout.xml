@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/doctor_bg">
+
+    <Button
+        android:id="@+id/backBtn3"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="47dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="330dp"
+        android:layout_marginLeft="330dp"
+        android:layout_marginTop="139dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="631dp"
+        android:background="@drawable/back_btn_right"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/UTSLogo"
+        android:layout_width="164dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="198dp"
+        android:layout_marginRight="198dp"
+        android:layout_marginBottom="639dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/uts_logo"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/upcomingApptText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Date"
+        android:textColor="#185586"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/upcomingApptText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Doctor"
+        android:textColor="#185586"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTextView"
+        app:layout_constraintVertical_bias="0.061"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/upcomingApptText4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Patient"
+        android:textColor="#185586"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drNameTextView"
+        app:layout_constraintVertical_bias="0.04"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="199dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="52dp"
+        android:text="Appointment Details"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toStartOf="@+id/backBtn3"
+        app:layout_constraintHorizontal_bias="0.017"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/UTSLogo" />
+
+    <TextView
+        android:id="@+id/urgentTextView"
+        android:layout_width="83dp"
+        android:layout_height="28dp"
+        android:text="URGENT"
+        android:textColor="#E31E1E"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toEndOf="@+id/welcomeText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19" />
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="29dp"
+        android:text="XX/XX/XXXX"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView" />
+
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00PM"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.815"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView" />
+
+    <TextView
+        android:id="@+id/drNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:text="DR FIRSTNAME LASTNAME"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.097"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText3" />
+
+    <TextView
+        android:id="@+id/patientNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:text="FIRSTNAME LASTNAME"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText4" />
+
+    <TextView
+        android:id="@+id/weekdayTextView"
+        android:layout_width="149dp"
+        android:layout_height="27dp"
+        android:text="WEEKDAY"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText"
+        app:layout_constraintVertical_bias="0.011" />
+
+    <Button
+        android:id="@+id/chatBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="124dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginLeft="39dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        android:background="@drawable/go_to_chat"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="goToChat"
+        app:layout_constraintBottom_toTopOf="@+id/cancelApptBtn"
+        app:layout_constraintEnd_toStartOf="@+id/editBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/cancelApptBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="179dp"
+        android:layout_height="55dp"
+        android:background="@drawable/cancel_appt"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="deleteAppt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
+        app:layout_constraintVertical_bias="0.685" />
+
+    <Button
+        android:id="@+id/editBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="124dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginRight="56dp"
+        android:background="@drawable/edit_details"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="editButton"
+        app:layout_constraintBottom_toTopOf="@+id/cancelApptBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/confirmChangesBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="confirmChanges"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96"
+        app:srcCompat="@drawable/regfinish_tick"
+        tools:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/discardChangesBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="discardChanges"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/confirmChangesBtn"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96"
+        app:srcCompat="@android:drawable/ic_delete"
+        tools:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/editTimeBtn"
+        android:layout_width="40dp"
+        android:layout_height="29dp"
+        android:background="@null"
+        android:onClick="editTime"
+        app:layout_constraintStart_toEndOf="@+id/timeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView"
+        app:srcCompat="@android:drawable/ic_menu_edit"
+        tools:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/editDocBtn"
+        android:layout_width="39dp"
+        android:layout_height="32dp"
+        android:background="@null"
+        android:onClick="editDoctor"
+        app:layout_constraintStart_toEndOf="@+id/drNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText3"
+        app:srcCompat="@android:drawable/ic_menu_edit"
+        tools:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/editDateBtn"
+        android:layout_width="40dp"
+        android:layout_height="29dp"
+        android:background="@null"
+        android:onClick="editDate"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/dateTextView"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
+
+
+    <!--
+    <TextView
+
+        android:id="@+id/textViewData"
+        android:layout_width="349dp"
+        android:layout_height="340dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="226dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginBottom="169dp"
+        android:textColor="#185586"
+        android:fontFamily="sans-serif-black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

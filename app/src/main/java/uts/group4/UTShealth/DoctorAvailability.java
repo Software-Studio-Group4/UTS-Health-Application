@@ -1,13 +1,12 @@
 package uts.group4.UTShealth;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,15 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
-import uts.group4.UTShealth.Model.AppointmentModel;
+import uts.group4.UTShealth.ActivityFragments.DatePickerFragment;
+import uts.group4.UTShealth.ActivityFragments.EditShiftFragment;
+import uts.group4.UTShealth.ActivityFragments.NewShiftFragment;
+import uts.group4.UTShealth.ActivityFragments.RemoveTimeOffFragment;
 import uts.group4.UTShealth.Model.ShiftModel;
 import uts.group4.UTShealth.Model.TimeOffModel;
 import uts.group4.UTShealth.Util.DATParser;
@@ -34,6 +40,7 @@ import uts.group4.UTShealth.Util.DATParser;
 public class DoctorAvailability extends AppCompatActivity {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    Switch urgentBtn;
     String userID = fAuth.getCurrentUser().getUid();
     CollectionReference shiftRef = fStore.collection("Doctor").document(userID).collection("Shifts");
     CollectionReference timeOffRef = fStore.collection("Doctor").document(userID).collection("Time Off");
@@ -59,6 +66,45 @@ public class DoctorAvailability extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctoravailability_layout);
+
+        // for urgent status
+        urgentBtn = findViewById(R.id.switch1);
+        final DocumentReference docRef = fStore.collection("Doctor").document(userID);
+        urgentBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Map<String, Object> urgentData = new HashMap<>();
+                    urgentData.put("UrgentStatus", true);
+                    docRef.update(urgentData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(DoctorAvailability.this, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(DoctorAvailability.this, "Error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    Map<String, Object> urgentData = new HashMap<>();
+                    urgentData.put("UrgentStatus", false);
+                    docRef.update(urgentData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(DoctorAvailability.this, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(DoctorAvailability.this, "Error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+        });
 
         timeOffRecyclerView = findViewById(R.id.timeOffRecycler);
         timeOffRecyclerView.setLayoutManager(new LinearLayoutManager(this));

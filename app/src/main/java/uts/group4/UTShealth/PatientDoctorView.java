@@ -71,7 +71,6 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         doctorProfileRecyclerView = findViewById(R.id.doctorProfileRecyclerView);
         setRecyclerView();
         refDatabase = FirebaseDatabase.getInstance().getReference().child("Location");
-        //sButton = (Button) findViewById(R.id.backButtonMap);
     }
 
 
@@ -190,7 +189,9 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         doctorAdapter.stopListening();
 
     }
-
+    public void backBtnPressed(View view) {
+        finish();
+    }
     private class DoctorProfileViewHolder extends RecyclerView.ViewHolder {
         private View view;
 
@@ -207,5 +208,6 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
     }
 
 }
+
 }
 

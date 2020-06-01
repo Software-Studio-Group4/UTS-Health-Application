@@ -59,7 +59,7 @@ public class PatientResetPass extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
-        startActivity(new Intent(getApplicationContext(), PatientLogin.class));
+        finish();
         CustomIntent.customType(PatientResetPass.this, "right-to-left");
     }
 

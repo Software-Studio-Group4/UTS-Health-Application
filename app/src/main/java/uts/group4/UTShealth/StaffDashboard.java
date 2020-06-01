@@ -1,13 +1,7 @@
 package uts.group4.UTShealth;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.icu.util.Calendar;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,35 +14,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.AppointmentModel;
-import uts.group4.UTShealth.Model.Doctor;
-import uts.group4.UTShealth.Model.DoctorLocation;
 import uts.group4.UTShealth.Util.DATParser;
 
 public class StaffDashboard extends AppCompatActivity {
@@ -141,6 +123,7 @@ public class StaffDashboard extends AppCompatActivity {
      ************************************************************************************************/
     public void goToAvailabilityPage(View view) {
         startActivity(new Intent(getApplicationContext(), DoctorAvailability.class));
+        CustomIntent.customType(StaffDashboard.this, "left-to-right");
     }
 
     public void userProfile(View view) {
@@ -165,7 +148,7 @@ public class StaffDashboard extends AppCompatActivity {
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
-        void setAppointmentName(String date, String time, String patient, final String chatCode, String documentID, final Timestamp apptTime) {
+        void setAppointmentName(String date, String time, String patient, final String chatCode, final String documentID, final Timestamp apptTime) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
             appointmentTextView.setText("Date: " + DATParser.weekDayAsString(DATParser.getWeekDay(date)) + " " + date + "\nTime: " + time + "\nPatient: " + patient + "\n");
             if(apptTime != null){
@@ -196,15 +179,21 @@ public class StaffDashboard extends AppCompatActivity {
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (chatCode != null) {
-
-                        Intent i = new Intent(StaffDashboard.this, Chat.class);
-                        i.putExtra("chatroomcode", chatCode);
+//                    if (chatCode != null) {
+//
+//                        Intent i = new Intent(StaffDashboard.this, Chat.class);
+//                        i.putExtra("chatroomcode", chatCode);
+//                        startActivity(i);
+//                        CustomIntent.customType(StaffDashboard.this, "right-to-left");
+//                    } else {
+//                        Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
+//                    }
+//
+                    Intent i = new Intent(StaffDashboard.this, AppointmentDetails.class);
+                    i.putExtra("appointmentID", documentID);
+                    i.putExtra("isDoctor", true);
                         startActivity(i);
                         CustomIntent.customType(StaffDashboard.this, "right-to-left");
-                    } else {
-                        Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
-                    }
                 }
             });
         }

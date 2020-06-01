@@ -13,6 +13,7 @@ public class AppointmentModel {
     private String PatientFullName;
     private String WeekDay;
     private boolean CompletionStatus;
+    private boolean UrgentStatus;
     private Timestamp TimeStamp;
 
     public AppointmentModel(){
@@ -25,7 +26,7 @@ public class AppointmentModel {
         this.Time = time;
     }
 
-    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName, String patientFullName, String weekDay, boolean completionStatus, Timestamp TimeStamp) {
+    public AppointmentModel(String id, String date, String time, String doctorID, String patientID, String chatCode, String doctorFullName, String patientFullName, String weekDay, boolean completionStatus, boolean urgentStatus, Timestamp TimeStamp) {
         this.id = id;
         Date = date;
         Time = time;
@@ -36,6 +37,7 @@ public class AppointmentModel {
         PatientFullName = patientFullName;
         WeekDay = weekDay;
         CompletionStatus = completionStatus;
+        UrgentStatus = urgentStatus;
         this.TimeStamp = TimeStamp;
     }
 
@@ -117,6 +119,12 @@ public class AppointmentModel {
 
     public void setCompletionStatus(boolean completionStatus) {
         CompletionStatus = completionStatus;
+    }
+
+    public boolean isUrgentStatus(){return UrgentStatus;}
+
+    public void setUrgentStatus(boolean urgentStatus) {
+        UrgentStatus = urgentStatus;
     }
 
     public Timestamp getTimeStamp() {

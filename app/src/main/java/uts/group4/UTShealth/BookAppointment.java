@@ -1,7 +1,6 @@
 package uts.group4.UTShealth;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -46,6 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uts.group4.UTShealth.ActivityFragments.DatePickerFragment;
+import uts.group4.UTShealth.ActivityFragments.TimePickerFragment;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ChatMessage;
 import uts.group4.UTShealth.Model.Doctor;
@@ -72,6 +75,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
     ArrayList<AppointmentModel> userAppointments = new ArrayList<>();
     Calendar dateObj = Calendar.getInstance();
+    boolean urgentStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +182,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
     public void btn_PickerTime(View view) {
         DialogFragment fragment = new TimePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("source", "BookAppointment");
+        fragment.setArguments(bundle);
         fragment.show(getSupportFragmentManager(), "time picker");
     }
 
@@ -227,6 +234,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
 
+
         //set the dateObj to the date and time
         dateObj.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date),
                     DATParser.getHour(DATParser.timeStrToInt(time)), DATParser.getMinute(DATParser.timeStrToInt(time)), 0);
@@ -241,8 +249,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         Log.i("LOGGER",  "week day found : " + weekDay + DATParser.getWeekDay(date));
         String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
 
-        DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
-
+        final DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
 
             //initialise A Chat Object in the RealTimeDatabase
             dbRef = FirebaseDatabase.getInstance().getReference().child("Chats/" + "CHAT" + appointmentID);
@@ -250,7 +257,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             dbRef.push().setValue(initMessage);
 
             // sets the target document reference to the Appointment collection in the firestore.
-
             //makes a Map of data to initialise into the appointment object
             Map<String, Object> appointmentData = new HashMap<>(); //
             appointmentData.put("patientID", userID);
@@ -263,6 +269,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("PatientFullName", patientFullName);
             appointmentData.put("CompletionStatus", false);
             appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
+            appointmentData.put("UrgentStatus", urgentStatus);
 
 
 
@@ -280,6 +287,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                         }
                     });
 
+
             //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
             DocumentReference patientDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
             patientDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
@@ -289,12 +297,56 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             doctorDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
 
 
-        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+        finish();
     }
 
-    public void backBtnPressed(View view) {
-        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+    public void urgentAppt(View view) {
+        Calendar calendar = Calendar.getInstance();
 
+        //set date to today
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        populateSetDateText(year, month + 1 , day);
+
+
+        //set time to now
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        populateSetTimeText(hour, minute);
+
+
+        //set doctor to the first available one
+        fStore.collection("Doctor")
+                .whereEqualTo("UrgentStatus", true).limit(1)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                chosenDoctorId = document.getId();
+                                String firstName = document.get("First Name").toString();
+                                String lastName = document.get("Last Name").toString();
+                                chosenDoctorTextView.setText(firstName + " " + lastName);
+
+                            }
+                        } else {
+                            Toast.makeText(BookAppointment.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        urgentStatus = true;
+        Button dateBtn = findViewById(R.id.dateButton);
+        Button timeBtn = findViewById(R.id.timeButton);
+        dateBtn.setVisibility(View.GONE);
+        timeBtn.setVisibility(View.GONE);
+        doctorRecycler.setVisibility(View.GONE);
+    }
+
+
+    public void backBtnPressed(View view) {
+        finish();
     }
 
 boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, ArrayList<AppointmentModel> existingAppointments){

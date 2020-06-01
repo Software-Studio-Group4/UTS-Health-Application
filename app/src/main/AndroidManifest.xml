@@ -61,10 +61,10 @@
         <activity android:name=".PatientRegistration$RegisterDetailsPge" />
         <activity android:name=".PatientRegistration$RegisterPassPge" />
         <activity android:name=".PatientRegistration$reg_billing_address" />
-        <activity android:name=".PatientDashboard$PatientPastAppointments" />
+        <activity android:name=".PatientPastAppointments" />
         <activity android:name=".StaffProfilePage" />
         <activity android:name=".PrescriptionNotes" />
-
+        <activity android:name=".AppointmentDetails" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCKXYbeT9cWV_7ucWc4LH8GSw4XOoXyGMI" />
