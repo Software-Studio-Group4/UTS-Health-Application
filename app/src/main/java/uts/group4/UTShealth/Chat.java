@@ -366,7 +366,7 @@ public class Chat extends AppCompatActivity {
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
         return mediaFile;
     }
-
+*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -404,7 +404,7 @@ public class Chat extends AppCompatActivity {
                     }
                 });
     }
-*/
+
     public void endChat(View view) {
         //code to send chatid to Notes class
 //        Bitmap bitmap1 = getScreenBitmap();
