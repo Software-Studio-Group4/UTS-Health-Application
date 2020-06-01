@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,7 +101,7 @@ public class PatientDashboard extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull AppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
                 String appointmentID = getSnapshots().getSnapshot(position).getId();
-                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName(), appointmentModel.getChatCode(), appointmentID, appointmentModel.getTimeStamp());
+                appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName(), appointmentModel.getChatCode(), appointmentID, appointmentModel.getTimeStamp(), appointmentModel.isUrgentStatus());
             }
 
             @NonNull
@@ -225,8 +226,12 @@ public class PatientDashboard extends AppCompatActivity {
 
         @SuppressLint("SetTextI18n")
         @RequiresApi(api = Build.VERSION_CODES.N)
-        void setAppointmentName(String date, String time, String doctor, final String chatCode, final String documentID, final Timestamp apptTime) {
+        void setAppointmentName(String date, String time, String doctor, final String chatCode, final String documentID, final Timestamp apptTime, final boolean urgentStatus) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
+            ImageView urgentIcon = view.findViewById(R.id.urgentIcon);
+            if(urgentStatus){
+                urgentIcon.setVisibility(View.VISIBLE);
+            }
             registerForContextMenu(appointmentTextView);
             appointmentID = documentID;
             if(apptTime != null){
@@ -259,16 +264,6 @@ public class PatientDashboard extends AppCompatActivity {
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    if (chatCode != null) {
-//
-//                        Intent i = new Intent(PatientDashboard.this, Chat.class);
-//                        i.putExtra("chatroomcode", chatCode);
-//                        startActivity(i);
-//                        CustomIntent.customType(PatientDashboard.this, "right-to-left");
-//                    } else {
-//                        Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
-//                    }
-                    //go to view appointment page
                     Intent i = new Intent(PatientDashboard.this, AppointmentDetails.class);
                     i.putExtra("appointmentID", documentID);
                     i.putExtra("isDoctor", false);

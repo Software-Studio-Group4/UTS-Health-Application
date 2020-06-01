@@ -307,7 +307,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         //set date to today
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
         populateSetDateText(year, month + 1 , day);
 
 
@@ -337,7 +337,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                         }
                     }
                 });
-        urgentStatus = true; 
+        urgentStatus = true;
         Button dateBtn = findViewById(R.id.dateButton);
         Button timeBtn = findViewById(R.id.timeButton);
         dateBtn.setVisibility(View.GONE);
