@@ -375,10 +375,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                                 chosenDoctorTextView.setText(firstName + " " + lastName);
                                 String doctorFullName = chosenDoctorTextView.getText().toString();
                                 final DocumentReference docRef = fStore.collection("Appointment").document(appointmentID);
-                                chosenDoctorId = id;
                                 Map<String, Object> docData = new HashMap<>();
                                 docData.put("DoctorFullName", doctorFullName);
-                                docData.put("doctorID", chosenDoctorId);
+                                docData.put("doctorID", id);
                                 docRef.update(docData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
