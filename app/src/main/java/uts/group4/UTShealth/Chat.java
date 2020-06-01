@@ -373,8 +373,8 @@ public class Chat extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             filePath = data.getData();
             putImageInStorage();
-                                }
-                }
+        }
+    }
     private void putImageInStorage() {
         // uploads the image into the database under the file named images
         final StorageReference ref = storageReference.child("images/" + java.util.UUID.randomUUID().toString());
@@ -386,7 +386,7 @@ public class Chat extends AppCompatActivity {
                             if (taskSnapshot.getMetadata().getReference() != null) {
                                 Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                @Override
+                                    @Override
                                     public void onSuccess(Uri uri) {
                                         imageUrl = uri.toString();
                                         ChatMessage Message = new
@@ -427,7 +427,7 @@ public class Chat extends AppCompatActivity {
 //        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
 //                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
 
- //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
+        //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
 
 //        mMessageRecyclerView.setDrawingCacheEnabled(true);
 //        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
@@ -523,7 +523,6 @@ public class Chat extends AppCompatActivity {
             Paint paint = new Paint();
             int iHeight = 0;
             final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
             // Use 1/8th of the available memory for this memory cache.
             final int cacheSize = maxMemory / 8;
             LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
@@ -537,24 +536,19 @@ public class Chat extends AppCompatActivity {
                 holder.itemView.buildDrawingCache();
                 Bitmap drawingCache = holder.itemView.getDrawingCache();
                 if (drawingCache != null) {
-
                     bitmaCache.put(String.valueOf(i), drawingCache);
                 }
-
                 height += holder.itemView.getMeasuredHeight();
             }
-
             bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
             Canvas bigCanvas = new Canvas(bigBitmap);
             bigCanvas.drawColor(Color.WHITE);
-
             for (int i = 0; i < size; i++) {
                 Bitmap bitmap = bitmaCache.get(String.valueOf(i));
                 bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
                 iHeight += bitmap.getHeight();
                 bitmap.recycle();
             }
-
         }
         return bigBitmap;
     }
@@ -567,5 +561,4 @@ public class Chat extends AppCompatActivity {
     }
 */
 }
-
 
