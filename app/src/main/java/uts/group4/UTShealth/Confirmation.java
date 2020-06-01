@@ -113,15 +113,15 @@ public class Confirmation extends AppCompatActivity implements Runnable {
         }
 
         // crate a page description
-        PdfDocument.PageInfo pageInfo = null;
+        PdfDocument.PageInfo pageInfo1 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
+            pageInfo1 = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
         }
 
         // create a new page from the PageInfo
         PdfDocument.Page page1 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            page1 = document.startPage(pageInfo);
+            page1 = document.startPage(pageInfo1);
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
@@ -138,35 +138,40 @@ public class Confirmation extends AppCompatActivity implements Runnable {
 
         }
 
-        Paint paint = new Paint();
-        canvas1.drawText("Prescription", 200, 50, paint);
-        canvas1.drawText("Medication: ", 40, 100, paint);
-        canvas1.drawText("Instructions: ", 40, 130, paint);
-        canvas1.drawText("Notes: ", 40, 160, paint);
-        canvas1.drawText(med, 120, 100, paint);
-        canvas1.drawText(ins, 120, 130, paint);
-        canvas1.drawText(note, 120, 160, paint);
+        Paint paint1 = new Paint();
+        canvas1.drawText("Prescription", 200, 50, paint1);
+        canvas1.drawText("Medication: ", 40, 100, paint1);
+        canvas1.drawText("Instructions: ", 40, 130, paint1);
+        canvas1.drawText("Notes: ", 40, 160, paint1);
+        canvas1.drawText(med, 120, 100, paint1);
+        canvas1.drawText(ins, 120, 130, paint1);
+        canvas1.drawText(note, 120, 160, paint1);
 
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             document.finishPage(page1);
         }
+
+        PdfDocument.PageInfo pageInfo2 = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            pageInfo2 = new PdfDocument.PageInfo.Builder(595, 842, 2).create();
+        }
         PdfDocument.Page page2 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            page2 = document.startPage(pageInfo);
+            page2 = document.startPage(pageInfo2);
         }
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+
+        scaledBitmap.prepareToDraw();
         Canvas canvas2 = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             canvas2 = page2.getCanvas();
 
         }
 
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
-
-        scaledBitmap.prepareToDraw();
-
-        canvas2.drawBitmap(scaledBitmap,0,0, paint);
+        Paint paint2 = new Paint();
+        canvas2.drawBitmap(scaledBitmap,0,0, paint2);
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
