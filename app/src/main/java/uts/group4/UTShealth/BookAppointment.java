@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -298,7 +299,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         finish();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void urgentAppt(View view) {
         Calendar calendar = Calendar.getInstance();
 
@@ -336,6 +336,12 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                     }
                 });
 
+        Button date = findViewById(R.id.dateButton);
+        Button time = findViewById(R.id.timeButton);
+        date.setEnabled(false);
+        time.setEnabled(false);
+        doctorRecycler.setClickable(false);
+        doctorRecycler.setEnabled(false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
