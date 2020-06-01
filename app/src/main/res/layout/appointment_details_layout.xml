@@ -7,6 +7,27 @@
     android:layout_height="match_parent"
     android:background="@drawable/patient_bg">
 
+    <Button
+        android:id="@+id/backBtn3"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="47dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="342dp"
+        android:layout_marginRight="342dp"
+        android:layout_marginBottom="638dp"
+        android:background="@drawable/back_btn_left"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04" />
+
     <ImageView
         android:id="@+id/UTSLogo"
         android:layout_width="164dp"
@@ -24,78 +45,20 @@
         app:srcCompat="@drawable/uts_logo"
         tools:ignore="ContentDescription" />
 
-    <Button
-        android:id="@+id/upcomingapptBtn"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="52dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="682dp"
-        android:layout_marginEnd="325dp"
-        android:layout_marginRight="325dp"
-        android:background="@drawable/calendar_alt"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.938"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/bookBtn"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="55dp"
-        android:layout_height="58dp"
-        android:layout_marginTop="682dp"
-        android:background="@drawable/book_btn"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:onClick="bookAppt"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/pastapptBtn"
-        app:layout_constraintStart_toEndOf="@+id/upcomingapptBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/pastapptBtn"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="52dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="325dp"
-        android:layout_marginLeft="325dp"
-        android:layout_marginTop="682dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginRight="1dp"
-        android:background="@drawable/calendar_check"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:onClick="pastAppt"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.545"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
-        tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/upcomingApptText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginTop="48dp"
         android:text="Date"
         android:textColor="#185586"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeText"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -105,12 +68,12 @@
         android:text="Doctor"
         android:textColor="#185586"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintHorizontal_bias="0.044"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTextView"
-        app:layout_constraintVertical_bias="0.100000024"
+        app:layout_constraintVertical_bias="0.061"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -120,32 +83,13 @@
         android:text="Patient"
         android:textColor="#185586"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.06"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/drNameTextView"
-        app:layout_constraintVertical_bias="0.100000024"
-        tools:ignore="MissingConstraints" />
-
-    <ImageView
-        android:id="@+id/userIcon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="325dp"
-        android:layout_marginLeft="325dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="717dp"
-        android:onClick="userProfile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.044"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/user_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/drNameTextView"
+        app:layout_constraintVertical_bias="0.04"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/welcomeText"
@@ -153,10 +97,8 @@
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="132dp"
         android:layout_marginEnd="303dp"
         android:layout_marginRight="303dp"
-        android:layout_marginBottom="582dp"
         android:text="Appointment Details"
         android:textColor="#185586"
         android:textSize="20sp"
@@ -166,7 +108,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <TextView
         android:id="@+id/urgentTextView"
@@ -177,25 +119,38 @@
         android:textSize="20sp"
         android:textStyle="bold|italic"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/pastapptBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.97"
         app:layout_constraintStart_toEndOf="@+id/welcomeText"
-        app:layout_constraintTop_toBottomOf="@+id/userIcon"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19" />
 
     <TextView
         android:id="@+id/dateTextView"
-        android:layout_width="136dp"
+        android:layout_width="wrap_content"
         android:layout_height="29dp"
         android:text="XX/XX/XXXX"
         android:textColor="#185586"
         android:textSize="20sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText" />
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView" />
+
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00PM"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.815"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView" />
 
     <TextView
         android:id="@+id/drNameTextView"
@@ -206,7 +161,7 @@
         android:textSize="20sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upcomingApptText3" />
 
@@ -219,51 +174,118 @@
         android:textSize="20sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintHorizontal_bias="0.082"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upcomingApptText4" />
 
     <TextView
         android:id="@+id/weekdayTextView"
-        android:layout_width="151dp"
-        android:layout_height="34dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginRight="56dp"
-        android:gravity="right"
+        android:layout_width="149dp"
+        android:layout_height="27dp"
         android:text="WEEKDAY"
         android:textColor="#185586"
         android:textSize="20sp"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toTopOf="@+id/pastapptBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/dateTextView"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
-        app:layout_constraintVertical_bias="0.147" />
+        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText"
+        app:layout_constraintVertical_bias="0.011" />
 
     <Button
         android:id="@+id/chatBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="goToChat"
         android:text="go to chat"
-        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintHorizontal_bias="0.409"
         app:layout_constraintStart_toEndOf="@+id/cancelApptBtn"
         app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
-        app:layout_constraintVertical_bias="0.51" />
+        app:layout_constraintVertical_bias="0.35000002" />
 
     <Button
         android:id="@+id/cancelApptBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="cancel\n appointment"
-        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.24"
+        app:layout_constraintHorizontal_bias="0.197"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
-        app:layout_constraintVertical_bias="0.519" />
+        app:layout_constraintVertical_bias="0.32999998" />
+
+    <Button
+        android:id="@+id/editBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="edit details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.93" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/confirmChangesBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96"
+        app:srcCompat="@drawable/regfinish_tick"
+        tools:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/discardChangesBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/confirmChangesBtn"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96"
+        app:srcCompat="@android:drawable/ic_delete"
+        tools:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/editTimeBtn"
+        android:layout_width="40dp"
+        android:layout_height="29dp"
+        android:background="@null"
+        app:layout_constraintStart_toEndOf="@+id/timeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView"
+        app:srcCompat="@android:drawable/ic_menu_edit"
+        tools:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/editDocBtn"
+        android:layout_width="39dp"
+        android:layout_height="32dp"
+        android:background="@null"
+        app:layout_constraintStart_toEndOf="@+id/drNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText3"
+        app:srcCompat="@android:drawable/ic_menu_edit"
+        tools:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/editDateBtn"
+        android:layout_width="40dp"
+        android:layout_height="29dp"
+        android:background="@null"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/dateTextView"
+        app:layout_constraintTop_toBottomOf="@+id/weekdayTextView"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
 
 
     <!--

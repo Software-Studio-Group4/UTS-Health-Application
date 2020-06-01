@@ -53,7 +53,7 @@ public class PatientProfilePage extends AppCompatActivity {
                     postCode.setText("Post Code: " + postText); // Displays post code
                     String phoneText = documentSnapshot.getString("Phone Number");
                     phoneNumber.setText("Phone Number: " + phoneText); // Displays phone number
-                    if (documentSnapshot.getString("Medicare Number") != null){
+                    if (documentSnapshot.getString("Medicare Number") != ""){
                         String medicareText = documentSnapshot.getString("Phone Number");
                         medicare.setText("Medicare Number: " + medicareText); // Displays medicare number
                     } else {
