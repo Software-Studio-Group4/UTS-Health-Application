@@ -13,8 +13,9 @@ public class Doctor {
     @PropertyName("Street Address") private String streetAddress;
     @PropertyName("Suburb") private String suburb;
     @PropertyName("Urgent Doctor") private boolean urgentDoctor;
+    @PropertyName("Specialisation") private String specialisation;
 
-    public Doctor(String email, String firstName, String lastName, String phoneNumber, String postCode, String state, String streetAddress, String suburb, boolean urgentDoctor) {
+    public Doctor(String email, String firstName, String lastName, String phoneNumber, String postCode, String state, String streetAddress, String suburb, boolean urgentDoctor, String specialisation) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -24,8 +25,17 @@ public class Doctor {
         this.streetAddress = streetAddress;
         this.suburb = suburb;
         this.urgentDoctor = urgentDoctor;
+        this.specialisation = specialisation;
     }
     public Doctor() {}
+
+    public String getSpecialisation() {
+        return specialisation;
+    }
+
+    public void setSpecialisation(String specialisation) {
+        this.specialisation = specialisation;
+    }
 
     @PropertyName("Urgent Doctor")
     public boolean isUrgentDoctor() { return urgentDoctor; }
