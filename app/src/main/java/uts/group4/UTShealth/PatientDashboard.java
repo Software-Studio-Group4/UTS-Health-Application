@@ -309,7 +309,7 @@ public class PatientDashboard extends AppCompatActivity {
 
         @SuppressLint("SetTextI18n")
         @RequiresApi(api = Build.VERSION_CODES.N)
-        void setAppointmentName(String date, String time, String doctor, final String chatCode, String documentID, final Timestamp apptTime) {
+        void setAppointmentName(String date, String time, String doctor, final String chatCode, final String documentID, final Timestamp apptTime) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
             registerForContextMenu(appointmentTextView);
             appointmentID = documentID;
@@ -354,7 +354,7 @@ public class PatientDashboard extends AppCompatActivity {
 //                    }
                     //go to view appointment page
                     Intent i = new Intent(PatientDashboard.this, AppointmentDetails.class);
-                    i.putExtra("appointmentID", appointmentID);
+                    i.putExtra("appointmentID", documentID);
                     i.putExtra("isDoctor", false);
                     startActivity(i);
                     CustomIntent.customType(PatientDashboard.this, "right-to-left");

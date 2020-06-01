@@ -294,7 +294,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             doctorDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
 
 
-        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+        finish();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -368,7 +368,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         appointmentData.put("DoctorFullName", doctorFullName);
         appointmentData.put("PatientFullName", patientFullName);
         appointmentData.put("CompletionStatus", false);
-        appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
+        appointmentData.put("TimeStamp", new Timestamp(calendar.getTime()));
 
 
 
@@ -396,7 +396,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         doctorDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
 
 
-        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+        finish();
     }
     public void backBtnPressed(View view) {
         startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
