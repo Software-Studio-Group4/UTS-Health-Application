@@ -177,7 +177,7 @@ public class AppointmentDetails extends AppCompatActivity {
                     patientTextView.setText(documentSnapshot.getString("PatientFullName"));
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Error: couldn't retrieve appointment data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AppointmentDetails.this, "Error: couldn't retrieve appointment data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -200,12 +200,12 @@ public class AppointmentDetails extends AppCompatActivity {
         fStore.collection("Appointment").document(appointmentID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "Appointment deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppointmentDetails.this, "Appointment deleted", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppointmentDetails.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
         finish();
@@ -243,16 +243,22 @@ public class AppointmentDetails extends AppCompatActivity {
         weekdayTextView.setTextColor(Color.parseColor("#185586"));
         doctorTextView.setTextColor(Color.parseColor("#185586"));
         isEditing = false;
-        Toast.makeText(getApplicationContext(), "Changes discarded", Toast.LENGTH_SHORT);
+        Toast.makeText(AppointmentDetails.this, "Changes discarded", Toast.LENGTH_SHORT);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void confirmChanges(View view){
         //update fields in firebase
         Map<String, Object> appointmentData = new HashMap<>();
         appointmentData.put("Date", dateTextView.getText().toString());
         appointmentData.put("Time", timeTextView.getText().toString());
         appointmentData.put("WeekDay", weekdayTextView.getText().toString());
-        //appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
+        appointmentData.put("TimeStamp", DATParser.dateToTimestamp(dateTextView.getText().toString()));
+        apptRef.update(appointmentData);
+
+        apptDate = dateTextView.getText().toString();
+        apptTime = timeTextView.getText().toString();
+        apptDay = weekdayTextView.getText().toString();
 
         editBtn.setVisibility(View.VISIBLE);
         editDateBtn.setVisibility(View.GONE);
@@ -272,7 +278,8 @@ public class AppointmentDetails extends AppCompatActivity {
         weekdayTextView.setTextColor(Color.parseColor("#185586"));
         doctorTextView.setTextColor(Color.parseColor("#185586"));
         isEditing = false;
-        Toast.makeText(getApplicationContext(), "Changes saved!", Toast.LENGTH_SHORT);
+
+        Toast.makeText(AppointmentDetails.this, "Changes saved!", Toast.LENGTH_SHORT);
     }
 
     public void editDate(View view) {
