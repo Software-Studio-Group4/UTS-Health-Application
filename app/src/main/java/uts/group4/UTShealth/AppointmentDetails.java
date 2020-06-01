@@ -1,8 +1,10 @@
 package uts.group4.UTShealth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
+import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,18 +28,24 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Util.DATParser;
 
 public class AppointmentDetails extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    DocumentReference apptRef;
+    Calendar cal = Calendar.getInstance();
     Bundle extras;
     ConstraintLayout rootLayout;
-    TextView dateTextView;
-    TextView weekdayTextView;
+    static TextView dateTextView;
+    static TextView weekdayTextView;
     TextView doctorTextView;
     TextView patientTextView;
-    TextView timeTextView;
+    static TextView timeTextView;
     Button chatBtn;
     Button backBtn;
     Button cancelApptBtn;
@@ -72,12 +81,10 @@ public class AppointmentDetails extends AppCompatActivity {
     Timestamp apptTimestamp;
 
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appointment_details_layout);
-
 
 
         //initialise fields//
@@ -100,13 +107,14 @@ public class AppointmentDetails extends AppCompatActivity {
         editDateBtn = findViewById(R.id.editDateBtn);
         editDoctorBtn = findViewById(R.id.editDocBtn);
 
-        if(extras != null){
+        if (extras != null) {
             appointmentID = extras.getString("appointmentID");
             isDoctor = extras.getBoolean("isDoctor");
+            apptRef = fStore.collection("Appointment").document(appointmentID);
         }
 
         //setting cosmetics
-        if(isUrgent){
+        if (isUrgent) {
             editBtn.setVisibility(View.GONE);
         }
         editTimeBtn.setVisibility(View.GONE);
@@ -116,11 +124,7 @@ public class AppointmentDetails extends AppCompatActivity {
         discardChanges.setVisibility(View.GONE);
 
 
-
-
-
-
-        if(isDoctor){
+        if (isDoctor) {
             /********************setting up the page to be a doctor page...***********************/
             //*********************COSMETIC CHANGES******************************************
             //sets all the text to white
@@ -137,13 +141,12 @@ public class AppointmentDetails extends AppCompatActivity {
             doctorTextView.setTextColor(Color.parseColor("#FFFFFF"));
             patientTextView.setTextColor(Color.parseColor("#FFFFFF"));
             doctorTextView.setTextColor(Color.parseColor("#FFFFFF"));
+            timeTextView.setTextColor(Color.parseColor("#FFFFFF"));
+            editBtn.setVisibility(View.GONE); //DOCTORS CANT EDIT JUST YET
             //sets background assets
             rootLayout.setBackgroundResource(R.drawable.staff_profile_bg);
             backBtn.setBackgroundResource(R.drawable.back_btn_staff);
 
-        }
-        else{
-            //sets patient layout unique actions
         }
 
     }
@@ -151,7 +154,6 @@ public class AppointmentDetails extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        DocumentReference apptRef = fStore.collection("Appointment").document(appointmentID);
 
         //SET INITIAL DATA BEFORE EDITS//
         apptRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -160,11 +162,11 @@ public class AppointmentDetails extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     chatCode = documentSnapshot.getString("ChatCode");
-                    apptDate  = documentSnapshot.getString("Date");
+                    apptDate = documentSnapshot.getString("Date");
                     apptDay = DATParser.weekDayAsString(DATParser.getWeekDay(apptDate));
                     apptTime = documentSnapshot.getString("Time");
                     apptTimestamp = documentSnapshot.getTimestamp("TimeStamp");
-                    doctorName  = documentSnapshot.getString("DoctorFullName");
+                    doctorName = documentSnapshot.getString("DoctorFullName");
                     patientID = documentSnapshot.getString("patientID");
                     doctorID = documentSnapshot.getString("doctorID");
 
@@ -183,33 +185,147 @@ public class AppointmentDetails extends AppCompatActivity {
 
     /*******************************BUTTON METHODS*******************************************************/
 
-    public void goToChat(View view){
+    public void goToChat(View view) {
         if (chatCode != null) {
             Intent i = new Intent(AppointmentDetails.this, Chat.class);
             i.putExtra("chatroomcode", chatCode);
             startActivity(i);
             CustomIntent.customType(AppointmentDetails.this, "right-to-left");
-        }
-        else {
+        } else {
             Toast.makeText(AppointmentDetails.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
         }
     }
-    public void deleteAppt(View view){
+
+    public void deleteAppt(View view) {
         fStore.collection("Appointment").document(appointmentID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(getApplicationContext(), "Appointment deleted", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
         finish();
     }
 
-    public void back(View view){
+    public void editButton(View view) {
+        editBtn.setVisibility(View.GONE);
+        editDateBtn.setVisibility(View.VISIBLE);
+        editDoctorBtn.setVisibility(View.VISIBLE);
+        editTimeBtn.setVisibility(View.VISIBLE);
+        confirmChanges.setVisibility(View.VISIBLE);
+        discardChanges.setVisibility(View.VISIBLE);
+        chatBtn.setVisibility(View.GONE);
+        cancelApptBtn.setVisibility(View.GONE);
+
+        isEditing = true;
+    }
+
+    public void discardChanges(View view) {
+        editBtn.setVisibility(View.VISIBLE);
+        editDateBtn.setVisibility(View.GONE);
+        editDoctorBtn.setVisibility(View.GONE);
+        editTimeBtn.setVisibility(View.GONE);
+        confirmChanges.setVisibility(View.GONE);
+        discardChanges.setVisibility(View.GONE);
+        chatBtn.setVisibility(View.VISIBLE);
+        cancelApptBtn.setVisibility(View.VISIBLE);
+
+        dateTextView.setText(apptDate);
+        timeTextView.setText(apptTime);
+        weekdayTextView.setText(apptDay);
+        doctorTextView.setText(doctorName);
+        dateTextView.setTextColor(Color.parseColor("#185586"));
+        timeTextView.setTextColor(Color.parseColor("#185586"));
+        weekdayTextView.setTextColor(Color.parseColor("#185586"));
+        doctorTextView.setTextColor(Color.parseColor("#185586"));
+        isEditing = false;
+        Toast.makeText(getApplicationContext(), "Changes discarded", Toast.LENGTH_SHORT);
+    }
+
+    public void confirmChanges(View view){
+        //update fields in firebase
+        Map<String, Object> appointmentData = new HashMap<>();
+        appointmentData.put("Date", dateTextView.getText().toString());
+        appointmentData.put("Time", timeTextView.getText().toString());
+        appointmentData.put("WeekDay", weekdayTextView.getText().toString());
+        //appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
+
+        editBtn.setVisibility(View.VISIBLE);
+        editDateBtn.setVisibility(View.GONE);
+        editDoctorBtn.setVisibility(View.GONE);
+        editTimeBtn.setVisibility(View.GONE);
+        confirmChanges.setVisibility(View.GONE);
+        discardChanges.setVisibility(View.GONE);
+        chatBtn.setVisibility(View.VISIBLE);
+        cancelApptBtn.setVisibility(View.VISIBLE);
+
+        dateTextView.setText(apptDate);
+        timeTextView.setText(apptTime);
+        weekdayTextView.setText(apptDay);
+        doctorTextView.setText(doctorName);
+        dateTextView.setTextColor(Color.parseColor("#185586"));
+        timeTextView.setTextColor(Color.parseColor("#185586"));
+        weekdayTextView.setTextColor(Color.parseColor("#185586"));
+        doctorTextView.setTextColor(Color.parseColor("#185586"));
+        isEditing = false;
+        Toast.makeText(getApplicationContext(), "Changes saved!", Toast.LENGTH_SHORT);
+    }
+
+    public void editDate(View view) {
+        DialogFragment fragment = new DatePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("source", "AppointmentDetails");
+        bundle.putString("doctorID", doctorID);
+        fragment.setArguments(bundle);
+        fragment.show(getSupportFragmentManager(), "date picker");
+    }
+
+    public void editTime(View view) {
+        DialogFragment fragment = new TimePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("source", "AppointmentDetails");
+        fragment.setArguments(bundle);
+        fragment.show(getSupportFragmentManager(), "time picker");
+
+    }
+
+    public void editDoctor(View view) {
+
+    }
+
+    public void back(View view) {
         finish();
+    }
+
+    /******************************EDIT METHODS************************************************/
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void editDateText(int year, int month, int day) {
+        dateTextView.setTextColor(Color.parseColor("#F9C70C"));
+        weekdayTextView.setTextColor(Color.parseColor("#F9C70C"));
+        if (month < 10) {
+            dateTextView.setText(day + "/0" + month + "/" + year);
+        } else {
+            dateTextView.setText(day + "/" + month + "/" + year);
+        }
+        weekdayTextView.setText(DATParser.weekDayAsString(DATParser.getWeekDay(dateTextView.getText().toString())));
+    }
+
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
+    public static void editTimeText(int hour, int minute) {
+        timeTextView.setTextColor(Color.parseColor("#F9C70C"));
+        String amPm;
+        int reformattedHour = hour;
+        if(hour > 12){
+            reformattedHour = (hour - 12);
+        }
+        if (hour >= 12) {
+            amPm = " PM";
+        } else
+            amPm = " AM";
+        timeTextView.setText(String.format("%02d:%02d", reformattedHour, minute) + amPm);
     }
 }

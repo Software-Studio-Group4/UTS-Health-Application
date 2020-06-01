@@ -181,6 +181,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
     public void btn_PickerTime(View view) {
         DialogFragment fragment = new TimePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("source", "BookAppointment");
+        fragment.setArguments(bundle);
         fragment.show(getSupportFragmentManager(), "time picker");
     }
 
