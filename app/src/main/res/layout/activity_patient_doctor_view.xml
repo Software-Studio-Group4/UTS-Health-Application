@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/patient_bg">
+    android:background="@drawable/doctor_bg">
 
 
     <ImageView
@@ -83,15 +83,5 @@
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="-16dp"
         tools:layout_editor_absoluteY="380dp" />
-
-    <Button
-        android:id="@+id/backButtonMap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="back"
-        android:translationY="600dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="595dp" />
 
 </RelativeLayout>

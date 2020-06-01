@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import maes.tech.intentanim.CustomIntent;
 
 public class StaffProfilePage extends AppCompatActivity {
-    TextView doctorName, street, city, state, postCode, phoneNumber;
+    TextView doctorName, street, city, state, postCode, phoneNumber, specTf;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
@@ -33,6 +33,7 @@ public class StaffProfilePage extends AppCompatActivity {
         state = findViewById(R.id.stateTf);
         postCode = findViewById(R.id.postCodeTf);
         phoneNumber = findViewById(R.id.numberTf);
+        specTf = findViewById(R.id.specTf);
         DocumentReference docRef = fStore.collection("Doctor").document(userID);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -51,6 +52,8 @@ public class StaffProfilePage extends AppCompatActivity {
                     postCode.setText("Post Code: " + postText); // Displays post code
                     String phoneText = documentSnapshot.getString("Phone Number");
                     phoneNumber.setText("Phone Number: " + phoneText); // Displays phone number
+                    String spec = documentSnapshot.getString("Specialisation");
+                    specTf.setText("Specialisation: " + spec); // Displays phone number
                 } else {
                     Toast.makeText(StaffProfilePage.this, "Cannot retrieve details", Toast.LENGTH_SHORT).show();
                 }
@@ -67,7 +70,7 @@ public class StaffProfilePage extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
-        startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+        finish();
         CustomIntent.customType(StaffProfilePage.this, "right-to-left");
     }
 }

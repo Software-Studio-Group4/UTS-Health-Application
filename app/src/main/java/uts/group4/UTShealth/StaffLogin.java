@@ -51,6 +51,7 @@ public class StaffLogin extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
+        finish();
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
         CustomIntent.customType(StaffLogin.this, "bottom-to-up");
     }

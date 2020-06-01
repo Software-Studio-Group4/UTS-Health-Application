@@ -1,6 +1,5 @@
 package uts.group4.UTShealth;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -111,7 +110,7 @@ public class StaffRequestAcc extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
-        startActivity(new Intent(getApplicationContext(), StaffLogin.class));
+        finish();
         CustomIntent.customType(StaffRequestAcc.this, "right-to-left");
     }
 

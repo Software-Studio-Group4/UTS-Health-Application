@@ -223,7 +223,7 @@ public class StaffCreateProfile extends AppCompatActivity {
             backBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(getApplicationContext(), StaffCreateProfile.class));
+                    finish();
                     CustomIntent.customType(StaffAddDetails.this, "fadein-to-fadeout");
                 }
             });

@@ -36,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.Doctor;
 import uts.group4.UTShealth.Model.DoctorLocation;
 import uts.group4.UTShealth.Model.PatientLocation;
@@ -80,7 +81,7 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         doctorAdapter = new FirestoreRecyclerAdapter<Doctor, DoctorProfileViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull DoctorProfileViewHolder holder, int position, @NonNull Doctor model) {
-                holder.setDrName((model.getFirstName() + " " + model.getLastName()));
+                holder.setDrName((model.getFirstName() + " " + model.getLastName()), model.getSpecialisation());
             }
             @NonNull
             @Override
@@ -191,7 +192,9 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
     }
     public void backBtnPressed(View view) {
         finish();
+        CustomIntent.customType(PatientDoctorView.this, "right-to-left");
     }
+
     private class DoctorProfileViewHolder extends RecyclerView.ViewHolder {
         private View view;
 
@@ -201,9 +204,9 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         }
 
         @SuppressLint("SetTextI18n")
-        void setDrName(String name) {
+        void setDrName(String name, String specialisation) {
             TextView textView = view.findViewById(R.id.doctorTextView);
-            textView.setText("Dr: " + name + "\nSpecialisation: ");
+            textView.setText("Dr: " + name + "\nSpecialisation: " + specialisation);
 
     }
 

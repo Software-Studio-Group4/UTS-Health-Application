@@ -32,7 +32,7 @@ public class PrescriptionNotes extends AppCompatActivity {
     public String medication;
     public String directions;
     public String notes;
-    String chatCode;
+    String chatCode, screenshot;
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
     @Override
@@ -48,6 +48,7 @@ public class PrescriptionNotes extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         assert extras != null;
         chatCode = extras.getString("Chatroomcode");
+        screenshot = extras.getString("Bitmap");
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -146,7 +146,7 @@ public class AppointmentDetails extends AppCompatActivity {
             editBtn.setVisibility(View.GONE); //DOCTORS CANT EDIT JUST YET
             //sets background assets
             rootLayout.setBackgroundResource(R.drawable.staff_profile_bg);
-            backBtn.setBackgroundResource(R.drawable.back_btn_staff);
+            backBtn.setBackgroundResource(R.drawable.back_btn_staff_right);
 
         }
 
@@ -170,12 +170,18 @@ public class AppointmentDetails extends AppCompatActivity {
                     doctorName = documentSnapshot.getString("DoctorFullName");
                     patientID = documentSnapshot.getString("patientID");
                     doctorID = documentSnapshot.getString("doctorID");
+                    if(documentSnapshot.getBoolean("UrgentStatus")!= null){
+                        isUrgent =documentSnapshot.getBoolean("UrgentStatus");
+                    }
 
                     dateTextView.setText(apptDate);
                     timeTextView.setText(apptTime);
                     weekdayTextView.setText(apptDay);
                     doctorTextView.setText(doctorName);
                     patientTextView.setText(documentSnapshot.getString("PatientFullName"));
+                    if(isUrgent){
+                        urgentStatus.setVisibility(View.VISIBLE);
+                    }
 
                 } else {
                     Toast.makeText(AppointmentDetails.this, "Error: couldn't retrieve appointment data", Toast.LENGTH_SHORT).show();
@@ -190,6 +196,7 @@ public class AppointmentDetails extends AppCompatActivity {
         if (chatCode != null) {
             Intent i = new Intent(AppointmentDetails.this, Chat.class);
             i.putExtra("chatroomcode", chatCode);
+            i.putExtra("isDoctor", isDoctor);
             startActivity(i);
             CustomIntent.customType(AppointmentDetails.this, "right-to-left");
         } else {
@@ -308,6 +315,7 @@ public class AppointmentDetails extends AppCompatActivity {
 
     public void back(View view) {
         finish();
+        CustomIntent.customType(AppointmentDetails.this, "left-to-right");
     }
 
     /********************************************EDIT METHODS************************************************/

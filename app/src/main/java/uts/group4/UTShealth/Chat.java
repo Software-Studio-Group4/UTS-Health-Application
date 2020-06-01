@@ -75,7 +75,7 @@ public class Chat extends AppCompatActivity {
 
         }
     }
-
+    private boolean isDoctor;
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
     public static final String CHATS_PATH = "Chats/";
@@ -153,7 +153,7 @@ public class Chat extends AppCompatActivity {
         chatCode = null;
         if(extras != null){
             chatCode = extras.getString("chatroomcode");
-
+            isDoctor = extras.getBoolean("isDoctor");
             messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
         }
         else{
@@ -162,6 +162,20 @@ public class Chat extends AppCompatActivity {
 
 
         final String chatRoomPath = CHATS_PATH + chatCode;
+
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        DocumentReference apptRef = fStore.collection("Appointment").document(chatCode.substring(4));
+        apptRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(isDoctor){
+                    mUsername = documentSnapshot.get("DoctorFullName").toString();
+                }
+                else{
+                    mUsername = documentSnapshot.get("PatientFullName").toString();
+                }
+            }
+        });
 
         FirebaseRecyclerOptions<ChatMessage> options =
                 new FirebaseRecyclerOptions.Builder<ChatMessage>()
@@ -179,7 +193,7 @@ public class Chat extends AppCompatActivity {
                                             int position,
                                             ChatMessage Message) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                if(Message.getText() != null && !Message.getText().equals("")){
+                if(!Message.hasImageUrl()){
                 viewHolder.messageTextView.setText(Message.getText());
                 }
                 viewHolder.messengerTextView.setText(Message.getName());
@@ -475,70 +489,5 @@ public class Chat extends AppCompatActivity {
         super.finish();
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
-
-/*    public Bitmap getScreenBitmap() {
-        View bit= mMessageRecyclerView.getRootView();
-        bit.setDrawingCacheEnabled(true);
-        bit.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        bit.layout(0, 0, bit.getMeasuredWidth(), bit.getMeasuredHeight());
-        bit.buildDrawingCache(true);
-        Bitmap b = Bitmap.createBitmap(bit.getDrawingCache());
-        bit.setDrawingCacheEnabled(false); // clear drawing cache
-        return b;
-    }
-    public Bitmap getScreenshotFromRecyclerView(RecyclerView view) {
-        RecyclerView.Adapter adapter = view.getAdapter();
-        Bitmap bigBitmap = null;
-        if (adapter != null) {
-            int size = adapter.getItemCount();
-            int height = 0;
-            Paint paint = new Paint();
-            int iHeight = 0;
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-            // Use 1/8th of the available memory for this memory cache.
-            final int cacheSize = maxMemory / 8;
-            LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
-            for (int i = 0; i < size; i++) {
-                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
-                adapter.onBindViewHolder(holder, i);
-                holder.itemView.measure(View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(), holder.itemView.getMeasuredHeight());
-                holder.itemView.setDrawingCacheEnabled(true);
-                holder.itemView.buildDrawingCache();
-                Bitmap drawingCache = holder.itemView.getDrawingCache();
-                if (drawingCache != null) {
-
-                    bitmaCache.put(String.valueOf(i), drawingCache);
-                }
-
-                height += holder.itemView.getMeasuredHeight();
             }
-
-            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
-            Canvas bigCanvas = new Canvas(bigBitmap);
-            bigCanvas.drawColor(Color.WHITE);
-
-            for (int i = 0; i < size; i++) {
-                Bitmap bitmap = bitmaCache.get(String.valueOf(i));
-                bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
-                iHeight += bitmap.getHeight();
-                bitmap.recycle();
-            }
-
-        }
-        return bigBitmap;
-    }
-    public String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
- */
-}
-
 

@@ -2,8 +2,11 @@ package uts.group4.UTShealth.ActivityFragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
@@ -12,12 +15,17 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.w3c.dom.Document;
+
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +38,7 @@ import uts.group4.UTShealth.Util.DATParser;
 
 import static uts.group4.UTShealth.AppointmentDetails.editDateText;
 import static uts.group4.UTShealth.BookAppointment.populateSetDateText;
+import static uts.group4.UTShealth.AppointmentDetails.editDateText;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
     private String sourceActivity;
@@ -44,6 +53,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        fStore = FirebaseFirestore.getInstance();
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
