@@ -2,11 +2,13 @@ package uts.group4.UTShealth;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +38,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import maes.tech.intentanim.CustomIntent;
 import uts.group4.UTShealth.Model.Doctor;
 import uts.group4.UTShealth.Model.DoctorLocation;
 import uts.group4.UTShealth.Model.PatientLocation;
@@ -71,7 +74,6 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         doctorProfileRecyclerView = findViewById(R.id.doctorProfileRecyclerView);
         setRecyclerView();
         refDatabase = FirebaseDatabase.getInstance().getReference().child("Location");
-        //sButton = (Button) findViewById(R.id.backButtonMap);
     }
 
 
@@ -207,5 +209,6 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
     }
 
 }
+
 }
 

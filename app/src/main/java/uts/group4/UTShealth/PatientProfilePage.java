@@ -45,7 +45,7 @@ public class PatientProfilePage extends AppCompatActivity {
                     patientName.setText("Name: " + firstName + " " + lastName); // Displays doctor's name
                     String streetText = documentSnapshot.getString("Street Address");
                     street.setText("Street: " + streetText); // Displays street
-                    String cityText = documentSnapshot.getString("City");
+                    String cityText = documentSnapshot.getString("Suburb");
                     city.setText("City: " + cityText); // Displays city
                     String stateText = documentSnapshot.getString("State");
                     state.setText("State: " + stateText); // Displays state
@@ -54,7 +54,7 @@ public class PatientProfilePage extends AppCompatActivity {
                     String phoneText = documentSnapshot.getString("Phone Number");
                     phoneNumber.setText("Phone Number: " + phoneText); // Displays phone number
                     if (documentSnapshot.getString("Medicare Number") != ""){
-                        String medicareText = documentSnapshot.getString("Phone Number");
+                        String medicareText = documentSnapshot.getString("Medicare Number");
                         medicare.setText("Medicare Number: " + medicareText); // Displays medicare number
                     } else {
                         medicare.setText("No Medicare Number provided.");
