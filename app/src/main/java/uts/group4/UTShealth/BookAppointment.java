@@ -408,8 +408,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         finish();
     }
     public void backBtnPressed(View view) {
-        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-
+        finish();
     }
 
 boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, ArrayList<AppointmentModel> existingAppointments){

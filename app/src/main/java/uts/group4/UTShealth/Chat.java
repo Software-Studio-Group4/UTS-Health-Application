@@ -449,10 +449,10 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
-                    startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+                    finish();
                     CustomIntent.customType(Chat.this, "left-to-right");
                 } else {
-                    startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+                    finish();
                     CustomIntent.customType(Chat.this, "left-to-right");
                 }
             }
