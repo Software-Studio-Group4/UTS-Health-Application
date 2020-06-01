@@ -8,11 +8,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.LruCache;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +47,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -273,6 +276,95 @@ public class Chat extends AppCompatActivity {
         });
     }
 
+    /**********************************************************************************************
+     * Screenshot testing
+     ************************************************************************************************/
+
+    public void BtnPressed(View v) {
+        storeImage(getRecyclerViewScreenshot(mMessageRecyclerView));
+    }
+
+
+    public static Bitmap getRecyclerViewScreenshot(RecyclerView view) {
+        int size = view.getAdapter().getItemCount();
+        RecyclerView.ViewHolder holder = view.getAdapter().createViewHolder(view, 0);
+        view.getAdapter().onBindViewHolder(holder, 0);
+        holder.itemView.measure(View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(), holder.itemView.getMeasuredHeight());
+        Bitmap bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), holder.itemView.getMeasuredHeight() * size,
+                Bitmap.Config.ARGB_8888);
+        Canvas bigCanvas = new Canvas(bigBitmap);
+        bigCanvas.drawColor(Color.TRANSPARENT);
+        Paint paint = new Paint();
+        int iHeight = 0;
+        holder.itemView.setDrawingCacheEnabled(true);
+        holder.itemView.buildDrawingCache();
+        bigCanvas.drawBitmap(holder.itemView.getDrawingCache(), 0f, iHeight, paint);
+        holder.itemView.setDrawingCacheEnabled(false);
+        holder.itemView.destroyDrawingCache();
+        iHeight += holder.itemView.getMeasuredHeight();
+        for (int i = 1; i < size; i++) {
+            view.getAdapter().onBindViewHolder(holder, i);
+            holder.itemView.setDrawingCacheEnabled(true);
+            holder.itemView.buildDrawingCache();
+            bigCanvas.drawBitmap(holder.itemView.getDrawingCache(), 0f, iHeight, paint);
+            iHeight += holder.itemView.getMeasuredHeight();
+            holder.itemView.setDrawingCacheEnabled(false);
+            holder.itemView.destroyDrawingCache();
+        }
+        return bigBitmap;
+    }
+
+    /**********************************************************************************************
+     * storeImage and getOutputMediaFile are for testing purposes. Screenshot is stored at android SDK.
+     * Android > data > uts.group4.UTSHealth > Files
+     ************************************************************************************************/
+
+    private void storeImage(Bitmap image) {
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            Log.d(TAG,
+                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+    }
+
+
+    private  File getOutputMediaFile(){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");
+
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName="MI_"+ timeStamp +".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -312,15 +404,39 @@ public class Chat extends AppCompatActivity {
     }
 
     public void endChat(View view) {
+        //code to send chatid to Notes class
+//        Bitmap bitmap1 = getScreenBitmap();
+//
+//        mMessageRecyclerView.setDrawingCacheEnabled(true);
+//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
+//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
+//        mMessageRecyclerView.setDrawingCacheEnabled(false);
+//        String stbmp = BitMapToString(newBmp);
+//
+//        Intent i = new Intent(getApplicationContext(), Prescription.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("Chatroomcode", chatCode);
+//        bundle.putString("Bitmap", stbmp);
+//        i.putExtras(bundle);
+//        startActivity(i);
+//        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
 
+        //code to send chatid to Notes class
+//        Bitmap bitmap1 = getScreenBitmap();
 
-//        Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
+//        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
+//                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+ //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
+
+//        mMessageRecyclerView.setDrawingCacheEnabled(true);
+//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
+//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
+//        mMessageRecyclerView.setDrawingCacheEnabled(false);
 //        String stbmp = BitMapToString(recycler_view_bm);
-
 
         Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();
-        //code to send chatid to Notes class
         bundle.putString("Chatroomcode", chatCode);
 //        bundle.putString("Bitmap", stbmp);
         i.putExtras(bundle);
@@ -347,6 +463,17 @@ public class Chat extends AppCompatActivity {
             }
         });
     }
+
+    public Bitmap getScreenBitmap() {
+        View v= mMessageRecyclerView;
+        v.setDrawingCacheEnabled(true);
+        v.buildDrawingCache(true);
+        Bitmap b = Bitmap.createBitmap(v.getDrawingCache());
+        v.setDrawingCacheEnabled(false); // clear drawing cache
+        return b;
+    }
+
+
 
     @Override
     public void onStart() {
@@ -376,13 +503,23 @@ public class Chat extends AppCompatActivity {
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
 
-/*     public Bitmap getScreenshotFromRecyclerView(RecyclerView view) {
+/*    public Bitmap getScreenBitmap() {
+        View bit= mMessageRecyclerView.getRootView();
+        bit.setDrawingCacheEnabled(true);
+        bit.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        bit.layout(0, 0, bit.getMeasuredWidth(), bit.getMeasuredHeight());
+        bit.buildDrawingCache(true);
+        Bitmap b = Bitmap.createBitmap(bit.getDrawingCache());
+        bit.setDrawingCacheEnabled(false); // clear drawing cache
+        return b;
+    }
+    public Bitmap getScreenshotFromRecyclerView(RecyclerView view) {
         RecyclerView.Adapter adapter = view.getAdapter();
         Bitmap bigBitmap = null;
         if (adapter != null) {
             int size = adapter.getItemCount();
             int height = 0;
-            int width = 0;
             Paint paint = new Paint();
             int iHeight = 0;
             final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -405,10 +542,9 @@ public class Chat extends AppCompatActivity {
                 }
 
                 height += holder.itemView.getMeasuredHeight();
-                width += holder.itemView.getMeasuredWidth();
             }
 
-            bigBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
             Canvas bigCanvas = new Canvas(bigBitmap);
             bigCanvas.drawColor(Color.WHITE);
 
@@ -429,8 +565,7 @@ public class Chat extends AppCompatActivity {
         String temp= Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }
- */
-
+*/
 }
 
 
