@@ -195,14 +195,22 @@
 
     <Button
         android:id="@+id/urgentBtn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="180dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="106dp"
+        android:layout_marginLeft="106dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="107dp"
+        android:layout_marginRight="107dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/urgent_appt"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="urgentAppt"
-        android:text="urgent appointment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmBtn"
-        app:layout_constraintVertical_bias="0.07999998" />
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
 
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +36,7 @@ import java.util.Map;
 import uts.group4.UTShealth.R;
 import uts.group4.UTShealth.Util.DATParser;
 
+import static uts.group4.UTShealth.AppointmentDetails.editDateText;
 import static uts.group4.UTShealth.BookAppointment.populateSetDateText;
 import static uts.group4.UTShealth.AppointmentDetails.editDateText;
 
@@ -50,6 +53,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        fStore = FirebaseFirestore.getInstance();
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);

@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,10 @@ import com.google.firebase.storage.UploadTask;
 import org.w3c.dom.Document;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -439,9 +444,11 @@ public class Chat extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     finish();
+                    startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
                     CustomIntent.customType(Chat.this, "left-to-right");
                 } else {
                     finish();
+                    startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
                     CustomIntent.customType(Chat.this, "left-to-right");
                 }
             }

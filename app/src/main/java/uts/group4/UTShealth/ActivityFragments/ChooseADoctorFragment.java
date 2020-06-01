@@ -33,6 +33,17 @@ import java.util.Map;
 import uts.group4.UTShealth.Model.Doctor;
 import uts.group4.UTShealth.R;
 import uts.group4.UTShealth.Util.DATParser;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import uts.group4.UTShealth.R;
 
 
 public class ChooseADoctorFragment extends DialogFragment {
