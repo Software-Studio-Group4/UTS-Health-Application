@@ -128,6 +128,8 @@
         ads:layout_constraintTop_toTopOf="parent"
         ads:layout_constraintVertical_bias="0.0" />
 
+
+    <!-- Screenshot testing -->
     <Button
         android:id="@+id/button2"
         android:onClick="BtnPressed"
@@ -143,11 +145,6 @@
         ads:layout_constraintTop_toTopOf="parent"
         ads:layout_constraintVertical_bias="0.0"/>
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

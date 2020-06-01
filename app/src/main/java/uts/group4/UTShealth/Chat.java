@@ -3,11 +3,16 @@ package uts.group4.UTShealth;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +47,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -267,6 +276,95 @@ public class Chat extends AppCompatActivity {
         });
     }
 
+    /**********************************************************************************************
+     * Screenshot testing
+     ************************************************************************************************/
+
+    public void BtnPressed(View v) {
+        storeImage(getRecyclerViewScreenshot(mMessageRecyclerView));
+    }
+
+
+    public static Bitmap getRecyclerViewScreenshot(RecyclerView view) {
+        int size = view.getAdapter().getItemCount();
+        RecyclerView.ViewHolder holder = view.getAdapter().createViewHolder(view, 0);
+        view.getAdapter().onBindViewHolder(holder, 0);
+        holder.itemView.measure(View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(), holder.itemView.getMeasuredHeight());
+        Bitmap bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), holder.itemView.getMeasuredHeight() * size,
+                Bitmap.Config.ARGB_8888);
+        Canvas bigCanvas = new Canvas(bigBitmap);
+        bigCanvas.drawColor(Color.TRANSPARENT);
+        Paint paint = new Paint();
+        int iHeight = 0;
+        holder.itemView.setDrawingCacheEnabled(true);
+        holder.itemView.buildDrawingCache();
+        bigCanvas.drawBitmap(holder.itemView.getDrawingCache(), 0f, iHeight, paint);
+        holder.itemView.setDrawingCacheEnabled(false);
+        holder.itemView.destroyDrawingCache();
+        iHeight += holder.itemView.getMeasuredHeight();
+        for (int i = 1; i < size; i++) {
+            view.getAdapter().onBindViewHolder(holder, i);
+            holder.itemView.setDrawingCacheEnabled(true);
+            holder.itemView.buildDrawingCache();
+            bigCanvas.drawBitmap(holder.itemView.getDrawingCache(), 0f, iHeight, paint);
+            iHeight += holder.itemView.getMeasuredHeight();
+            holder.itemView.setDrawingCacheEnabled(false);
+            holder.itemView.destroyDrawingCache();
+        }
+        return bigBitmap;
+    }
+
+    /**********************************************************************************************
+     * storeImage and getOutputMediaFile are for testing purposes. Screenshot is stored at android SDK.
+     * Android > data > uts.group4.UTSHealth > Files
+     ************************************************************************************************/
+
+    private void storeImage(Bitmap image) {
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            Log.d(TAG,
+                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+    }
+
+
+    private  File getOutputMediaFile(){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + getApplicationContext().getPackageName()
+                + "/Files");
+
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName="MI_"+ timeStamp +".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -375,11 +473,7 @@ public class Chat extends AppCompatActivity {
         return b;
     }
 
-    public void BtnPressed(View v) {
-        ImageView mImg;
-        mImg = (ImageView) findViewById(R.id.imageView2);
-        mImg.setImageBitmap(getScreenBitmap());
-    }
+
 
     @Override
     public void onStart() {
