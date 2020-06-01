@@ -299,7 +299,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void urgentAppt(View view) {
-        String userID = fAuth.getCurrentUser().getUid();
+        final String userID = fAuth.getCurrentUser().getUid();
         Calendar calendar = Calendar.getInstance();
 
         //set date to today
@@ -315,26 +315,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         populateSetTimeText(hour, minute);
 
 
-        //set doctor to the first available one
-        fStore.collection("Doctor")
-                .whereEqualTo("UrgentStatus", true).limit(1)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String id = document.getId();
-                                String firstName = document.get("First Name").toString();
-                                String lastName = document.get("Last Name").toString();
-                                chosenDoctorTextView.setText(firstName + " " + lastName);
-                                chosenDoctorId = id;
-                            }
-                        } else {
-                            Toast.makeText(BookAppointment.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
 
         String date = dateTextView.getText().toString();
         String time = timeTextView.getText().toString();
@@ -345,10 +325,9 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                 DATParser.getHour(DATParser.timeStrToInt(time)), DATParser.getMinute(DATParser.timeStrToInt(time)), 0);
 
 
-        String doctorFullName = chosenDoctorTextView.getText().toString();
         String weekDay = DATParser.weekDayAsString(DATParser.getWeekDay(date));
         Log.i("LOGGER",  "week day found : " + weekDay + DATParser.getWeekDay(date));
-        String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
+        final String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
 
         final DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
 
@@ -361,12 +340,10 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         //makes a Map of data to initialise into the appointment object
         Map<String, Object> appointmentData = new HashMap<>(); //
         appointmentData.put("patientID", userID);
-        appointmentData.put("doctorID", chosenDoctorId);
         appointmentData.put("Date", date);
         appointmentData.put("Time", time);
         appointmentData.put("WeekDay", weekDay);
         appointmentData.put("ChatCode", "CHAT" + appointmentID);
-        appointmentData.put("DoctorFullName", doctorFullName);
         appointmentData.put("PatientFullName", patientFullName);
         appointmentData.put("CompletionStatus", false);
         appointmentData.put("TimeStamp", new Timestamp(calendar.getTime()));
@@ -384,6 +361,44 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        //set doctor to the first available one
+        fStore.collection("Doctor")
+                .whereEqualTo("UrgentStatus", true).limit(1)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                String firstName = document.get("First Name").toString();
+                                String lastName = document.get("Last Name").toString();
+                                chosenDoctorTextView.setText(firstName + " " + lastName);
+                                String doctorFullName = chosenDoctorTextView.getText().toString();
+                                final DocumentReference docRef = fStore.collection("Appointment").document(appointmentID);
+                                chosenDoctorId = id;
+                                Map<String, Object> docData = new HashMap<>();
+                                docData.put("DoctorFullName", doctorFullName);
+                                docData.put("doctorID", chosenDoctorId);
+                                docRef.update(docData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                            }
+                        } else {
+                            Toast.makeText(BookAppointment.this, "Can't retrieve document", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
