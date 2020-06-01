@@ -18,14 +18,12 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name=".PatientDoctorView"></activity>
         <activity android:name=".DoctorAvailability"></activity>
-        <activity android:name=".Prescription" />
         <activity android:name=".DatabaseTester">
             <intent-filter>
                 <action android:name="com.company.package.FOO"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Notes" />
         <activity android:name=".Confirmation"/>
         <!-- FileProvider - a ContentProvider for making the image file securely available to the other end -->
         <provider

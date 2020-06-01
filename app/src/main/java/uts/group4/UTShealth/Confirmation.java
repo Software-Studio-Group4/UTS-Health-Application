@@ -1,8 +1,6 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
@@ -11,12 +9,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
-import android.util.Base64;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,31 +32,57 @@ import java.io.OutputStream;
 
 import maes.tech.intentanim.CustomIntent;
 
-public class Confirmation extends AppCompatActivity implements Runnable  {
+public class Confirmation extends AppCompatActivity implements Runnable {
 
-    Button backBtn, closeBtn;
+    TextView patientText, emailText;
     private Intent mShareIntent;
     private OutputStream os;
+    String chatCode;
+    String appointmentID;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    String userID = fAuth.getCurrentUser().getUid();
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    private static final String TAG = "Confirmation";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
-        backBtn = findViewById(R.id.backBtn);
-        closeBtn = findViewById(R.id.closeBtn);
+        patientText = findViewById(R.id.patientText);
+        emailText = findViewById(R.id.emailText);
+        //code to get the chat code
+        Bundle extras = getIntent().getExtras();
+        assert extras != null;
+        chatCode = extras.getString("Chatroomcode");
+    }
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // this code block displays the patients name & email
+        appointmentID = chatCode.substring(4);
+        DocumentReference docRef = fStore.collection("Appointment").document(appointmentID);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            private String ID;
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), PrescriptionNotes.class));
-                CustomIntent.customType(Confirmation.this, "right-to-left");
-            }
-        });
-
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
-                CustomIntent.customType(Confirmation.this, "left-to-right");
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    ID = documentSnapshot.getString("patientID");
+                    Log.d("PatientID", ID);
+                    DocumentReference patientRef = fStore.collection("Patients").document(ID);
+                    patientRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            String firstName = documentSnapshot.getString("First Name");
+                            String lastName = documentSnapshot.getString("Last Name");
+                            String email = documentSnapshot.getString("Email");
+                            patientText.setText("Patient: " + firstName + " " + lastName);
+                            emailText.setText("Email: " + email);
+                        }
+                    });
+                } else {
+                    Toast.makeText(Confirmation.this, "Cannot retrieve details", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -89,12 +122,12 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
-        String med =extras.getString("Medication");
-        String ins =extras.getString("Instructions");
-        String note =extras.getString("Notes");
+        String med = extras.getString("Medication");
+        String ins = extras.getString("Instructions");
+        String note = extras.getString("Notes");
 //        String stbmps = extras.getString("Bitmap");
 //        Bitmap bits = StringToBitMap(stbmps);
-       // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
 
         //scaledBitmap.prepareToDraw();
 
@@ -107,12 +140,12 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
 
         Paint paint = new Paint();
 //        canvas.drawBitmap(scaledBitmap,0,0, paint);
-        canvas.drawText("Prescription", 200,50, paint);
-        canvas.drawText("Medication: ",40,100, paint);
+        canvas.drawText("Prescription", 200, 50, paint);
+        canvas.drawText("Medication: ", 40, 100, paint);
         canvas.drawText("Instructions: ", 40, 130, paint);
         canvas.drawText("Notes: ", 40, 160, paint);
-        canvas.drawText(med, 120,100, paint);
-        canvas.drawText(ins, 120,130, paint);
+        canvas.drawText(med, 120, 100, paint);
+        canvas.drawText(ins, 120, 130, paint);
         canvas.drawText(note, 120, 160, paint);
 
 
@@ -144,18 +177,21 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         } catch (IOException e) {
             throw new RuntimeException("Error generating file", e);
         }
+
+
     }
-/*    public Bitmap StringToBitMap(String encodedString){
-        try {
-            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
+
+    /*    public Bitmap StringToBitMap(String encodedString){
+            try {
+                byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
+                Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                return bitmap;
+            } catch(Exception e) {
+                e.getMessage();
+                return null;
+            }
         }
-    }
-*/
+    */
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
@@ -166,5 +202,30 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         startActivity(Intent.createChooser(mShareIntent, "Send email..."));
     }
 
+    public void endAppointment(View view) {
+        // This code marks the CompletionStatus to true
+        DocumentReference docRef = fStore.collection("Appointment").document(appointmentID);
+        docRef.update("CompletionStatus", true).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "DocumentSnapshot successfully updated!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error updating document", e);
+            }
+        });
+        startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+        CustomIntent.customType(Confirmation.this, "left-to-right");
+    }
 
+    public void backBtnPressed(View view) {
+        Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("Chatroomcode", chatCode);
+        i.putExtras(bundle);
+        startActivity(i);
+        CustomIntent.customType(Confirmation.this, "right-to-left");
+    }
 }

@@ -33,6 +33,7 @@ public class PrescriptionNotes extends AppCompatActivity {
     public String medication;
     public String directions;
     public String notes;
+    String chatCode;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     String userID = fAuth.getCurrentUser().getUid();
@@ -46,6 +47,10 @@ public class PrescriptionNotes extends AppCompatActivity {
         directionsTf = findViewById(R.id.directionsTf);
         notesTf = findViewById(R.id.notesTf);
         nextBtn = findViewById(R.id.nextBtn);
+
+        Bundle extras = getIntent().getExtras();
+        assert extras != null;
+        chatCode = extras.getString("Chatroomcode");
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +73,6 @@ public class PrescriptionNotes extends AppCompatActivity {
                 }
 
                 //code to get the chat code
-                Bundle extras = getIntent().getExtras();
-                assert extras != null;
-                String chatCode = extras.getString("Chatroomcode");
                 fStore.collection("Appointment")
                         .whereEqualTo("ChatCode", chatCode)
                         .get()
@@ -119,7 +121,7 @@ public class PrescriptionNotes extends AppCompatActivity {
                         });
                 Intent i = new Intent(getApplicationContext(), Confirmation.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("chatroomcode1", chatCode);
+                bundle.putString("Chatroomcode", chatCode);
                 bundle.putString("Medication", medicationTf.getText().toString());
                 bundle.putString("Instructions", directionsTf.getText().toString());
                 bundle.putString("Notes", notesTf.getText().toString());
@@ -131,5 +133,11 @@ public class PrescriptionNotes extends AppCompatActivity {
     }
 
     public void backBtnPressed(View view) {
+        Intent i = new Intent(getApplicationContext(), Chat.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("chatroomcode", chatCode);
+        i.putExtras(bundle);
+        startActivity(i);
+        CustomIntent.customType(PrescriptionNotes.this, "right-to-left");
     }
 }
