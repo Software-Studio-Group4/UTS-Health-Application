@@ -1,6 +1,8 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
@@ -9,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -116,44 +119,59 @@ public class Confirmation extends AppCompatActivity implements Runnable {
         }
 
         // create a new page from the PageInfo
-        PdfDocument.Page page = null;
+        PdfDocument.Page page1 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            page = document.startPage(pageInfo);
+            page1 = document.startPage(pageInfo);
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
         String med = extras.getString("Medication");
         String ins = extras.getString("Instructions");
         String note = extras.getString("Notes");
-//        String stbmps = extras.getString("Bitmap");
-//        Bitmap bits = StringToBitMap(stbmps);
-        // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
-
-        //scaledBitmap.prepareToDraw();
+        String screenshot = extras.getString("bitmap");
+        Bitmap bits = StringToBitMap(screenshot);
 
         // test to create something in the page
-        Canvas canvas = null;
+        Canvas canvas1 = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            canvas = page.getCanvas();
+            canvas1 = page1.getCanvas();
 
         }
 
         Paint paint = new Paint();
-//        canvas.drawBitmap(scaledBitmap,0,0, paint);
-        canvas.drawText("Prescription", 200, 50, paint);
-        canvas.drawText("Medication: ", 40, 100, paint);
-        canvas.drawText("Instructions: ", 40, 130, paint);
-        canvas.drawText("Notes: ", 40, 160, paint);
-        canvas.drawText(med, 120, 100, paint);
-        canvas.drawText(ins, 120, 130, paint);
-        canvas.drawText(note, 120, 160, paint);
+        canvas1.drawText("Prescription", 200, 50, paint);
+        canvas1.drawText("Medication: ", 40, 100, paint);
+        canvas1.drawText("Instructions: ", 40, 130, paint);
+        canvas1.drawText("Notes: ", 40, 160, paint);
+        canvas1.drawText(med, 120, 100, paint);
+        canvas1.drawText(ins, 120, 130, paint);
+        canvas1.drawText(note, 120, 160, paint);
 
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            document.finishPage(page);
+            document.finishPage(page1);
+        }
+        PdfDocument.Page page2 = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            page2 = document.startPage(pageInfo);
+        }
+        Canvas canvas2 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            canvas2 = page2.getCanvas();
+
         }
 
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+
+        scaledBitmap.prepareToDraw();
+
+        canvas2.drawBitmap(scaledBitmap,0,0, paint);
+
+        // do final processing of the page
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            document.finishPage(page2);
+        }
 
         // Write the PDF document to a file
         try {
@@ -181,7 +199,7 @@ public class Confirmation extends AppCompatActivity implements Runnable {
 
     }
 
-    /*    public Bitmap StringToBitMap(String encodedString){
+        public Bitmap StringToBitMap(String encodedString){
             try {
                 byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
                 Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
@@ -191,7 +209,7 @@ public class Confirmation extends AppCompatActivity implements Runnable {
                 return null;
             }
         }
-    */
+
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);

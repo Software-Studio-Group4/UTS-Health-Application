@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -280,10 +282,10 @@ public class Chat extends AppCompatActivity {
      * Screenshot testing
      ************************************************************************************************/
 
-    public void BtnPressed(View v) {
+/*    public void BtnPressed(View v) {
         storeImage(getRecyclerViewScreenshot(mMessageRecyclerView));
     }
-
+*/
 
     public static Bitmap getRecyclerViewScreenshot(RecyclerView view) {
         int size = view.getAdapter().getItemCount();
@@ -321,7 +323,7 @@ public class Chat extends AppCompatActivity {
      * Android > data > uts.group4.UTSHealth > Files
      ************************************************************************************************/
 
-    private void storeImage(Bitmap image) {
+/*    private void storeImage(Bitmap image) {
         File pictureFile = getOutputMediaFile();
         if (pictureFile == null) {
             Log.d(TAG,
@@ -402,7 +404,7 @@ public class Chat extends AppCompatActivity {
                     }
                 });
     }
-
+*/
     public void endChat(View view) {
         //code to send chatid to Notes class
 //        Bitmap bitmap1 = getScreenBitmap();
@@ -411,7 +413,8 @@ public class Chat extends AppCompatActivity {
 //        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
 //        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
 //        mMessageRecyclerView.setDrawingCacheEnabled(false);
-//        String stbmp = BitMapToString(newBmp);
+        Bitmap screenshot = getRecyclerViewScreenshot(mMessageRecyclerView);
+        String stbmp = BitMapToString(screenshot);
 //
 //        Intent i = new Intent(getApplicationContext(), Prescription.class);
 //        Bundle bundle = new Bundle();
@@ -438,7 +441,7 @@ public class Chat extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();
         bundle.putString("Chatroomcode", chatCode);
-//        bundle.putString("Bitmap", stbmp);
+        bundle.putString("Bitmap", stbmp);
         i.putExtras(bundle);
         startActivity(i);
         CustomIntent.customType(Chat.this, "left-to-right");
@@ -464,7 +467,7 @@ public class Chat extends AppCompatActivity {
         });
     }
 
-    public Bitmap getScreenBitmap() {
+/*    public Bitmap getScreenBitmap() {
         View v= mMessageRecyclerView;
         v.setDrawingCacheEnabled(true);
         v.buildDrawingCache(true);
@@ -472,7 +475,7 @@ public class Chat extends AppCompatActivity {
         v.setDrawingCacheEnabled(false); // clear drawing cache
         return b;
     }
-
+*/
 
 
     @Override
@@ -552,6 +555,8 @@ public class Chat extends AppCompatActivity {
         }
         return bigBitmap;
     }
+
+ */
     public String BitMapToString(Bitmap bitmap){
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
@@ -559,6 +564,6 @@ public class Chat extends AppCompatActivity {
         String temp= Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }
-*/
+
 }
 
