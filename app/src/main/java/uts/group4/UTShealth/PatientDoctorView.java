@@ -83,7 +83,7 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         doctorAdapter = new FirestoreRecyclerAdapter<Doctor, DoctorProfileViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull DoctorProfileViewHolder holder, int position, @NonNull Doctor model) {
-                holder.setDrName((model.getFirstName() + " " + model.getLastName()));
+                holder.setDrName((model.getFirstName() + " " + model.getLastName()), model.getSpecialisation());
             }
             @NonNull
             @Override
@@ -204,9 +204,9 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         }
 
         @SuppressLint("SetTextI18n")
-        void setDrName(String name) {
+        void setDrName(String name, String specialisation) {
             TextView textView = view.findViewById(R.id.doctorTextView);
-            textView.setText("Dr: " + name + "\nSpecialisation: ");
+            textView.setText("Dr: " + name + "\nSpecialisation: " + specialisation);
 
     }
 

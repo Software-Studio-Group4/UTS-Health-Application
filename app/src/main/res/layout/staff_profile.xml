@@ -141,11 +141,22 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="42dp"
         android:hint="Post Code: "
-        app:layout_constraintBottom_toTopOf="@+id/numberTf"
+        app:layout_constraintBottom_toTopOf="@+id/specTf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.265"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stateTf" />
+    <TextView
+        android:id="@+id/specTf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="42dp"
+        android:hint="Specialisation "
+        app:layout_constraintBottom_toTopOf="@+id/numberTf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.29"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postCodeTf" />
 
     <TextView
         android:id="@+id/numberTf"
@@ -157,5 +168,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.29"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postCodeTf" />
+        app:layout_constraintTop_toBottomOf="@+id/specTf" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
