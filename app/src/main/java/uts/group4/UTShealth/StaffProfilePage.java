@@ -67,7 +67,7 @@ public class StaffProfilePage extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
-        startActivity(new Intent(getApplicationContext(), StaffDashboard.class));
+        finish();
         CustomIntent.customType(StaffProfilePage.this, "right-to-left");
     }
 }

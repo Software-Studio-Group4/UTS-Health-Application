@@ -57,7 +57,7 @@ public class StaffResetPass extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
-        startActivity(new Intent(getApplicationContext(), StaffLogin.class));
+        finish();
         CustomIntent.customType(StaffResetPass.this, "right-to-left");
     }
 

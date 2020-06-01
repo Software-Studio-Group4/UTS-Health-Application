@@ -131,11 +131,7 @@ public class PrescriptionNotes extends AppCompatActivity {
     }
 
     public void backBtnPressed(View view) {
-        Intent i = new Intent(getApplicationContext(), Chat.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("chatroomcode", chatCode);
-        i.putExtras(bundle);
-        startActivity(i);
+        finish();
         CustomIntent.customType(PrescriptionNotes.this, "right-to-left");
     }
 }

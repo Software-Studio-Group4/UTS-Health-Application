@@ -111,7 +111,7 @@ public class StaffRequestAcc extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
-        startActivity(new Intent(getApplicationContext(), StaffLogin.class));
+        finish();
         CustomIntent.customType(StaffRequestAcc.this, "right-to-left");
     }
 

@@ -82,8 +82,6 @@ public class PatientDashboard extends AppCompatActivity {
     private FusedLocationProviderClient client;
     private PatientLocation patientLocation;
 
-    public static void pastAppt() {
-    }
 
 
     @Override
@@ -190,89 +188,7 @@ public class PatientDashboard extends AppCompatActivity {
      * manipulates the page where past appointments are shown
      ************************************************************************************************/
 
-    public static class PatientPastAppointments extends AppCompatActivity {
-        private RecyclerView appointmentsRecycler;
-        private FirestoreRecyclerAdapter<AppointmentModel, PastAppointmentViewHolder> appointmentAdapter;
 
-        @Override
-        protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.past_appointments);
-            appointmentsRecycler = findViewById(R.id.pastAppointmentsRecycler);
-            appointmentsRecycler.setLayoutManager(new LinearLayoutManager(this));
-            Query appointmentQuery = appointmentRef.whereEqualTo("patientID", userID).whereEqualTo("CompletionStatus", true).orderBy("TimeStamp", Query.Direction.ASCENDING);
-            FirestoreRecyclerOptions<AppointmentModel> options = new FirestoreRecyclerOptions.Builder<AppointmentModel>().setQuery(appointmentQuery, AppointmentModel.class).build();
-
-            appointmentAdapter = new FirestoreRecyclerAdapter<AppointmentModel, PastAppointmentViewHolder>(options) {
-                @RequiresApi(api = Build.VERSION_CODES.N)
-                @Override
-                protected void onBindViewHolder(@NonNull PastAppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
-                    Log.i("DASHBOARD","timestamp status: " + appointmentModel.getTimeStamp());
-                    String appointmentID = getSnapshots().getSnapshot(position).getId();
-                    appointmentViewHolder.setPastAppointmentData(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName(), appointmentID);
-                }
-
-                @NonNull
-                @Override
-                public PastAppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_appointment, parent, false);
-                    return new PastAppointmentViewHolder(view);
-                }
-            };
-            appointmentsRecycler.setAdapter(appointmentAdapter);
-        }
-
-        public void upcomingAppt(View view) {
-            startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-            CustomIntent.customType(getApplicationContext(), "fadein-to-fadeout");
-        }
-
-        public void bookAppt(View view) {
-            startActivity(new Intent(getApplicationContext(), BookAppointment.class));
-        }
-
-        public void userProfile(View view) {
-            startActivity(new Intent(getApplicationContext(), PatientProfilePage.class));
-            CustomIntent.customType(getApplicationContext(), "left-to-right");
-        }
-
-        @Override
-        protected void onStart(){
-            super.onStart();
-            appointmentAdapter.startListening();
-        }
-
-        @Override
-        protected void onStop(){
-            super.onStop();
-            if(appointmentAdapter != null){
-                appointmentAdapter.stopListening();
-            }
-        }
-
-        @Override
-        public void finish() {
-            super.finish();
-            CustomIntent.customType(this, "fadein-to-fadeout");
-        } // Fade transition
-        /**********************************************************************************************
-         * Private Class for the past appointments recycler
-         ************************************************************************************************/
-        private class PastAppointmentViewHolder extends RecyclerView.ViewHolder{
-            private View view;
-
-            PastAppointmentViewHolder(View itemView) {
-                super(itemView);
-                view = itemView;
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            void setPastAppointmentData(String date, String time, String doctor, String documentID){
-                TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
-                appointmentTextView.setText("Date: " + DATParser.weekDayAsString(DATParser.getWeekDay(date)) + " " + date + "\nTime: " + time + "\nPhysician: Dr. " + doctor + "\n");
-            }
-        }
-    }
 
     /**********************************************************************************************
      * Onlclick and other methods
@@ -280,7 +196,7 @@ public class PatientDashboard extends AppCompatActivity {
 
     public void pastAppt(View view) {
         startActivity(new Intent(getApplicationContext(), PatientPastAppointments.class));
-        CustomIntent.customType(PatientDashboard.this, "fadein-to-fadeout");
+
     }
 
     public void bookAppt(View view) {

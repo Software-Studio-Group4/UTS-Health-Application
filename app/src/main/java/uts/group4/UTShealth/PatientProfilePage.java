@@ -77,7 +77,7 @@ public class PatientProfilePage extends AppCompatActivity {
     }
 
     public void backBtnPressed (View view) {
-        startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
+        finish();
         CustomIntent.customType(PatientProfilePage.this, "right-to-left");
     }
 }

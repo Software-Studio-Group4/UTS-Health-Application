@@ -192,7 +192,9 @@ public class PatientDoctorView extends AppCompatActivity implements OnMapReadyCa
         doctorAdapter.stopListening();
 
     }
-
+    public void backBtnPressed(View view) {
+        finish();
+    }
     private class DoctorProfileViewHolder extends RecyclerView.ViewHolder {
         private View view;
 
