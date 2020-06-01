@@ -209,7 +209,7 @@ public class StaffCreateProfile extends AppCompatActivity {
                     user.put("Suburb", city);
                     user.put("State", state);
                     user.put("Post Code", postCode);
-                    user.put("Urgent Doctor", false);
+                    user.put("UrgentStatus", false);
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
