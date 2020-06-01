@@ -321,6 +321,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             }
         });
 
+
             //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
             DocumentReference patientDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
             patientDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
