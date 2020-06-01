@@ -82,6 +82,9 @@ public class PatientDashboard extends AppCompatActivity {
     private FusedLocationProviderClient client;
     private PatientLocation patientLocation;
 
+    public static void pastAppt() {
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -221,7 +224,7 @@ public class PatientDashboard extends AppCompatActivity {
 
         public void upcomingAppt(View view) {
             startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-            CustomIntent.customType(PatientPastAppointments.this, "fadein-to-fadeout");
+            CustomIntent.customType(getApplicationContext(), "fadein-to-fadeout");
         }
 
         public void bookAppt(View view) {
@@ -230,7 +233,7 @@ public class PatientDashboard extends AppCompatActivity {
 
         public void userProfile(View view) {
             startActivity(new Intent(getApplicationContext(), PatientProfilePage.class));
-            CustomIntent.customType(PatientPastAppointments.this, "left-to-right");
+            CustomIntent.customType(getApplicationContext(), "left-to-right");
         }
 
         @Override
