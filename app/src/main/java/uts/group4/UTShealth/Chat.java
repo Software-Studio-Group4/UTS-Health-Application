@@ -170,13 +170,16 @@ public class Chat extends AppCompatActivity {
                                             int position,
                                             ChatMessage Message) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.messageTextView.setText(Message.getText());
+                if(Message.getText() != null){
+                    viewHolder.messageTextView.setText(Message.getText());
+                }
                 viewHolder.messengerTextView.setText(Message.getName());
                 viewHolder.messengerTimeView.setText(Message.getDateAndTime());
                 viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
                 viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
-                Glide.with(viewHolder.messageImageView.getContext()).load(imageUrl).into(viewHolder.messageImageView);
-
+                if(Message.getImageUrl() != null){
+                    Glide.with(viewHolder.messageImageView.getContext()).load(Message.getImageUrl()).into(viewHolder.messageImageView);
+                }
             }
         };
 

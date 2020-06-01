@@ -141,6 +141,7 @@ public class StaffDashboard extends AppCompatActivity {
      ************************************************************************************************/
     public void goToAvailabilityPage(View view) {
         startActivity(new Intent(getApplicationContext(), DoctorAvailability.class));
+        CustomIntent.customType(StaffDashboard.this, "left-to-right");
     }
 
     public void userProfile(View view) {
@@ -165,7 +166,7 @@ public class StaffDashboard extends AppCompatActivity {
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
-        void setAppointmentName(String date, String time, String patient, final String chatCode, String documentID, final Timestamp apptTime) {
+        void setAppointmentName(String date, String time, String patient, final String chatCode, final String documentID, final Timestamp apptTime) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
             appointmentTextView.setText("Date: " + DATParser.weekDayAsString(DATParser.getWeekDay(date)) + " " + date + "\nTime: " + time + "\nPatient: " + patient + "\n");
             if(apptTime != null){
@@ -196,15 +197,21 @@ public class StaffDashboard extends AppCompatActivity {
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (chatCode != null) {
-
-                        Intent i = new Intent(StaffDashboard.this, Chat.class);
-                        i.putExtra("chatroomcode", chatCode);
-                        startActivity(i);
-                        CustomIntent.customType(StaffDashboard.this, "right-to-left");
-                    } else {
-                        Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
-                    }
+//                    if (chatCode != null) {
+//
+//                        Intent i = new Intent(StaffDashboard.this, Chat.class);
+//                        i.putExtra("chatroomcode", chatCode);
+//                        startActivity(i);
+//                        CustomIntent.customType(StaffDashboard.this, "right-to-left");
+//                    } else {
+//                        Toast.makeText(StaffDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
+//                    }
+//
+                    Intent i = new Intent(StaffDashboard.this, AppointmentDetails.class);
+                    i.putExtra("appointmentID", documentID);
+                    i.putExtra("isDoctor", true);
+                    startActivity(i);
+                    CustomIntent.customType(StaffDashboard.this, "right-to-left");
                 }
             });
         }

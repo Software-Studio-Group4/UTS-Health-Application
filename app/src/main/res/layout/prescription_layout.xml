@@ -6,14 +6,36 @@
     android:layout_height="match_parent"
     android:background="@drawable/prescription_bg">
 
+    <Button
+        android:id="@+id/backBtn"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="47dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="173dp"
+        android:layout_marginLeft="173dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="173dp"
+        android:layout_marginRight="173dp"
+        android:layout_marginBottom="127dp"
+        android:background="@drawable/back_btn_staff"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="backBtnPressed"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nextBtn"
+        app:layout_constraintVertical_bias="0.144"
+        tools:ignore="MissingConstraints" />
+
     <ImageView
         android:id="@+id/UTSLogo"
         android:layout_width="164dp"
         android:layout_height="80dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="198dp"
-        android:layout_marginRight="198dp"
-        android:layout_marginBottom="639dp"
+        android:layout_marginEnd="229dp"
+        android:layout_marginRight="229dp"
+        android:layout_marginBottom="717dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -106,12 +128,10 @@
         android:layout_marginTop="28dp"
         android:background="@drawable/next_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notesTf"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
     <ImageView

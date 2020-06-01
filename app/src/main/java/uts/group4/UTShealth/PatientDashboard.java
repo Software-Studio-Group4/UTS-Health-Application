@@ -82,6 +82,9 @@ public class PatientDashboard extends AppCompatActivity {
     private FusedLocationProviderClient client;
     private PatientLocation patientLocation;
 
+    public static void pastAppt() {
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,7 +101,6 @@ public class PatientDashboard extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             protected void onBindViewHolder(@NonNull AppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
-                Log.i("DASHBOARD","timestamp status: " + appointmentModel.getTimeStamp());
                 String appointmentID = getSnapshots().getSnapshot(position).getId();
                 appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName(), appointmentModel.getChatCode(), appointmentID, appointmentModel.getTimeStamp());
             }
@@ -222,7 +224,7 @@ public class PatientDashboard extends AppCompatActivity {
 
         public void upcomingAppt(View view) {
             startActivity(new Intent(getApplicationContext(), PatientDashboard.class));
-            CustomIntent.customType(PatientPastAppointments.this, "fadein-to-fadeout");
+            CustomIntent.customType(getApplicationContext(), "fadein-to-fadeout");
         }
 
         public void bookAppt(View view) {
@@ -231,7 +233,7 @@ public class PatientDashboard extends AppCompatActivity {
 
         public void userProfile(View view) {
             startActivity(new Intent(getApplicationContext(), PatientProfilePage.class));
-            CustomIntent.customType(PatientPastAppointments.this, "left-to-right");
+            CustomIntent.customType(getApplicationContext(), "left-to-right");
         }
 
         @Override
@@ -305,10 +307,12 @@ public class PatientDashboard extends AppCompatActivity {
             view = itemView;
         }
 
+        @SuppressLint("SetTextI18n")
         @RequiresApi(api = Build.VERSION_CODES.N)
         void setAppointmentName(String date, String time, String doctor, final String chatCode, String documentID, final Timestamp apptTime) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
             registerForContextMenu(appointmentTextView);
+            appointmentID = documentID;
             if(apptTime != null){
                 Log.i("DASHBOARD", "Timestamp found for " + documentID);
                 final Calendar apptTimeCalendar = Calendar.getInstance();
@@ -335,23 +339,25 @@ public class PatientDashboard extends AppCompatActivity {
                 Log.i("DASHBOARD", "updating TimeStamp for null TimeStamps");
             }
 
-            if(chatCode != null){
-            appointmentID = chatCode.substring(4);
-            }
-
             appointmentTextView.setText("Date: " + DATParser.weekDayAsString(DATParser.getWeekDay(date)) + " " + date + "\nTime: " + time + "\nPhysician: Dr. " + doctor + "\n");
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (chatCode != null) {
-
-                        Intent i = new Intent(PatientDashboard.this, Chat.class);
-                        i.putExtra("chatroomcode", chatCode);
-                        startActivity(i);
-                        CustomIntent.customType(PatientDashboard.this, "right-to-left");
-                    } else {
-                        Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
-                    }
+//                    if (chatCode != null) {
+//
+//                        Intent i = new Intent(PatientDashboard.this, Chat.class);
+//                        i.putExtra("chatroomcode", chatCode);
+//                        startActivity(i);
+//                        CustomIntent.customType(PatientDashboard.this, "right-to-left");
+//                    } else {
+//                        Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
+//                    }
+                    //go to view appointment page
+                    Intent i = new Intent(PatientDashboard.this, AppointmentDetails.class);
+                    i.putExtra("appointmentID", appointmentID);
+                    i.putExtra("isDoctor", false);
+                    startActivity(i);
+                    CustomIntent.customType(PatientDashboard.this, "right-to-left");
                 }
             });
         }
