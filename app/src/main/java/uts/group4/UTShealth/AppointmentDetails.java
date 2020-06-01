@@ -191,6 +191,7 @@ public class AppointmentDetails extends AppCompatActivity {
         if (chatCode != null) {
             Intent i = new Intent(AppointmentDetails.this, Chat.class);
             i.putExtra("chatroomcode", chatCode);
+            i.putExtra("isDoctor", isDoctor);
             startActivity(i);
             CustomIntent.customType(AppointmentDetails.this, "right-to-left");
         } else {

@@ -1,5 +1,6 @@
 package uts.group4.UTShealth;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +25,11 @@ import androidx.core.content.FileProvider;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,8 +38,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.Model.ChatMessage;
 
 public class Confirmation extends AppCompatActivity implements Runnable {
 
@@ -46,6 +54,9 @@ public class Confirmation extends AppCompatActivity implements Runnable {
     String userID = fAuth.getCurrentUser().getUid();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private static final String TAG = "Confirmation";
+    ArrayList<ChatMessage> chatMessages = new ArrayList<>();
+    String doctorName;
+    String patientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +68,30 @@ public class Confirmation extends AppCompatActivity implements Runnable {
         Bundle extras = getIntent().getExtras();
         assert extras != null;
         chatCode = extras.getString("Chatroomcode");
+        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chats/" + chatCode);
+        chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot messageSnapshot : dataSnapshot.getChildren()){
+                    Log.i("LOGGER", messageSnapshot.getValue().toString());
+                    chatMessages.add(messageSnapshot.getValue(ChatMessage.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        DocumentReference apptRef = FirebaseFirestore.getInstance().collection("Appointment").document(chatCode.substring(4));
+        apptRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                doctorName = documentSnapshot.getString("DoctorFullName");
+                patientName = documentSnapshot.getString("PatientFullName");
+            }
+        });
+
     }
 
     @Override
@@ -114,32 +149,39 @@ public class Confirmation extends AppCompatActivity implements Runnable {
 
         // crate a page description
         PdfDocument.PageInfo pageInfo1 = null;
+        PdfDocument.PageInfo pageInfo2 = null;
+        PdfDocument.PageInfo pageInfo3 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             pageInfo1 = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
+            pageInfo2 = new PdfDocument.PageInfo.Builder(595, 842, 2).create();
+            pageInfo3 = new PdfDocument.PageInfo.Builder(595, 842, 2).create();
         }
 
         // create a new page from the PageInfo
-        PdfDocument.Page page1 = null;
+        PdfDocument.Page prescriptionPage = null;
+        PdfDocument.Page ChatPage1 = null;
+        PdfDocument.Page ChatPage2 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            page1 = document.startPage(pageInfo1);
+            prescriptionPage = document.startPage(pageInfo1);
         }
+
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
         String med = extras.getString("Medication");
         String ins = extras.getString("Instructions");
         String note = extras.getString("Notes");
         String screenshot = extras.getString("bitmap");
-        Bitmap bits = StringToBitMap(screenshot);
 
         // test to create something in the page
+        // test to create something in the page
+
+        /**********************************make the prescription page***********************************/
         Canvas canvas1 = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            canvas1 = page1.getCanvas();
-
+            canvas1 = prescriptionPage.getCanvas();
         }
-
         Paint paint1 = new Paint();
-        canvas1.drawText("Prescription", 200, 50, paint1);
+        canvas1.drawText("Prescription", 230, 50, paint1);
         canvas1.drawText("Medication: ", 40, 100, paint1);
         canvas1.drawText("Instructions: ", 40, 130, paint1);
         canvas1.drawText("Notes: ", 40, 160, paint1);
@@ -150,33 +192,133 @@ public class Confirmation extends AppCompatActivity implements Runnable {
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            document.finishPage(page1);
+            document.finishPage(prescriptionPage);
         }
 
-        PdfDocument.PageInfo pageInfo2 = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            pageInfo2 = new PdfDocument.PageInfo.Builder(595, 842, 2).create();
-        }
-        PdfDocument.Page page2 = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            page2 = document.startPage(pageInfo2);
-        }
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
-
-        scaledBitmap.prepareToDraw();
+        /**************************************chat messages p1***********************************************/
+        int numMessage = chatMessages.size();
+        int numPages = numMessage/9;
         Canvas canvas2 = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            canvas2 = page2.getCanvas();
+            ChatPage1 = document.startPage(pageInfo2);
+            canvas2 = ChatPage1.getCanvas();
+        }
+        Paint paint2 = new Paint();
+        canvas2.drawText("Chat Transcript", 230, 50, paint1);
+        ArrayList<String> multiLineString = new ArrayList();
+        int y = 100;
+        int lineCount  = 0;
+        for(int j = 0; j < 9; j++){
+        //for(ChatMessage message : chatMessages){
+            if(!chatMessages.get(j).hasImageUrl()) {
+                //canvas2.drawText(chatMessages.get(j).getDateAndTime(), 475, y, paint2);
+                canvas2.drawText(chatMessages.get(j).getName(), 30, y, paint2);
+                if(chatMessages.get(j).getText().length() <= 55 && chatMessages.get(j).getText().indexOf('\n') == -1){
+                    canvas2.drawText(chatMessages.get(j).getText(), 120, y, paint2);
+                    y+= 30; lineCount++;lineCount++;
+                }
+                else if(chatMessages.get(j).getText().length() > 55 && chatMessages.get(j).getText().indexOf('\n' ) == -1) {
+                    String string = chatMessages.get(j).getText();
+                    int length = chatMessages.get(j).getText().length();
+                    int numlines = length / 55;
+                    if (length % 55 != 0) {
+                        numlines++;
+                    }
+                    int index = 0;
+                    for (int i = 0; i < numlines; i++) {
+                        if (i == (numlines - 1)) {
+                            multiLineString.add(string.substring(index, string.length() - 1));
+                            break;
+                        }
+                        multiLineString.add(string.substring(index, index + 55));
+                        index += 55;
+                    }
+                    for (int i = 0; i < numlines; i++) {
+                        if (i == (numlines - 1)) {
+                            canvas2.drawText(multiLineString.get(i), 120, y, paint2);
+                            y += 30; lineCount++;
+                            break;
+                        }
+                        canvas2.drawText(multiLineString.get(i), 120, y, paint2);
+                        y += 15; lineCount++;
+                    }
+                }
+                multiLineString.clear();
+            }
+            else{
+               // canvas2.drawText(chatMessages.get(j).getDateAndTime(), 475, y, paint2);
+                canvas2.drawText("[Image not Shown]", 120, y, paint2);
+                canvas2.drawText(chatMessages.get(j).getName(), 30, y, paint2);
+                y+= 30; lineCount++;lineCount++;
+            }
 
         }
-
-        Paint paint2 = new Paint();
-        canvas2.drawBitmap(scaledBitmap,0,0, paint2);
-
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            document.finishPage(page2);
+            document.finishPage(ChatPage1);
         }
+        /**************************************chat messages p2***********************************************/
+        Canvas canvas3 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            ChatPage2 = document.startPage(pageInfo3);
+            canvas3 = ChatPage2.getCanvas();
+        }
+        Paint paint3 = new Paint();
+        canvas3.drawText("Chat Transcript Page 2", 230, 50, paint2);
+        //ArrayList<String> multiLineString = new ArrayList();
+        y = 100;
+        //int lineCount  = 0;
+        for(int j = 9; j < chatMessages.size(); j++){
+            //for(ChatMessage message : chatMessages){
+            if(!chatMessages.get(j).hasImageUrl()) {
+                canvas3.drawText(chatMessages.get(j).getName(), 30, y, paint3);
+                if(chatMessages.get(j).getText().length() <= 55 && chatMessages.get(j).getText().indexOf('\n') == -1){
+                    canvas3.drawText(chatMessages.get(j).getText(), 120, y, paint3);
+                    y+= 30; lineCount++;lineCount++;
+                }
+                else if(chatMessages.get(j).getText().length() > 55 && chatMessages.get(j).getText().indexOf('\n' ) == -1) {
+                    String string = chatMessages.get(j).getText();
+                    int length = chatMessages.get(j).getText().length();
+                    int numlines = length / 55;
+                    if (length % 55 != 0) {
+                        numlines++;
+                    }
+                    int index = 0;
+                    for (int i = 0; i < numlines; i++) {
+                        if (i == (numlines - 1)) {
+                            multiLineString.add(string.substring(index, string.length() - 1));
+                            break;
+                        }
+                        multiLineString.add(string.substring(index, index + 55));
+                        index += 55;
+                    }
+                    for (int i = 0; i < numlines; i++) {
+                        if (i == (numlines - 1)) {
+                            canvas3.drawText(multiLineString.get(i), 120, y, paint3);
+                            y += 30; lineCount++;
+                            break;
+                        }
+                        canvas3.drawText(multiLineString.get(i), 120, y, paint3);
+                        y += 15; lineCount++;
+                    }
+                }
+                multiLineString.clear();
+            }
+            else{
+
+                canvas3.drawText("[Image not Shown]", 120, y, paint3);
+                canvas3.drawText(chatMessages.get(j).getName(), 30, y, paint3);
+                y+= 30; lineCount++;lineCount++;
+            }
+
+        }
+        // do final processing of the page
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            document.finishPage(ChatPage2);
+        }
+
+        /*************************************end chat transcript*********************************************/
+
 
         // Write the PDF document to a file
         try {
@@ -204,22 +346,14 @@ public class Confirmation extends AppCompatActivity implements Runnable {
 
     }
 
-        public Bitmap StringToBitMap(String encodedString){
-            try {
-                byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
-                Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-                return bitmap;
-            } catch(Exception e) {
-                e.getMessage();
-                return null;
-            }
-        }
 
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
         mShareIntent.setType("application/pdf");
-        mShareIntent.putExtra(Intent.EXTRA_SUBJECT, "Here is a PDF from UTS Health Application");
+        mShareIntent.putExtra(Intent.EXTRA_SUBJECT, "UTS Health Application : Appointment Summary");
+        mShareIntent.putExtra(Intent.EXTRA_EMAIL, "placeholder@email.com");
+        mShareIntent.putExtra(Intent.EXTRA_TEXT, "Hi, " + patientName + "!\nAttached is a summary of your appointment with Dr." + doctorName  + " from today!\n\n Kind Regards,\nUTS Health Application Group 4");
         // Attach the PDf as a Uri.
         mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(mShareIntent, "Send email..."));

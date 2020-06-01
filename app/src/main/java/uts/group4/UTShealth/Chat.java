@@ -48,6 +48,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Document;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -77,7 +79,7 @@ public class Chat extends AppCompatActivity {
 
         }
     }
-
+    private boolean isDoctor;
     private static final String TAG = "MainActivity";
     public static final String MESSAGES_CHILD = "messages";
     public static final String CHATS_PATH = "Chats/";
@@ -155,7 +157,7 @@ public class Chat extends AppCompatActivity {
         chatCode = null;
         if(extras != null){
             chatCode = extras.getString("chatroomcode");
-
+            isDoctor = extras.getBoolean("isDoctor");
             messagesRef = mFirebaseDatabaseReference.child(CHATS_PATH + chatCode);
         }
         else{
@@ -164,6 +166,20 @@ public class Chat extends AppCompatActivity {
 
 
         final String chatRoomPath = CHATS_PATH + chatCode;
+
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        DocumentReference apptRef = fStore.collection("Appointment").document(chatCode.substring(4));
+        apptRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(isDoctor){
+                    mUsername = documentSnapshot.get("DoctorFullName").toString();
+                }
+                else{
+                    mUsername = documentSnapshot.get("PatientFullName").toString();
+                }
+            }
+        });
 
         FirebaseRecyclerOptions<ChatMessage> options =
                 new FirebaseRecyclerOptions.Builder<ChatMessage>()
@@ -181,7 +197,7 @@ public class Chat extends AppCompatActivity {
                                             int position,
                                             ChatMessage Message) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                if(Message.getText() != null && !Message.getText().equals("")){
+                if(!Message.hasImageUrl()){
                     viewHolder.messageTextView.setText(Message.getText());
                 }
                 viewHolder.messengerTextView.setText(Message.getName());
@@ -284,10 +300,9 @@ public class Chat extends AppCompatActivity {
 
     public void BtnPressed(View v) {
 
-/*    public void BtnPressed(View v) {
         storeImage(getRecyclerViewScreenshot(mMessageRecyclerView));
     }
-*/
+
 
     public static Bitmap getRecyclerViewScreenshot(RecyclerView view) {
         int size = view.getAdapter().getItemCount();
@@ -325,7 +340,7 @@ public class Chat extends AppCompatActivity {
      * Android > data > uts.group4.UTSHealth > Files
      ************************************************************************************************/
 
-/*    private void storeImage(Bitmap image) {
+    private void storeImage(Bitmap image) {
         File pictureFile = getOutputMediaFile();
         if (pictureFile == null) {
             Log.d(TAG,
@@ -368,7 +383,7 @@ public class Chat extends AppCompatActivity {
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
         return mediaFile;
     }
-*/
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -377,8 +392,8 @@ public class Chat extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             filePath = data.getData();
             putImageInStorage();
-        }
-    }
+                                }
+                }
     private void putImageInStorage() {
         // uploads the image into the database under the file named images
         final StorageReference ref = storageReference.child("images/" + java.util.UUID.randomUUID().toString());
@@ -390,7 +405,7 @@ public class Chat extends AppCompatActivity {
                             if (taskSnapshot.getMetadata().getReference() != null) {
                                 Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
+                                                @Override
                                     public void onSuccess(Uri uri) {
                                         imageUrl = uri.toString();
                                         ChatMessage Message = new
@@ -408,42 +423,11 @@ public class Chat extends AppCompatActivity {
     }
 
     public void endChat(View view) {
-        //code to send chatid to Notes class
-//        Bitmap bitmap1 = getScreenBitmap();
-//
-//        mMessageRecyclerView.setDrawingCacheEnabled(true);
-//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
-//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
-//        mMessageRecyclerView.setDrawingCacheEnabled(false);
-        Bitmap screenshot = getRecyclerViewScreenshot(mMessageRecyclerView);
-        String stbmp = BitMapToString(screenshot);
-//
-//        Intent i = new Intent(getApplicationContext(), Prescription.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("Chatroomcode", chatCode);
-//        bundle.putString("Bitmap", stbmp);
-//        i.putExtras(bundle);
-//        startActivity(i);
-//        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
-
-        //code to send chatid to Notes class
-//        Bitmap bitmap1 = getScreenBitmap();
-
-//        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
-//                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-
-        //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
-
-//        mMessageRecyclerView.setDrawingCacheEnabled(true);
-//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
-//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
-//        mMessageRecyclerView.setDrawingCacheEnabled(false);
-//        String stbmp = BitMapToString(recycler_view_bm);
 
         Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();
         bundle.putString("Chatroomcode", chatCode);
-        bundle.putString("Bitmap", stbmp);
+//        bundle.putString("Bitmap", stbmp);
         i.putExtras(bundle);
         startActivity(i);
         CustomIntent.customType(Chat.this, "left-to-right");
@@ -469,7 +453,7 @@ public class Chat extends AppCompatActivity {
         });
     }
 
-/*    public Bitmap getScreenBitmap() {
+    public Bitmap getScreenBitmap() {
         View v= mMessageRecyclerView;
         v.setDrawingCacheEnabled(true);
         v.buildDrawingCache(true);
@@ -477,7 +461,7 @@ public class Chat extends AppCompatActivity {
         v.setDrawingCacheEnabled(false); // clear drawing cache
         return b;
     }
-*/
+
 
 
     @Override
@@ -507,65 +491,5 @@ public class Chat extends AppCompatActivity {
         super.finish();
         CustomIntent.customType(this, "left-to-right");
     } // Fade transition
-
-/*    public Bitmap getScreenBitmap() {
-        View bit= mMessageRecyclerView.getRootView();
-        bit.setDrawingCacheEnabled(true);
-        bit.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        bit.layout(0, 0, bit.getMeasuredWidth(), bit.getMeasuredHeight());
-        bit.buildDrawingCache(true);
-        Bitmap b = Bitmap.createBitmap(bit.getDrawingCache());
-        bit.setDrawingCacheEnabled(false); // clear drawing cache
-        return b;
-    }
-    public Bitmap getScreenshotFromRecyclerView(RecyclerView view) {
-        RecyclerView.Adapter adapter = view.getAdapter();
-        Bitmap bigBitmap = null;
-        if (adapter != null) {
-            int size = adapter.getItemCount();
-            int height = 0;
-            Paint paint = new Paint();
-            int iHeight = 0;
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            // Use 1/8th of the available memory for this memory cache.
-            final int cacheSize = maxMemory / 8;
-            LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
-            for (int i = 0; i < size; i++) {
-                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
-                adapter.onBindViewHolder(holder, i);
-                holder.itemView.measure(View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(), holder.itemView.getMeasuredHeight());
-                holder.itemView.setDrawingCacheEnabled(true);
-                holder.itemView.buildDrawingCache();
-                Bitmap drawingCache = holder.itemView.getDrawingCache();
-                if (drawingCache != null) {
-                    bitmaCache.put(String.valueOf(i), drawingCache);
-                }
-                height += holder.itemView.getMeasuredHeight();
-            }
-            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
-            Canvas bigCanvas = new Canvas(bigBitmap);
-            bigCanvas.drawColor(Color.WHITE);
-            for (int i = 0; i < size; i++) {
-                Bitmap bitmap = bitmaCache.get(String.valueOf(i));
-                bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
-                iHeight += bitmap.getHeight();
-                bitmap.recycle();
-            }
-        }
-        return bigBitmap;
-    }
-
- */
-    public String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
-    }
-
 }
 

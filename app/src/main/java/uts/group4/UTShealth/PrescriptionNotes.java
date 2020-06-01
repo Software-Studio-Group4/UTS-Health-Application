@@ -124,7 +124,6 @@ public class PrescriptionNotes extends AppCompatActivity {
                 bundle.putString("Medication", medicationTf.getText().toString());
                 bundle.putString("Instructions", directionsTf.getText().toString());
                 bundle.putString("Notes", notesTf.getText().toString());
-                bundle.putString("bitmap", screenshot);
                 i.putExtras(bundle);
                 startActivity(i);
                 CustomIntent.customType(PrescriptionNotes.this, "left-to-right");
