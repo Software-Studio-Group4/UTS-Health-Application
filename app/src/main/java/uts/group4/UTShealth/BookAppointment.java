@@ -71,7 +71,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
     String dateAndTime = formatter.format(date);
-    ToggleButton urgentBtn;
     private RecyclerView doctorRecycler;
     private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
     ArrayList<AppointmentModel> userAppointments = new ArrayList<>();
@@ -282,44 +281,6 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                             Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-            // for urgent status
-        urgentBtn = findViewById(R.id.urgentBtn);
-        urgentBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Map<String, Object> urgentData = new HashMap<>();
-                    urgentData.put("UrgentStatus", true);
-                    appointmentRef.update(urgentData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } else {
-                    Map<String, Object> urgentData = new HashMap<>();
-                    urgentData.put("UrgentStatus", false);
-                    appointmentRef.update(urgentData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
-            }
-        });
 
 
             //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
