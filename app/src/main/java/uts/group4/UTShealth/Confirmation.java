@@ -1,8 +1,9 @@
 package uts.group4.UTShealth;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.pdf.PrintedPdfDocument;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 
@@ -77,7 +79,7 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         // crate a page description
         PdfDocument.PageInfo pageInfo = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            pageInfo = new PdfDocument.PageInfo.Builder(300, 300, 1).create();
+            pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
         }
 
         // create a new page from the PageInfo
@@ -87,17 +89,32 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
         }
         Bundle extras = getIntent().getExtras();
         String chatCode = extras.getString("chatroomcode1");
+        String med =extras.getString("Medication");
+        String ins =extras.getString("Instructions");
+        String note =extras.getString("Notes");
+//        String stbmps = extras.getString("Bitmap");
+//        Bitmap bits = StringToBitMap(stbmps);
+       // Bitmap scaledBitmap = Bitmap.createScaledBitmap(bits,595, 842, false);
+
+        //scaledBitmap.prepareToDraw();
 
         // test to create something in the page
         Canvas canvas = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             canvas = page.getCanvas();
+
         }
 
         Paint paint = new Paint();
-        paint.setColor(Color.RED);
+//        canvas.drawBitmap(scaledBitmap,0,0, paint);
+        canvas.drawText("Prescription", 200,50, paint);
+        canvas.drawText("Medication: ",40,100, paint);
+        canvas.drawText("Instructions: ", 40, 130, paint);
+        canvas.drawText("Notes: ", 40, 160, paint);
+        canvas.drawText(med, 120,100, paint);
+        canvas.drawText(ins, 120,130, paint);
+        canvas.drawText(note, 120, 160, paint);
 
-        canvas.drawCircle(50, 50, 30, paint);
 
         // do final processing of the page
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -128,7 +145,17 @@ public class Confirmation extends AppCompatActivity implements Runnable  {
             throw new RuntimeException("Error generating file", e);
         }
     }
-
+/*    public Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+*/
     private void shareDocument(Uri uri) {
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);

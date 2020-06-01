@@ -2,21 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/patient_bg">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/appointmentsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/bookBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText"
-        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/UTSLogo"
@@ -99,14 +88,44 @@
         android:id="@+id/upcomingApptText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
-        android:text="Upcoming Appointments"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="48dp"
+        android:text="Date"
         android:textColor="#185586"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeText"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/upcomingApptText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Doctor"
+        android:textColor="#185586"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTextView"
+        app:layout_constraintVertical_bias="0.100000024"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/upcomingApptText4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Patient"
+        android:textColor="#185586"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drNameTextView"
+        app:layout_constraintVertical_bias="0.100000024"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -128,34 +147,17 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/user_icon" />
 
-    <ImageView
-        android:id="@+id/doctorIcon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="317dp"
-        android:layout_marginLeft="317dp"
-        android:layout_marginTop="132dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="543dp"
-        android:onClick="doctorProfile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/doctor_icon" />
-
     <TextView
         android:id="@+id/welcomeText"
-        android:layout_width="140dp"
-        android:layout_height="30dp"
+        android:layout_width="199dp"
+        android:layout_height="32dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="132dp"
         android:layout_marginEnd="303dp"
         android:layout_marginRight="303dp"
         android:layout_marginBottom="582dp"
-        android:text="Welcome, "
+        android:text="Appointment Details"
         android:textColor="#185586"
         android:textSize="20sp"
         android:textStyle="bold|italic"
@@ -165,6 +167,103 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/urgentTextView"
+        android:layout_width="83dp"
+        android:layout_height="28dp"
+        android:text="URGENT"
+        android:textColor="#E31E1E"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pastapptBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toEndOf="@+id/welcomeText"
+        app:layout_constraintTop_toBottomOf="@+id/userIcon"
+        app:layout_constraintVertical_bias="0.060000002" />
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="136dp"
+        android:layout_height="29dp"
+        android:text="XX/XX/XXXX"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText" />
+
+    <TextView
+        android:id="@+id/drNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:text="DR FIRSTNAME LASTNAME"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText3" />
+
+    <TextView
+        android:id="@+id/patientNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:text="FIRSTNAME LASTNAME"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upcomingApptText4" />
+
+    <TextView
+        android:id="@+id/weekdayTextView"
+        android:layout_width="151dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginRight="56dp"
+        android:gravity="right"
+        android:text="WEEKDAY"
+        android:textColor="#185586"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/pastapptBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/dateTextView"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeText"
+        app:layout_constraintVertical_bias="0.147" />
+
+    <Button
+        android:id="@+id/chatBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="go to chat"
+        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toEndOf="@+id/cancelApptBtn"
+        app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
+        app:layout_constraintVertical_bias="0.51" />
+
+    <Button
+        android:id="@+id/cancelApptBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cancel\n appointment"
+        app:layout_constraintBottom_toTopOf="@+id/upcomingapptBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
+        app:layout_constraintVertical_bias="0.519" />
 
 
     <!--

@@ -347,7 +347,7 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, Ar
             ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
             TextView text = view.findViewById(R.id.doctorTextView);
 
-            text.setText("Dr." + doctorfName + " " + doctorlName + "\nSpecialty: ");
+            text.setText("Dr. " + doctorfName + " " + doctorlName + "\nSpecialty: ");
 
             //get the doctor's time off
             CollectionReference timeOffRef = fStore.collection("Doctor").document(doctorID).collection("Time Off");
@@ -406,7 +406,7 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, Ar
                     }
                     for(TimeOffModel date : timeOff){
                         if(date.getDate().equals(dateTextView.getText().toString())){
-                            Toast.makeText(getApplicationContext(), "Dr." +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Dr. " +doctorfName + " " + doctorlName +" is not available on " + date.getDate(), Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
