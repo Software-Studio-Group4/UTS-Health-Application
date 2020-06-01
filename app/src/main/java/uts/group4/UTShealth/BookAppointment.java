@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -49,6 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uts.group4.UTShealth.ActivityFragments.DatePickerFragment;
+import uts.group4.UTShealth.ActivityFragments.TimePickerFragment;
 import uts.group4.UTShealth.Model.AppointmentModel;
 import uts.group4.UTShealth.Model.ChatMessage;
 import uts.group4.UTShealth.Model.Doctor;
@@ -75,6 +76,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
     private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
     ArrayList<AppointmentModel> userAppointments = new ArrayList<>();
     Calendar dateObj = Calendar.getInstance();
+    boolean urgentStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,7 +270,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             appointmentData.put("PatientFullName", patientFullName);
             appointmentData.put("CompletionStatus", false);
             appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
-            appointmentData.put("UrgentStatus", false);
+            appointmentData.put("UrgentStatus", urgentStatus);
 
 
 
@@ -324,7 +326,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                String id = document.getId();
+                                chosenDoctorId = document.getId();
                                 String firstName = document.get("First Name").toString();
                                 String lastName = document.get("Last Name").toString();
                                 chosenDoctorTextView.setText(firstName + " " + lastName);
@@ -335,78 +337,15 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
                         }
                     }
                 });
-
-        Button date = findViewById(R.id.dateButton);
-        Button time = findViewById(R.id.timeButton);
-        date.setEnabled(false);
-        time.setEnabled(false);
-        doctorRecycler.setClickable(false);
-        doctorRecycler.setEnabled(false);
+        urgentStatus = true; 
+        Button dateBtn = findViewById(R.id.dateButton);
+        Button timeBtn = findViewById(R.id.timeButton);
+        dateBtn.setVisibility(View.GONE);
+        timeBtn.setVisibility(View.GONE);
+        doctorRecycler.setVisibility(View.GONE);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void confirmUrgentAppt(View view) {
-        final String userID = fAuth.getCurrentUser().getUid();
-        String date = dateTextView.getText().toString();
-        String time = timeTextView.getText().toString();
 
-
-        //set the dateObj to the date and time
-        dateObj.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date),
-                DATParser.getHour(DATParser.timeStrToInt(time)), DATParser.getMinute(DATParser.timeStrToInt(time)), 0);
-
-
-        String weekDay = DATParser.weekDayAsString(DATParser.getWeekDay(date));
-        Log.i("LOGGER",  "week day found : " + weekDay + DATParser.getWeekDay(date));
-        final String appointmentID = (userID + date + time).replaceAll("[/:]", ""); //this makes an appointment easier to find.
-
-        final DocumentReference appointmentRef = fStore.collection("Appointment").document(appointmentID); //sets reference to this appointment object
-
-        //initialise A Chat Object in the RealTimeDatabase
-        dbRef = FirebaseDatabase.getInstance().getReference().child("Chats/" + "CHAT" + appointmentID);
-        ChatMessage initMessage = new ChatMessage("Welcome to your appointment!", "SYSTEM", null, dateAndTime);
-        dbRef.push().setValue(initMessage);
-
-        String doctorFullName = chosenDoctorTextView.getText().toString();
-
-        // sets the target document reference to the Appointment collection in the firestore.
-        //makes a Map of data to initialise into the appointment object
-        Map<String, Object> appointmentData = new HashMap<>(); //
-        appointmentData.put("patientID", userID);
-        appointmentData.put("Date", date);
-        appointmentData.put("Time", time);
-        appointmentData.put("WeekDay", weekDay);
-        appointmentData.put("ChatCode", "CHAT" + appointmentID);
-        appointmentData.put("PatientFullName", patientFullName);
-        appointmentData.put("CompletionStatus", false);
-        appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
-        appointmentData.put("DoctorFullName", doctorFullName);
-        appointmentData.put("doctorID", chosenDoctorId);
-        appointmentData.put("UrgentStatus", true);
-        //CREATES AN APPOINTMENT OBJECT IN THE FIRESTORE.
-        appointmentRef.set(appointmentData).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(BookAppointment.this, "Success", Toast.LENGTH_SHORT).show();
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(BookAppointment.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE PATIENT OBJECT.
-        DocumentReference patientDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
-        patientDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
-
-        //ADDS THIS APPOINTMENT ID INTO THE 'Appointments' LIST IN THE DOCTOR OBJECT.
-        DocumentReference doctorDocRef = fStore.collection("Patient").document(userID); //setting a document reference to the patient's data path
-        doctorDocRef.update("Appointments", FieldValue.arrayUnion(appointmentID));//appends the same appointment ID to the list of strings so we can search for this appointment.
-
-
-        finish();
-    }
     public void backBtnPressed(View view) {
         finish();
     }

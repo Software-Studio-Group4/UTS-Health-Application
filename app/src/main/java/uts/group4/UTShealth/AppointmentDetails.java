@@ -3,8 +3,6 @@ package uts.group4.UTShealth;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
-import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -33,6 +31,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
+import uts.group4.UTShealth.ActivityFragments.ChooseADoctorFragment;
+import uts.group4.UTShealth.ActivityFragments.DatePickerFragment;
+import uts.group4.UTShealth.ActivityFragments.EditShiftFragment;
+import uts.group4.UTShealth.ActivityFragments.TimePickerFragment;
 import uts.group4.UTShealth.Util.DATParser;
 
 public class AppointmentDetails extends AppCompatActivity {
@@ -301,14 +303,15 @@ public class AppointmentDetails extends AppCompatActivity {
     }
 
     public void editDoctor(View view) {
-
+        ChooseADoctorFragment chooseDoc = new ChooseADoctorFragment();
+        chooseDoc.show(getSupportFragmentManager(), "ChooseDoc");
     }
 
     public void back(View view) {
         finish();
     }
 
-    /******************************EDIT METHODS************************************************/
+    /********************************************EDIT METHODS************************************************/
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void editDateText(int year, int month, int day) {
         dateTextView.setTextColor(Color.parseColor("#F9C70C"));
@@ -335,4 +338,5 @@ public class AppointmentDetails extends AppCompatActivity {
             amPm = " AM";
         timeTextView.setText(String.format("%02d:%02d", reformattedHour, minute) + amPm);
     }
+
 }

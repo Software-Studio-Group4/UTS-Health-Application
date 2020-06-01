@@ -1,13 +1,10 @@
 package uts.group4.UTShealth;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -28,12 +25,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import maes.tech.intentanim.CustomIntent;
-import uts.group4.UTShealth.Model.AppointmentModel;
+import uts.group4.UTShealth.ActivityFragments.DatePickerFragment;
+import uts.group4.UTShealth.ActivityFragments.EditShiftFragment;
+import uts.group4.UTShealth.ActivityFragments.NewShiftFragment;
+import uts.group4.UTShealth.ActivityFragments.RemoveTimeOffFragment;
 import uts.group4.UTShealth.Model.ShiftModel;
 import uts.group4.UTShealth.Model.TimeOffModel;
 import uts.group4.UTShealth.Util.DATParser;

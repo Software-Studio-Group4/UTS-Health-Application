@@ -179,14 +179,14 @@ public class Chat extends AppCompatActivity {
                                             int position,
                                             ChatMessage Message) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                if(Message.getText() != null){
+                if(Message.getText() != null && !Message.getText().equals("")){
                     viewHolder.messageTextView.setText(Message.getText());
                 }
                 viewHolder.messengerTextView.setText(Message.getName());
                 viewHolder.messengerTimeView.setText(Message.getDateAndTime());
                 viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
                 viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
-                if(Message.getImageUrl() != null){
+                if(Message.hasImageUrl()){
                     Glide.with(viewHolder.messageImageView.getContext()).load(Message.getImageUrl()).into(viewHolder.messageImageView);
                 }
             }
@@ -281,6 +281,7 @@ public class Chat extends AppCompatActivity {
      ************************************************************************************************/
 
     public void BtnPressed(View v) {
+
         storeImage(getRecyclerViewScreenshot(mMessageRecyclerView));
     }
 
@@ -404,36 +405,6 @@ public class Chat extends AppCompatActivity {
     }
 
     public void endChat(View view) {
-        //code to send chatid to Notes class
-//        Bitmap bitmap1 = getScreenBitmap();
-//
-//        mMessageRecyclerView.setDrawingCacheEnabled(true);
-//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
-//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
-//        mMessageRecyclerView.setDrawingCacheEnabled(false);
-//        String stbmp = BitMapToString(newBmp);
-//
-//        Intent i = new Intent(getApplicationContext(), Prescription.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("Chatroomcode", chatCode);
-//        bundle.putString("Bitmap", stbmp);
-//        i.putExtras(bundle);
-//        startActivity(i);
-//        CustomIntent.customType(Chat.this, "fadein-to-fadeout");
-
-        //code to send chatid to Notes class
-//        Bitmap bitmap1 = getScreenBitmap();
-
-//        Bitmap bitmap2 = Bitmap.createBitmap(mMessageRecyclerView.getMeasuredWidth(),
-//                mMessageRecyclerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-
- //       Bitmap recycler_view_bm =     getScreenshotFromRecyclerView(mMessageRecyclerView);
-
-//        mMessageRecyclerView.setDrawingCacheEnabled(true);
-//        Bitmap bitmap = Bitmap.createBitmap(mMessageRecyclerView.getDrawingCache());
-//        Bitmap newBmp = bitmap.copy(bitmap.getConfig(),true);
-//        mMessageRecyclerView.setDrawingCacheEnabled(false);
-//        String stbmp = BitMapToString(recycler_view_bm);
 
         Intent i = new Intent(getApplicationContext(), PrescriptionNotes.class);
         Bundle bundle = new Bundle();

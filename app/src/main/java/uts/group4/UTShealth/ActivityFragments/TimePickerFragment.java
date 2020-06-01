@@ -1,4 +1,4 @@
-package uts.group4.UTShealth;
+package uts.group4.UTShealth.ActivityFragments;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
+
+import uts.group4.UTShealth.R;
 
 import static uts.group4.UTShealth.BookAppointment.populateSetTimeText;
 import static uts.group4.UTShealth.AppointmentDetails.editTimeText;

@@ -1,4 +1,4 @@
-package uts.group4.UTShealth;
+package uts.group4.UTShealth.ActivityFragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uts.group4.UTShealth.R;
 import uts.group4.UTShealth.Util.DATParser;
 
 import static uts.group4.UTShealth.BookAppointment.populateSetDateText;
