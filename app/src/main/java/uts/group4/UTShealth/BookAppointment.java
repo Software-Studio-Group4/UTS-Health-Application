@@ -306,7 +306,8 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
-        populateSetDateText(year, month, day);
+        populateSetDateText(year, month + 1 , day);
+
 
         //set time to now
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
