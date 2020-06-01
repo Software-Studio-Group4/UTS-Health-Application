@@ -33,7 +33,7 @@ public class PatientProfilePage extends AppCompatActivity {
         state = findViewById(R.id.stateTf);
         postCode = findViewById(R.id.postCodeTf);
         phoneNumber = findViewById(R.id.numberTf);
-        medicare = findViewById(R.id.medicareNumberTf);
+        medicare = findViewById(R.id.medicareTf);
         email = findViewById(R.id.emailTf);
         DocumentReference docRef = fStore.collection("Patients").document(userID);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
