@@ -98,7 +98,6 @@ public class PatientDashboard extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             protected void onBindViewHolder(@NonNull AppointmentViewHolder appointmentViewHolder, int position, @NonNull AppointmentModel appointmentModel) {
-                Log.i("DASHBOARD","timestamp status: " + appointmentModel.getTimeStamp());
                 String appointmentID = getSnapshots().getSnapshot(position).getId();
                 appointmentViewHolder.setAppointmentName(appointmentModel.getDate(), appointmentModel.getTime(), appointmentModel.getDoctorFullName(), appointmentModel.getChatCode(), appointmentID, appointmentModel.getTimeStamp());
             }
@@ -305,6 +304,7 @@ public class PatientDashboard extends AppCompatActivity {
             view = itemView;
         }
 
+        @SuppressLint("SetTextI18n")
         @RequiresApi(api = Build.VERSION_CODES.N)
         void setAppointmentName(String date, String time, String doctor, final String chatCode, String documentID, final Timestamp apptTime) {
             TextView appointmentTextView = view.findViewById(R.id.appointmentTextView);
@@ -340,15 +340,21 @@ public class PatientDashboard extends AppCompatActivity {
             appointmentTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (chatCode != null) {
-
-                        Intent i = new Intent(PatientDashboard.this, Chat.class);
-                        i.putExtra("chatroomcode", chatCode);
-                        startActivity(i);
-                        CustomIntent.customType(PatientDashboard.this, "right-to-left");
-                    } else {
-                        Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
-                    }
+//                    if (chatCode != null) {
+//
+//                        Intent i = new Intent(PatientDashboard.this, Chat.class);
+//                        i.putExtra("chatroomcode", chatCode);
+//                        startActivity(i);
+//                        CustomIntent.customType(PatientDashboard.this, "right-to-left");
+//                    } else {
+//                        Toast.makeText(PatientDashboard.this, "NO CHAT ROOM CODE FOUND", Toast.LENGTH_SHORT).show();
+//                    }
+                    //go to view appointment page
+                    Intent i = new Intent(PatientDashboard.this, AppointmentDetails.class);
+                    i.putExtra("appointmentID", appointmentID);
+                    i.putExtra("isDoctor", false);
+                    startActivity(i);
+                    CustomIntent.customType(PatientDashboard.this, "right-to-left");
                 }
             });
         }
