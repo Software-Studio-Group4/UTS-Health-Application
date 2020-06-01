@@ -171,12 +171,18 @@ public class AppointmentDetails extends AppCompatActivity {
                     doctorName = documentSnapshot.getString("DoctorFullName");
                     patientID = documentSnapshot.getString("patientID");
                     doctorID = documentSnapshot.getString("doctorID");
+                    if(documentSnapshot.getBoolean("UrgentStatus")!= null){
+                        isUrgent =documentSnapshot.getBoolean("UrgentStatus");
+                    }
 
                     dateTextView.setText(apptDate);
                     timeTextView.setText(apptTime);
                     weekdayTextView.setText(apptDay);
                     doctorTextView.setText(doctorName);
                     patientTextView.setText(documentSnapshot.getString("PatientFullName"));
+                    if(isUrgent){
+                        urgentStatus.setVisibility(View.VISIBLE);
+                    }
 
                 } else {
                     Toast.makeText(AppointmentDetails.this, "Error: couldn't retrieve appointment data", Toast.LENGTH_SHORT).show();

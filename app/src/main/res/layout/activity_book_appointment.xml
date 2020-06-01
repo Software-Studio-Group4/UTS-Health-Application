@@ -204,7 +204,6 @@
         android:layout_marginEnd="107dp"
         android:layout_marginRight="107dp"
         android:layout_marginBottom="3dp"
-        android:background="@drawable/urgent_appt"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="urgentAppt"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -212,5 +211,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmBtn"
         app:layout_constraintVertical_bias="1.0" />
+    <!--        android:background="@drawable/urgent_appt" -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

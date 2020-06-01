@@ -201,7 +201,7 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="48dp"
         android:layout_marginRight="48dp"
-        android:background="@drawable/go_to_chat"
+
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="goToChat"
         app:layout_constraintBottom_toTopOf="@+id/cancelApptBtn"
@@ -210,13 +210,13 @@
         app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
-
+<!--    android:background="@drawable/go_to_chat"-->
     <Button
         android:id="@+id/cancelApptBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="179dp"
         android:layout_height="55dp"
-        android:background="@drawable/cancel_appt"
+
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="deleteAppt"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -224,7 +224,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
         app:layout_constraintVertical_bias="0.685" />
-
+<!--    android:background="@drawable/cancel_appt"-->
     <Button
         android:id="@+id/editBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
@@ -233,7 +233,7 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="56dp"
         android:layout_marginRight="56dp"
-        android:background="@drawable/edit_details"
+
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="editButton"
         app:layout_constraintBottom_toTopOf="@+id/cancelApptBtn"
@@ -241,7 +241,7 @@
         app:layout_constraintTop_toBottomOf="@+id/patientNameTextView"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
-
+<!--    android:background="@drawable/edit_details"-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/confirmChangesBtn"
         android:layout_width="wrap_content"

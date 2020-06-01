@@ -50,7 +50,7 @@ public class ChooseADoctorFragment extends DialogFragment {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     private RecyclerView doctorRecycler;
-//    private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
+    //private FirestoreRecyclerAdapter<Doctor, DoctorViewHolder> doctorAdapter;
 
 
 
@@ -66,17 +66,13 @@ public class ChooseADoctorFragment extends DialogFragment {
        fAuth = FirebaseAuth.getInstance();
        fStore = FirebaseFirestore.getInstance();
 
-       //initialise the spinners and all information in the spinners
-
-        //fills a list full of this doctor's shifts
-
-
 
         return view;
 
     }
 
     /***doctor view holder private class***/
+
 
 
 }
