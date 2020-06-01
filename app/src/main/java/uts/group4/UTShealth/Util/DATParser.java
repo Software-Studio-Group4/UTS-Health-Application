@@ -212,4 +212,12 @@ public class DATParser {
             default: return "INVALID DAY";
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static Timestamp dateToTimestamp(String date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(DATParser.getYear(date), DATParser.getMonthAsInt(date) - 1, DATParser.getDay(date));
+        Timestamp timestamp = new Timestamp(calendar.getTime());
+        return timestamp;
+    }
 }

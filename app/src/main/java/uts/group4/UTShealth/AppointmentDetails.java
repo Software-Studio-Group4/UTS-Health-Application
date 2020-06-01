@@ -246,13 +246,19 @@ public class AppointmentDetails extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Changes discarded", Toast.LENGTH_SHORT);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void confirmChanges(View view){
         //update fields in firebase
         Map<String, Object> appointmentData = new HashMap<>();
         appointmentData.put("Date", dateTextView.getText().toString());
         appointmentData.put("Time", timeTextView.getText().toString());
         appointmentData.put("WeekDay", weekdayTextView.getText().toString());
-        //appointmentData.put("TimeStamp", new Timestamp(dateObj.getTime()));
+        appointmentData.put("TimeStamp", DATParser.dateToTimestamp(dateTextView.getText().toString()));
+        apptRef.update(appointmentData);
+
+        apptDate = dateTextView.getText().toString();
+        apptTime = timeTextView.getText().toString();
+        apptDay = weekdayTextView.getText().toString();
 
         editBtn.setVisibility(View.VISIBLE);
         editDateBtn.setVisibility(View.GONE);
