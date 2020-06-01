@@ -34,9 +34,7 @@ public class PrescriptionNotes extends AppCompatActivity {
     public String directions;
     public String notes;
     String chatCode;
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    String userID = fAuth.getCurrentUser().getUid();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

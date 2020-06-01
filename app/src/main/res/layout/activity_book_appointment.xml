@@ -139,7 +139,7 @@
         android:layout_marginLeft="146dp"
         android:layout_marginEnd="147dp"
         android:layout_marginRight="147dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="139dp"
         android:background="@drawable/confirm_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:onClick="confirmAppt"
@@ -148,7 +148,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/doctorRecycler"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
 
     <TextView
