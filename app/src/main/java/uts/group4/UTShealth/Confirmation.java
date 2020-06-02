@@ -348,7 +348,7 @@ public class Confirmation extends AppCompatActivity implements Runnable {
 
 
     private void shareDocument(Uri uri) {
-        String chatContent = null;
+        String chatContent = "";
 
         for(ChatMessage message: chatMessages){
             if(!message.hasImageUrl()){
