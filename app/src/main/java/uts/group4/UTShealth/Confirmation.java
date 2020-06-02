@@ -352,10 +352,10 @@ public class Confirmation extends AppCompatActivity implements Runnable {
 
         for(ChatMessage message: chatMessages){
             if(!message.hasImageUrl()){
-                chatContent = chatContent + message.getName() + " (" + message.getDateAndTime() + ") : " + message.getText() + "\n";
+                chatContent = chatContent + message.getName() + " (" + message.getDateAndTime() + ") : " + message.getText() + "\n\n";
             }
             else{
-                chatContent = chatContent + message.getName() + " (" + message.getDateAndTime() + ") : " + message.getImageUrl() + " [IMAGE URL]\n";
+                chatContent = chatContent + message.getName() + " (" + message.getDateAndTime() + ") : " + message.getImageUrl() + " [IMAGE URL]\n\n";
             }
         }
 
