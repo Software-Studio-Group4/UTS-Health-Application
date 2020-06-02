@@ -128,7 +128,7 @@ public class BookAppointment extends AppCompatActivity implements AdapterView.On
             @Override
             protected void onBindViewHolder(@NonNull DoctorViewHolder doctorViewHolder, int position, @NonNull Doctor doctorModel) {
                 String doctorId = getSnapshots().getSnapshot(position).getId();
-                doctorViewHolder.setDoctorData(doctorModel.getFirstName(), doctorModel.getLastName(), doctorId);
+                doctorViewHolder.setDoctorData(doctorModel.getFirstName(), doctorModel.getLastName(), doctorId, doctorModel.getSpecialisation());
             }
             @NonNull
             @Override
@@ -392,14 +392,14 @@ boolean checkUserAppointmentOverlap(String proposedDate, String proposedTime, Ar
         }
 
         @SuppressLint("SetTextI18n")
-        void setDoctorData(final String doctorfName, final String doctorlName, final String doctorID){
+        void setDoctorData(final String doctorfName, final String doctorlName, final String doctorID, final String doctorSpeciality){
             final ArrayList<TimeOffModel> timeOff = new ArrayList<>();
             final ArrayList<ShiftModel> shifts = new ArrayList<>();
             final ArrayList<AppointmentModel> existingDocAppts = new ArrayList<>();
             ConstraintLayout doctorItem = view.findViewById(R.id.doctorItem);
             TextView text = view.findViewById(R.id.doctorTextView);
 
-            text.setText("Dr. " + doctorfName + " " + doctorlName + "\nSpecialty: ");
+            text.setText("Dr. " + doctorfName + " " + doctorlName + "\nSpecialty: " +  doctorSpeciality);
 
             //get the doctor's time off
             CollectionReference timeOffRef = fStore.collection("Doctor").document(doctorID).collection("Time Off");
