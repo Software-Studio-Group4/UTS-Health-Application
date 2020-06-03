@@ -197,6 +197,7 @@ public class PatientDashboard extends AppCompatActivity {
 
     public void pastAppt(View view) {
         startActivity(new Intent(getApplicationContext(), PatientPastAppointments.class));
+        CustomIntent.customType(PatientDashboard.this, "fadein-to-fadeout");
 
     }
 
